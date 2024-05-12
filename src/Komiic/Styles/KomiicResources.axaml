@@ -1,0 +1,97 @@
+﻿<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
+    xmlns:viewModels="clr-namespace:Komiic.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Add Resources Here  -->
+    <DataTemplate DataType="{x:Type model:MangaInfo}" x:Key="MangaInfoTemplate">
+        <Border
+            Background="Transparent"
+            Classes="BoxShadow PointeroverBoxShadow"
+            Cursor="Hand"
+            Margin="5">
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="PointerReleased">
+                    <InvokeCommandAction Command="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).OpenMangaCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
+            <StackPanel Margin="8">
+                <Panel
+                    Background="Transparent"
+                    Height="240"
+                    Width="180">
+                    <Border ClipToBounds="True" CornerRadius="6">
+                        <Image asyncImageLoader:ImageLoader.Source="{Binding imageUrl}" />
+                    </Border>
+
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock Text="{Binding views}" />
+                    </Border>
+                    <Border HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <TextBlock Text="{Binding favoriteCount}" />
+                    </Border>
+                </Panel>
+                <TextBlock
+                    FontWeight="Bold"
+                    Margin="0,5"
+                    Text="{Binding title}"
+                    TextAlignment="Center"
+                    TextTrimming="CharacterEllipsis"
+                    Width="180" />
+                <DockPanel>
+                    <TextBlock
+                        Background="MediumBlue"
+                        Padding="5,2"
+                        Text="連載">
+                        <!-- <TextBlock.Styles> -->
+                        <!--     <Style Selector="TextBlock.ONGOING"> -->
+                        <!--         <Setter Property="Text" Value="連載" /> -->
+                        <!--     </Style> -->
+                        <!-- </TextBlock.Styles> -->
+                    </TextBlock>
+                    <StackPanel Background="CornflowerBlue" Orientation="Horizontal">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Text="{Binding lastChapterUpdate, StringFormat={}{0}話}"
+                            VerticalAlignment="Center" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Text="|"
+                            VerticalAlignment="Center" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Text="{Binding lastBookUpdate, StringFormat={}{0}卷}"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                </DockPanel>
+                <TextBlock
+                    Background="#80808080"
+                    Margin="0,2"
+                    Padding="10,3"
+                    Text="{Binding dateUpdated}"
+                    TextAlignment="Left" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type model:Author}" x:Key="AuthorInfoTemplate">
+        <Border
+            Background="Transparent"
+            Classes="BoxShadow PointeroverBoxShadow"
+            Cursor="Hand"
+            Margin="5">
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="PointerReleased">
+                    <InvokeCommandAction Command="{Binding $parent[UserControl].((viewModels:IOpenAuthorViewModel)DataContext).OpenAuthorCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
+            <StackPanel Margin="8">
+                <TextBlock FontSize="{StaticResource TextStyleExtraLargeFontSize}" Text="{Binding name}" />
+                <TextBlock Text="{Binding comicCount, StringFormat={}漫畫數:{0}}" />
+                <TextBlock Text="{Binding views, StringFormat={}觀看數:{0}}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>

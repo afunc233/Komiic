@@ -1,0 +1,155 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Pages.MangeDetailPage"
+    x:DataType="vm:MangeDetailPageViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
+    xmlns:vm="clr-namespace:Komiic.PageViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
+        <vm:MangeDetailPageViewModel />
+    </Design.DataContext>
+    <ItemsControl>
+        <StackPanel>
+            <Border
+                Classes="BoxShadow"
+                HorizontalAlignment="Center"
+                Margin="20">
+                <StackPanel Margin="20">
+                    <WrapPanel Orientation="Horizontal">
+                        <Image
+                            Height="400"
+                            Width="300"
+                            asyncImageLoader:ImageLoader.Source="{Binding MangaInfo.imageUrl}" />
+                        <StackPanel Margin="5,0,0,0">
+                            <TextBlock
+                                FontSize="28"
+                                FontWeight="Bold"
+                                Text="{Binding MangaInfo.title}"
+                                TextWrapping="Wrap"
+                                Width="260" />
+                            <TextBlock
+                                FontSize="22"
+                                Margin="0,20,0,0"
+                                Text="{Binding MangaInfo.status, StringFormat={}狀態:{0}}" />
+                            <TextBlock
+                                FontSize="22"
+                                Margin="0,20,0,0"
+                                Text="{Binding MangaInfo.year, StringFormat={}年份:{0}}" />
+                            <StackPanel Margin="0,20,0,0">
+                                <!--  TODO 這裡要顯示多個作者  -->
+                                <TextBlock FontSize="22" Text="{Binding MangaInfo.authors[0].name, StringFormat={}作者:{0}}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,20,0,0">
+                                <!--  TODO 這裡要顯示多個類型  -->
+                                <TextBlock FontSize="22" Text="{Binding MangaInfo.categories[0].name, StringFormat={}類型:{0}}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,20,0,0">
+                                <TextBlock FontSize="22" Text="{Binding MangaInfo.views, StringFormat={}點閱:{0}}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,20,0,0">
+                                <TextBlock FontSize="22" Text="{Binding MangaInfo.lastBookUpdate, StringFormat={}更新:{0}}" />
+                            </StackPanel>
+                            <Button
+                                Background="#5057a3"
+                                Content=" 開始閱讀 "
+                                CornerRadius="4" />
+
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <Grid
+                        ColumnDefinitions="*,*,*"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,20">
+                        <Button
+                            Content=" 書櫃 "
+                            CornerRadius="4"
+                            Grid.Column="0"
+                            HorizontalAlignment="Center" />
+                        <Button
+                            Content=" 留言 "
+                            CornerRadius="4"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center" />
+                        <Button
+                            Content=" 喜愛 "
+                            CornerRadius="4"
+                            Grid.Column="2"
+                            HorizontalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Border
+                Classes="BoxShadow"
+                HorizontalAlignment="Stretch"
+                Margin="20">
+                <StackPanel Margin="20">
+                    <StackPanel.DataTemplates>
+                        <DataTemplate DataType="{x:Type vm:GroupChaptersByComicId}">
+                            <ItemsControl ItemsSource="{Binding Chapters}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type model:ChaptersByComicId}">
+                            <Button
+                                Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).OpenMangaViewerCommand, FallbackValue={x:Null}}"
+                                CommandParameter="{Binding}"
+                                Margin="4">
+                                <StackPanel>
+                                    <TextBlock FontSize="18" Text="{Binding serial}" />
+                                    <TextBlock FontSize="14" Text="{Binding size, StringFormat={}{0}p}" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </StackPanel.DataTemplates>
+                    <TabControl DisplayMemberBinding="{Binding Type, x:DataType=vm:GroupChaptersByComicId}" ItemsSource="{Binding GroupingChaptersByComicIdList}">
+                        <!-- <TabControl.Styles> -->
+                        <!--     <Style Selector="TabItem" x:DataType="{x:Type vm:GroupChaptersByComicId}"> -->
+                        <!--         <Setter Property="Header" Value="{Binding}" /> -->
+                        <!--     </Style> -->
+                        <!-- </TabControl.Styles> -->
+                    </TabControl>
+                </StackPanel>
+            </Border>
+            <Panel>
+                <Border
+                    BorderBrush="Gray"
+                    BorderThickness="0,1,0,0"
+                    Height="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="5,0" />
+                <TextBlock
+                    Background="{DynamicResource SystemRegionBrush}"
+                    HorizontalAlignment="Center"
+                    Padding="10,0"
+                    Text="推薦漫畫" />
+            </Panel>
+            <ScrollViewer
+                Classes="BoxShadow"
+                HorizontalAlignment="Stretch"
+                Margin="20">
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding RecommendMangaInfoList}">
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout
+                            ItemsJustification="Center"
+                            ItemsStretch="None"
+                            MaximumRowsOrColumns="6"
+                            Orientation="Horizontal" />
+                    </ItemsRepeater.Layout>
+                </ItemsRepeater>
+            </ScrollViewer>
+        </StackPanel>
+    </ItemsControl>
+</UserControl>

@@ -1,0 +1,52 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Pages.HotPage"
+    x:DataType="vm:HotPageViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="clr-namespace:Komiic.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Komiic.PageViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
+        <vm:HotPageViewModel />
+    </Design.DataContext>
+    <DockPanel>
+        <Panel DockPanel.Dock="Top">
+            <TextBlock
+                FontSize="{StaticResource TabItemHeaderFontSize}"
+                HorizontalAlignment="Center"
+                Text="{Binding Title}"
+                VerticalAlignment="Center" />
+            <ComboBox
+                DisplayMemberBinding="{Binding Item1}"
+                HorizontalAlignment="Right"
+                ItemsSource="{Binding StateList}"
+                SelectedIndex="0"
+                SelectedValue="{Binding State}"
+                SelectedValueBinding="{Binding Item2}" />
+        </Panel>
+        <TabControl>
+            <TabItem Header="月">
+
+                <ScrollViewer>
+                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding MonthHotComicsMangaInfos}" />
+                    <Interaction.Behaviors>
+                        <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreMonthHotComicsCommand}" />
+                    </Interaction.Behaviors>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="綜合">
+                <ScrollViewer>
+                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding HotComicsMangaInfos}" />
+                    <Interaction.Behaviors>
+                        <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
+                    </Interaction.Behaviors>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

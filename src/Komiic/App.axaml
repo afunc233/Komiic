@@ -1,0 +1,22 @@
+<Application
+    RequestedThemeVariant="Light"
+    x:Class="Komiic.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:local="using:Komiic"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.DataTemplates>
+        <local:NavigationAwareLocator />
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="Styles/KomiicStyles.axaml" />
+    </Application.Styles>
+    <Application.Resources>
+
+    </Application.Resources>
+
+</Application>

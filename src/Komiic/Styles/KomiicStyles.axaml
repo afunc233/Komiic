@@ -1,0 +1,101 @@
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:icon="clr-namespace:Assets"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!--  Add Controls for Previewer Here  -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="./KomiicResources.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <BoxShadows x:Key="BorderBoxShadow">5 5 10 0 #30000000</BoxShadows>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <BoxShadows x:Key="BorderBoxShadow">5 5 10 0 #30FFFFFF</BoxShadows>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+
+        <SKPictureImage Source="{x:Static icon:Icon.Picture}" x:Key="IconImage" />
+
+        <!--  需要一个加载中的图  -->
+        <!-- <ImageBrush Source="resm:Avalonia.Skia.Assets.NoiseAsset_256X256_PNG.png?assembly=Avalonia.Skia" x:Key="LoadingMovieImage" /> -->
+        <!--  给 ItemsControl 加 ScrollViewer  -->
+        <ControlTheme TargetType="ItemsControl" x:Key="{x:Type ItemsControl}">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                        <ScrollViewer
+                            AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                            BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}"
+                            HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                            HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
+                            IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                            IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
+                            VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                            VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
+                            x:Name="PART_ScrollViewer">
+                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" x:Name="PART_ItemsPresenter" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+        <!--  给 ItemsControl 加 ScrollViewer 结束  -->
+
+        <ControlTheme TargetType="ItemsRepeater" x:Key="{x:Type ItemsRepeater}">
+            <Setter Property="Layout">
+                <Setter.Value>
+                    <UniformGridLayout
+                        ItemsJustification="Center"
+                        ItemsStretch="None"
+                        Orientation="Horizontal" />
+                </Setter.Value>
+            </Setter>
+        </ControlTheme>
+    </Styles.Resources>
+
+    <StyleInclude Source="../Controls/MangeImageView.axaml" />
+
+    <!--  加载中设置个默认图片  -->
+    <Style Selector="Image[(asyncImageLoader|ImageLoader.IsLoading)=True]">
+        <Setter Property="Source" Value="resm:Avalonia.Skia.Assets.NoiseAsset_256X256_PNG.png?assembly=Avalonia.Skia" />
+    </Style>
+
+    <!--  Add Styles Here  -->
+    <Style Selector="Border.BoxShadow">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BoxShadow" Value="{DynamicResource BorderBoxShadow}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="100%,100%" StartPoint="0%,0%">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#10808080" Offset="0" />
+                        <GradientStop Color="#aa808080" Offset="1" />
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.PointeroverBoxShadow:pointerover">
+        <Setter Property="BoxShadow" Value="5 5 10 0 #60FF0000" />
+        <Setter Property="Margin" Value="2" />
+    </Style>
+
+</Styles>

@@ -1,0 +1,59 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Pages.AllMangaPage"
+    x:DataType="pageViewModels:AllMangaPageViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="clr-namespace:Komiic.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
+        <pageViewModels:AllMangaPageViewModel />
+    </Design.DataContext>
+    <DockPanel>
+        <Panel DockPanel.Dock="Top">
+            <TextBlock
+                FontSize="{StaticResource TabItemHeaderFontSize}"
+                HorizontalAlignment="Center"
+                Text="{Binding Title}"
+                VerticalAlignment="Center" />
+
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <ComboBox
+                    DisplayMemberBinding="{Binding Item1}"
+                    ItemsSource="{Binding OrderByList}"
+                    SelectedValue="{Binding OrderBy}"
+                    SelectedValueBinding="{Binding Item2}" />
+                <ComboBox
+                    DisplayMemberBinding="{Binding Item1}"
+                    ItemsSource="{Binding StateList}"
+                    SelectedValue="{Binding State}"
+                    SelectedValueBinding="{Binding Item2}" />
+            </StackPanel>
+        </Panel>
+        <ListBox
+            DisplayMemberBinding="{Binding name}"
+            DockPanel.Dock="Top"
+            ItemsSource="{Binding AllCategories}"
+            Margin="20"
+            SelectedValue="{Binding SelectedCategory}"
+            SelectionMode="AlwaysSelected">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+
+        <ScrollViewer>
+            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding AllMangaInfos}" />
+            <Interaction.Behaviors>
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadCategoryMangeCommand}" />
+            </Interaction.Behaviors>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

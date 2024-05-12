@@ -1,0 +1,42 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Pages.AuthorDetailPage"
+    x:DataType="pageViewModels:AuthorDetailPageViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="clr-namespace:Komiic.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.DataContext>
+        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
+        <pageViewModels:AuthorDetailPageViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <Panel DockPanel.Dock="Top">
+            <TextBlock
+                FontSize="{StaticResource TabItemHeaderFontSize}"
+                HorizontalAlignment="Center"
+                Text="{Binding Author.name, StringFormat={}作者:{0}}" />
+            <Border
+                BorderBrush="Gray"
+                BorderThickness="0,1,0,0"
+                Height="1"
+                HorizontalAlignment="Stretch"
+                Margin="5,0"
+                VerticalAlignment="Bottom" />
+        </Panel>
+
+        <ScrollViewer>
+            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding MangaInfos}" />
+            <Interaction.Behaviors>
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMangaInfoByAuthorCommand}" />
+            </Interaction.Behaviors>
+        </ScrollViewer>
+
+    </DockPanel>
+</UserControl>

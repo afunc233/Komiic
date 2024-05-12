@@ -1,0 +1,50 @@
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Views.MainView"
+    x:DataType="vm:MainViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:asyncLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Komiic.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:NavBar}">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Height="28"
+                    Width="28"
+                    asyncLoader:ImageLoader.Source="{Binding IconUrl}" />
+                <TextBlock
+                    FontSize="16"
+                    Margin="10,0,0,0"
+                    Text="{Binding BarName}"
+                    VerticalAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+    <SplitView
+        CompactPaneLength="{OnFormFactor Default=48,
+                                         Mobile=0}"
+        DisplayMode="CompactInline"
+        IsPaneOpen="{OnFormFactor Default=True,
+                                  Mobile=False}"
+        OpenPaneLength="160"
+        x:Name="SplitView">
+        <SplitView.Pane>
+            <DockPanel>
+                <ListBox
+                    DockPanel.Dock="Bottom"
+                    ItemsSource="{Binding FooterMenuItemsSource}"
+                    SelectedItem="{Binding SelectedNavBar}" />
+                <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
+            </DockPanel>
+        </SplitView.Pane>
+        <TransitioningContentControl Content="{Binding SelectedContent}" />
+    </SplitView>
+</UserControl>

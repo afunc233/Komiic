@@ -1,0 +1,60 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Views.HeaderView"
+    x:DataType="viewModels:HeaderViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Komiic.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
+        <viewModels:HeaderViewModel />
+    </Design.DataContext>
+    <DockPanel Margin="0,0,10,0">
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+            <Image
+                Margin="10,0"
+                PointerReleased="InputElement_OnPointerReleased"
+                Source="{StaticResource IconImage}"
+                Width="100" />
+            <HyperlinkButton Content=" 贊助 " NavigateUri="https://donate.komiic.com/" />
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <Button Content="搜" />
+            <Button Content="登录" Foreground="Blue" />
+            <TextBlock Text="/" VerticalAlignment="Center" />
+            <HyperlinkButton
+                Content="註冊"
+                Foreground="Blue"
+                NavigateUri="https://komiic.com/register/" />
+            <ToggleButton
+                Content="日"
+                IsChecked="True"
+                IsCheckedChanged="ToggleButton_OnIsCheckedChanged" />
+        </StackPanel>
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            Orientation="Horizontal"
+            VerticalAlignment="Center">
+            <TextBlock
+                HorizontalAlignment="Center"
+                Text="{Binding ImageLimit.usage}"
+                TextAlignment="Center"
+                VerticalAlignment="Center" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                Text="/"
+                TextAlignment="Center"
+                VerticalAlignment="Center" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                Text="{Binding ImageLimit.limit}"
+                TextAlignment="Center"
+                VerticalAlignment="Center" />
+        </StackPanel>
+    </DockPanel>
+</UserControl>

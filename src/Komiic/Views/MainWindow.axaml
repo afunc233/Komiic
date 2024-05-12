@@ -1,0 +1,72 @@
+<Window
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="32"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="/Assets/avalonia-logo.ico"
+    SystemDecorations="BorderOnly"
+    Title="Komiic"
+    WindowStartupLocation="CenterScreen"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Views.MainWindow"
+    x:DataType="viewModels:MainViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Komiic.ViewModels"
+    xmlns:views="clr-namespace:Komiic.Views"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.DataContext>
+        <viewModels:MainViewModel />
+    </Design.DataContext>
+    <Panel>
+        <views:MainView
+            IsVisible="False"
+            Margin="0,40,0,0"
+            x:Name="MainView" />
+        <!--  标题部分  -->
+        <Panel
+            Height="38"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top">
+            <Border
+                Background="Transparent"
+                BoxShadow="{DynamicResource BorderBoxShadow}"
+                DoubleTapped="InputElement_OnDoubleTapped"
+                HorizontalAlignment="Stretch"
+                PointerPressed="InputElement_OnPointerPressed" />
+            <DockPanel Margin="3">
+                <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding #MainView.MainSplitView.IsPaneOpen}">
+                    <PathIcon Data="M3 17h18a1 1 0 0 1 .117 1.993L21 19H3a1 1 0 0 1-.117-1.993L3 17h18H3Zm0-6 18-.002a1 1 0 0 1 .117 1.993l-.117.007L3 13a1 1 0 0 1-.117-1.993L3 11l18-.002L3 11Zm0-6h18a1 1 0 0 1 .117 1.993L21 7H3a1 1 0 0 1-.117-1.993L3 5h18H3Z" />
+                </ToggleButton>
+                <CaptionButtons DockPanel.Dock="Right" x:Name="CaptionButtons">
+                    <CaptionButtons.Styles>
+                        <Style Selector="CaptionButtons">
+                            <Style Selector="^:normal /template/ Button#PART_FullScreenButton">
+                                <Setter Property="IsVisible" Value="True" />
+                            </Style>
+                            <Style Selector="^:maximized /template/ Button#PART_FullScreenButton">
+                                <Setter Property="IsVisible" Value="True" />
+                            </Style>
+                            <Style Selector="^:fullscreen /template/ Button#PART_FullScreenButton">
+                                <Setter Property="IsVisible" Value="True" />
+                            </Style>
+                        </Style>
+                    </CaptionButtons.Styles>
+                </CaptionButtons>
+                <ContentControl Content="{Binding Header}" />
+            </DockPanel>
+        </Panel>
+
+        <!--  标题部分  -->
+
+        <!--  Splash  -->
+        <ContentControl
+            Background="Transparent"
+            IsHitTestVisible="False"
+            IsVisible="True"
+            x:Name="SplashHost" />
+        <!--  Splash  -->
+    </Panel>
+</Window>
