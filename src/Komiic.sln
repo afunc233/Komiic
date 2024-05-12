@@ -63,4 +63,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CD782D57-222E-4AD4-AFA4-847EEE150799} = {0FB2637F-C273-4B71-AE61-0E043FDA810C}
 	EndGlobalSection
+	GlobalSection(RiderSharedRunConfigurations) = postSolution
+		File = .aot\Publish Komiic.Desktop win-x64 to folder.run.xml
+	EndGlobalSection
 EndGlobal
