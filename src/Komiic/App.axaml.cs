@@ -28,7 +28,7 @@ public class App : Application
     {
         AvaloniaXamlLoader.Load(this);
 
-        var cacheFolder = Path.Combine(
+        string cacheFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(Komiic),
             "Cache", "Images");
         AsyncImageLoader.ImageLoader.AsyncImageLoader =

@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia;
+using Komiic.Extensions;
 using NLog;
 
 namespace Komiic.Desktop;
@@ -38,7 +39,7 @@ sealed class Program
     private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .WithInterFont()
+            .WithHarmonyOSSansSCFont()
             .LogToTrace()
             .With(new SkiaOptions { UseOpacitySaveLayer = true });
 

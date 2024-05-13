@@ -1,6 +1,7 @@
 using Foundation;
 using Avalonia;
 using Avalonia.iOS;
+using Komiic.Extensions;
 
 namespace Komiic.iOS;
 
@@ -15,6 +16,6 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
         return base.CustomizeAppBuilder(builder)
-            .WithInterFont();
+            .WithHarmonyOSSansSCFont();
     }
 }
