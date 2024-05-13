@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\komiic\komiic.csproj"/>
+        <!--        <ProjectReference Include="..\komiic\komiic.csproj"/>-->
+      <ProjectReference Include="..\Komiic\Komiic.csproj" />
     </ItemGroup>
 </Project>

@@ -15,6 +15,9 @@ public partial class MainWindow : Window
 
     private CancellationTokenSource? _splashCts;
 
+    /// <summary>
+    /// TODO 在 ubuntu 下  resize 没了？
+    /// </summary>
     public MainWindow()
     {
         InitializeComponent();
@@ -23,7 +26,7 @@ public partial class MainWindow : Window
         //                                     RendererDebugOverlays.LayoutTimeGraph |
         //                                     RendererDebugOverlays.RenderTimeGraph;
     }
-    
+
     protected override async void OnOpened(EventArgs e)
     {
         if (SplashScreen == null)
@@ -140,6 +143,7 @@ public partial class MainWindow : Window
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        // TODO 在 ubuntu 下 BeginMoveDrag 导致 DoubleTapped 触发有些问题 考虑自己移动 而不是 调用 BeginMoveDrag
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             this.BeginMoveDrag(e);
