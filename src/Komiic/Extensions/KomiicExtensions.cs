@@ -65,7 +65,9 @@ public static class KomiicExtensions
         var jsonSerializerOptions = new JsonSerializerOptions
         {
 #pragma warning disable IL2026
+#pragma warning disable IL3050
             TypeInfoResolver = JsonTypeInfoResolver.Combine(KomiicJsonSerializerContext.Default, new DefaultJsonTypeInfoResolver())
+#pragma warning restore IL3050
 #pragma warning restore IL2026
         };
 

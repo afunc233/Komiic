@@ -22,7 +22,7 @@ public class App : Application
         .UseNLog(new NLogProviderOptions())
         .Build();
     
-    private readonly ILogger? _logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly ILogger? _logger = LogManager.GetCurrentClassLogger();
 
     public override void Initialize()
     {
@@ -38,8 +38,6 @@ public class App : Application
 
     public override async void OnFrameworkInitializationCompleted()
     {
-        _logger?.Debug(nameof(OnFrameworkInitializationCompleted));
-
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
@@ -59,5 +57,7 @@ public class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+        
+        _logger?.Debug(nameof(OnFrameworkInitializationCompleted));
     }
 }

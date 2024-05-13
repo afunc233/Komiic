@@ -1,6 +1,6 @@
 ﻿<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Publish Komiic.Desktop win-x64 to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
-    <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/Komiic.Desktop/bin/Release/net8.0/win-x64/publish" target_framework="net8.0" trim_unused_assemblies="true" uuid_high="-6069974389149972757" uuid_low="-5498245974063364756" />
+    <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/Komiic.Desktop/bin/Release/publish" target_framework="net8.0" trim_unused_assemblies="true" uuid_high="-6069974389149972757" uuid_low="-5498245974063364756" />
     <method v="2" />
   </configuration>
 </component>

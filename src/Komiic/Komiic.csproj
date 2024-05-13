@@ -1,39 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>$(MainTargetFramework)</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
-        <AdditionalFiles Include="Assets/Icon.svg" NamespaceName="Assets" ClassName="Icon" />
+        <!-- svg to SKPicture -->
+        <AdditionalFiles Include="Assets/Icon.svg" NamespaceName="Assets" ClassName="Icon"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1" />
+        <!-- Avalonia -->
         <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)"/>
-        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.2.999-cibuild0046261-alpha" />
-        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
-        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
-        <PackageReference Include="NLog.Extensions.Hosting" Version="5.3.11" />
-        <PackageReference Include="Svg.SourceGenerator.Skia" Version="1.0.0.18" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.2.999-cibuild0046261-alpha"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)"/>
-        
+
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>
+
+        <!-- Hosting -->
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-preview.3.24172.9"/>
+
+        <!-- NLog -->
+        <PackageReference Include="NLog.Extensions.Hosting" Version="5.3.11"/>
+
+        <!-- CommunityToolkit.Mvvm -->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="$(CommunityToolkitVersion)"/>
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="$(CommunityToolkitVersion)"/>
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="$(CommunityToolkitVersion)"/>
+
+        <!-- AsyncImageLoader -->
+        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1"/>
+
+        <!-- Svg -->
+        <PackageReference Include="Svg.SourceGenerator.Skia" Version="1.0.0.18"/>
+        <PackageReference Include="Avalonia.Controls.Skia" Version="11.1.0-build20240312-01"/>
         
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-preview.3.24172.9" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-
-        <PackageReference Include="Avalonia.Controls.Skia" Version="11.1.0-build20240312-01" />
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0-build20240312-01" />
+        <!-- Behaviors -->
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0-build20240312-01"/>
     </ItemGroup>
-    
 
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\Komiic.Core\Komiic.Core.csproj" />
+        <ProjectReference Include="..\Komiic.Core\Komiic.Core.csproj"/>
     </ItemGroup>
 </Project>
