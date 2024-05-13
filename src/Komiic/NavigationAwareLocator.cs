@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Interactivity;
 using Komiic.PageViewModels;
 
 namespace Komiic;
@@ -18,16 +19,32 @@ public class NavigationAwareLocator : IDataTemplate
 #pragma warning restore IL2057
 
         if (type == null) return new TextBlock { Text = "Not Found: " + name };
-        
+
         var control = (Control)Activator.CreateInstance(type)!;
-        
-        if (data is not INavigationAware pageViewModel) return control;
-        
-        control.Loaded += async (sender, args) => { await pageViewModel.OnNavigatedTo(); };
-        control.Unloaded += async (sender, args) => { await pageViewModel.OnNavigatedFrom(); };
+
+        if (data is not INavigationAware) return control;
+
+        control.Loaded += ControlOnLoaded;
+        control.Unloaded += ControlOnUnloaded;
 
         return control;
+    }
 
+    private async void ControlOnUnloaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: INavigationAware navigationAware } control) return;
+        
+        control.Loaded -= ControlOnLoaded;
+        control.Unloaded -= ControlOnUnloaded;
+        await navigationAware.OnNavigatedFrom();
+    }
+
+    private async void ControlOnLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Control { DataContext: INavigationAware navigationAware })
+        {
+            await navigationAware.OnNavigatedTo();
+        }
     }
 
     public bool Match(object? data)
