@@ -11,10 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.DataContext>
-        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
-        <pageViewModels:MangaViewerPageViewModel />
-    </Design.DataContext>
 
     <UserControl.DataTemplates>
         <!--    -->

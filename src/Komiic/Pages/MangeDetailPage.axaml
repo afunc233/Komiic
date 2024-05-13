@@ -11,10 +11,7 @@
     xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
     xmlns:vm="clr-namespace:Komiic.PageViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.DataContext>
-        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
-        <vm:MangeDetailPageViewModel />
-    </Design.DataContext>
+
     <ItemsControl>
         <StackPanel>
             <Border

@@ -11,11 +11,6 @@
     xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Design.DataContext>
-        <!--  ReSharper disable once Xaml.ConstructorWarning  -->
-        <pageViewModels:AuthorDetailPageViewModel />
-    </Design.DataContext>
-
     <DockPanel>
         <Panel DockPanel.Dock="Top">
             <TextBlock

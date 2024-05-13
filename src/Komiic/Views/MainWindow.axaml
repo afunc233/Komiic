@@ -17,9 +17,7 @@
     xmlns:viewModels="clr-namespace:Komiic.ViewModels"
     xmlns:views="clr-namespace:Komiic.Views"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.DataContext>
-        <viewModels:MainViewModel />
-    </Design.DataContext>
+
     <Panel>
         <views:MainView
             IsVisible="False"

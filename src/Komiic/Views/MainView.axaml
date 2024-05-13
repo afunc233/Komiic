@@ -10,9 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Komiic.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.DataContext>
-        <vm:MainViewModel />
-    </Design.DataContext>
+
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type vm:NavBar}">
             <StackPanel Orientation="Horizontal">
