@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Avalonia;
 using Komiic.Extensions;
 using NLog;
@@ -9,7 +10,7 @@ sealed class Program
 {
     static Program()
     {
-        ConfigNLog(nameof(App));
+        ConfigNLog($"{nameof(Komiic)}.{nameof(Desktop)}");
     }
 
     private static ILogger? _logger;
@@ -63,9 +64,11 @@ sealed class Program
         fileTarget.ArchiveAboveSize = 1048576;
         var minLevel = NLog.LogLevel.Error;
 
-#if DEBUG
-        minLevel = NLog.LogLevel.Debug;
-#endif
+        if (ShouldTraceLog(appName))
+        {
+            minLevel = NLog.LogLevel.Trace;
+        }
+
         // Step 4. Define rules
         var consoleRule = new NLog.Config.LoggingRule("*", minLevel, consoleTarget);
         var fileRule = new NLog.Config.LoggingRule("*", minLevel, fileTarget);
@@ -82,5 +85,11 @@ sealed class Program
         NLog.LogManager.Configuration = config;
 
         _logger = NLog.LogManager.GetCurrentClassLogger();
+    }
+
+    private static bool ShouldTraceLog(string appName)
+    {
+        string debugStateFile = Path.Combine(AppContext.BaseDirectory, $"{appName}.debug");
+        return File.Exists(debugStateFile);
     }
 }

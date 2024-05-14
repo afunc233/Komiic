@@ -28,7 +28,7 @@
     </UserControl.DataTemplates>
     <SplitView
         CompactPaneLength="{OnFormFactor Default=48,
-                                         Mobile=0}"
+                                         Mobile=48}"
         DisplayMode="CompactInline"
         IsPaneOpen="{OnFormFactor Default=True,
                                   Mobile=False}"

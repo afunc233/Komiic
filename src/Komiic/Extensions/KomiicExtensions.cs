@@ -56,7 +56,14 @@ public static class KomiicExtensions
     private static void AddImageLoader(this IServiceCollection services)
     {
         // 注入图片加载器
-        services.AddSingleton<IImageCacheService, DiskImageCacheService>();
+        if (OperatingSystem.IsBrowser())
+        {
+            services.AddSingleton<IImageCacheService, MockImageCacheService>();
+        }
+        else
+        {
+            services.AddSingleton<IImageCacheService, DiskImageCacheService>();
+        }
         services.AddTransient<IMangeImageLoader, MangeImageLoader>();
     }
 
@@ -93,7 +100,15 @@ public static class KomiicExtensions
                 sp.GetRequiredService<ITokenService>().GetToken()));
 
         // http 缓存
-        services.AddSingleton<IJsonCacheService, DiskJsonCacheService>();
+        if (OperatingSystem.IsBrowser())
+        {
+            services.AddSingleton<IJsonCacheService, MockJsonCacheService>();
+        }
+        else
+        {
+            services.AddSingleton<IJsonCacheService, DiskJsonCacheService>();
+        }
+
         services.AddScoped<HttpCacheHandler>();
 
         // 查询相关 Api
@@ -118,10 +133,15 @@ public static class KomiicExtensions
             options.HttpMessageHandlerBuilderActions.Add(builder =>
             {
                 var primaryHandler = builder.Services.GetRequiredService<OptionalAuthenticatedHttpClientHandler>();
+
+                if (!OperatingSystem.IsBrowser())
+                {
 #if !DEBUG
-                primaryHandler.Proxy = null;
-                primaryHandler.UseProxy = false;
+                    primaryHandler.Proxy = null;
+                    primaryHandler.UseProxy = false;
 #endif
+                }
+
                 if (!OperatingSystem.IsBrowser())
                 {
                     var cookieContainer = builder.Services.GetRequiredService<CookieContainer>();
