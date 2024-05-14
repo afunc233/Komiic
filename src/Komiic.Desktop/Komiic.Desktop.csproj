@@ -5,30 +5,36 @@
         One for Windows with net8.0-windows TFM, one for MacOS with net8.0-macos and one with net8.0 TFM for Linux.-->
         <TargetFramework>$(MainTargetFramework)</TargetFramework>
         <Nullable>enable</Nullable>
-<!--        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>-->
+        <!--        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>-->
         <ApplicationIcon>..\Komiic\Assets\avalonia-logo.ico</ApplicationIcon>
         <PublishAot>true</PublishAot>
         <!-- 取消警告 -->
         <NoWarn>$(NoWarn);IL2026;IL2057;IL3050;IL3053;IL3000;IL2104;IL3002</NoWarn>
     </PropertyGroup>
-
+    
+    <!-- 如果是 linux 平台 取消  PublishAot ,没有测试 -->
+    <!-- dotnet publish -c Release  -r linux-x64 -p:self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeNativeLibrariesForSelfExtract=true -->
+    <PropertyGroup Condition="$(RuntimeIdentifier.Contains('linux'))">
+        <PublishAot>false</PublishAot>
+    </PropertyGroup>
+    
     <ItemGroup>
-        <RdXmlFile Include="..\Komiic\Komiic.rd.xml" />
+        <RdXmlFile Include="..\Komiic\Komiic.rd.xml"/>
     </ItemGroup>
 
     <!--AOT Reflection Define-->
     <ItemGroup>
-        <TrimmerRootDescriptor Include=".ReflectionDefine\Avalonia.xml" />
+        <TrimmerRootDescriptor Include=".ReflectionDefine\Avalonia.xml"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
         If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
         https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
-        <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
-        <TrimmableAssembly Include="Avalonia.Themes.Default" />
+        <TrimmableAssembly Include="Avalonia.Themes.Fluent"/>
+        <TrimmableAssembly Include="Avalonia.Themes.Default"/>
     </ItemGroup>
-    
+
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
     </PropertyGroup>
@@ -38,19 +44,19 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>
     </ItemGroup>
-    
-<!--    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">-->
-<!--        <DefineConstants>$(DefineConstants);ENABLE_XAML_HOT_RELOAD</DefineConstants>-->
-<!--    </PropertyGroup>-->
-    
-<!--    <ItemGroup>-->
-<!--        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />-->
-<!--        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="HotAvalonia" Version="1.1.0" />-->
-<!--        <PackageReference Include="HotAvalonia.Extensions" Version="1.1.0" PrivateAssets="All" />-->
-<!--    </ItemGroup>-->
-    
+
+    <!--    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">-->
+    <!--        <DefineConstants>$(DefineConstants);ENABLE_XAML_HOT_RELOAD</DefineConstants>-->
+    <!--    </PropertyGroup>-->
+
+    <!--    <ItemGroup>-->
+    <!--        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />-->
+    <!--        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="HotAvalonia" Version="1.1.0" />-->
+    <!--        <PackageReference Include="HotAvalonia.Extensions" Version="1.1.0" PrivateAssets="All" />-->
+    <!--    </ItemGroup>-->
+
     <ItemGroup>
         <!--        <ProjectReference Include="..\komiic\komiic.csproj"/>-->
-      <ProjectReference Include="..\Komiic\Komiic.csproj" />
+        <ProjectReference Include="..\Komiic\Komiic.csproj"/>
     </ItemGroup>
 </Project>

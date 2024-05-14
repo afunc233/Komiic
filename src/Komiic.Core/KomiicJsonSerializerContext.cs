@@ -39,7 +39,15 @@ namespace Komiic.Core;
 
 
 [JsonSerializable(typeof(QueryData))]
+
 // [JsonSerializable(typeof(QueryData<>))]
+[JsonSerializable(typeof(QueryData<PaginationVariables>))]
+[JsonSerializable(typeof(QueryData<ComicIdVariables>))]
+[JsonSerializable(typeof(QueryData<ComicIdsVariables>))]
+[JsonSerializable(typeof(QueryData<ChapterIdVariables>))]
+[JsonSerializable(typeof(QueryData<CategoryIdPaginationVariables>))]
+[JsonSerializable(typeof(QueryData<AuthorIdVariables>))]
+
 [JsonSerializable(typeof(Pagination))]
 [JsonSerializable(typeof(PaginationVariables))]
 [JsonSerializable(typeof(ComicIdVariables))]
