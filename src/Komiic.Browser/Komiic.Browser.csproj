@@ -2,9 +2,16 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>$(MainTargetFramework)-browser</TargetFramework>
+        <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+        <WasmMainJSPath>wwwroot\main.js</WasmMainJSPath>
+        <WasmBuildNative>true</WasmBuildNative>
+<!--        <MicrosoftNetCoreAppRuntimePackDir>？？？</MicrosoftNetCoreAppRuntimePackDir>-->
     </PropertyGroup>
 
-
+    <ItemGroup>
+        <WasmExtraFilesToDeploy Include="wwwroot\**"/>
+    </ItemGroup>
+    
     <ItemGroup>
         <PackageReference Include="Avalonia.Browser" Version="$(AvaloniaVersion)"/>
     </ItemGroup>

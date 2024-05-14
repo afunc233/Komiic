@@ -28,11 +28,19 @@ public class App : Application
     {
         AvaloniaXamlLoader.Load(this);
 
-        string cacheFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(Komiic),
-            "Cache", "Images");
-        AsyncImageLoader.ImageLoader.AsyncImageLoader =
-            AsyncImageLoader.ImageBrushLoader.AsyncImageLoader = new DiskCachedWebImageLoader(cacheFolder);
+        if (OperatingSystem.IsBrowser())
+        {
+            AsyncImageLoader.ImageLoader.AsyncImageLoader =
+                AsyncImageLoader.ImageBrushLoader.AsyncImageLoader = new RamCachedWebImageLoader();
+        }
+        else
+        {
+            string cacheFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(Komiic),
+                "Cache", "Images");
+            AsyncImageLoader.ImageLoader.AsyncImageLoader =
+                AsyncImageLoader.ImageBrushLoader.AsyncImageLoader = new DiskCachedWebImageLoader(cacheFolder);
+        }
         _logger?.Debug(nameof(Initialize));
     }
 
