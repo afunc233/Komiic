@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,27 +8,27 @@ using Komiic.Contracts.Services;
 using Komiic.Core.Contracts.Model;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
 public partial class MainPageViewModel(
     IMessenger messenger,
     IRecentUpdateDataService recentUpdateDataService,
-    IHotComicsDataService hotComicsDataService) : ViewModelBase, IPageViewModel, IOpenMangaViewModel
+    IHotComicsDataService hotComicsDataService,
+    ILogger<MainPageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    private int _recentUpdatePageIndex = 0;
-    private int _hotComicsPageIndex = 0;
+    private int _recentUpdatePageIndex;
+    private int _hotComicsPageIndex;
 
     [ObservableProperty] private bool _isLoading;
 
     [NotifyCanExecuteChangedFor(nameof(OpenMangaCommand))] [ObservableProperty]
     private bool _hasMore = true;
 
-    public NavBarType NavBarType => NavBarType.Main;
+    public override NavBarType NavBarType => NavBarType.Main;
 
-    public string Title => "首页";
-
-    public ViewModelBase? Header => null;
+    public override string Title => "首页";
 
     public ObservableCollection<MangaInfo> RecentUpdateMangaInfos { get; } = [];
 
@@ -46,39 +47,40 @@ public partial class MainPageViewModel(
     [RelayCommand]
     private async Task LoadMoreRecentUpdate()
     {
-        var dataList = await recentUpdateDataService.LoadMore(_recentUpdatePageIndex++);
-        if (dataList.Count == 0)
+        await SafeLoadData(async () =>
         {
-            HasMore = false;
-        }
-        else
-        {
-            dataList.ForEach(RecentUpdateMangaInfos.Add);
-        }
+            var dataList = await recentUpdateDataService.LoadMore(_recentUpdatePageIndex++);
+            if (dataList.Count == 0)
+            {
+                HasMore = false;
+            }
+            else
+            {
+                dataList.ForEach(RecentUpdateMangaInfos.Add);
+            }
+        });
     }
 
     [RelayCommand]
     private async Task LoadMoreHotComics()
     {
-        var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++);
-        if (dataList.Count == 0)
+        await SafeLoadData(async () =>
         {
-            HasMore = false;
-        }
-        else
-        {
-            dataList.ForEach(HotComicsMangaInfos.Add);
-        }
+            var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++);
+            if (dataList.Count == 0)
+            {
+                HasMore = false;
+            }
+            else
+            {
+                dataList.ForEach(HotComicsMangaInfos.Add);
+            }
+        });
     }
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
         await LoadMoreRecentUpdate();
         await LoadMoreHotComics();
-    }
-
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
     }
 }

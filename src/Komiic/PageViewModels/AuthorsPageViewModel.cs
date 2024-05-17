@@ -7,13 +7,14 @@ using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public partial class AuthorsPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi)
-    : ViewModelBase, IPageViewModel, IOpenAuthorViewModel
+public partial class AuthorsPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,ILogger<AuthorsPageViewModel> logger)
+    : AbsPageViewModel(logger), IOpenAuthorViewModel
 {
-    private int _pageIndex = 0;
+    private int _pageIndex;
 
     [NotifyCanExecuteChangedFor(nameof(LoadAllAuthorsCommand))] [ObservableProperty]
     private bool _hasMore = true;
@@ -23,28 +24,29 @@ public partial class AuthorsPageViewModel(IMessenger messenger, IKomiicQueryApi 
     [RelayCommand(CanExecute = nameof(HasMore))]
     private async Task LoadAllAuthors()
     {
-        var authorsData = await komiicQueryApi.GetAllAuthors(QueryDataEnum.Authors.GetQueryDataWithVariables(
-            new PaginationVariables()
-            {
-                Pagination = new Pagination()
+        await SafeLoadData(async () =>
+        {
+            var authorsData = await komiicQueryApi.GetAllAuthors(QueryDataEnum.Authors.GetQueryDataWithVariables(
+                new PaginationVariables()
                 {
-                    Limit = 50,
-                    Offset = (_pageIndex++) * 50,
-                    OrderBy = "DATE_UPDATED"
-                }
-            }));
+                    Pagination = new Pagination()
+                    {
+                        Limit = 50,
+                        Offset = (_pageIndex++) * 50,
+                        OrderBy = "DATE_UPDATED"
+                    }
+                }));
 
-        if (authorsData is { Data.AuthorList.Count: > 0 })
-        {
-            authorsData.Data.AuthorList.ForEach(AllAuthors.Add);
-            HasMore = true;
-        }
-        else
-        {
-            HasMore = false;
-        }
-
-        await Task.CompletedTask;
+            if (authorsData is { Data.AuthorList.Count: > 0 })
+            {
+                authorsData.Data.AuthorList.ForEach(AllAuthors.Add);
+                HasMore = true;
+            }
+            else
+            {
+                HasMore = false;
+            }
+        });
     }
 
 
@@ -55,19 +57,12 @@ public partial class AuthorsPageViewModel(IMessenger messenger, IKomiicQueryApi 
         messenger.Send(new OpenAuthorMessage(author));
     }
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
     }
 
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
-    }
+    public override NavBarType NavBarType => NavBarType.Authors;
 
-    public NavBarType NavBarType => NavBarType.Authors;
-
-    public string Title => "作者列表";
-    public ViewModelBase? Header => null;
-    public bool IsLoading { get; }
+    public override string Title => "作者列表";
 }

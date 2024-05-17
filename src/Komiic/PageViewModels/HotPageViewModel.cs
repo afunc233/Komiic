@@ -8,22 +8,22 @@ using Komiic.Core.Contracts.Model;
 using Komiic.Data;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataService hotComicsDataService)
-    : ViewModelBase, IPageViewModel, IOpenMangaViewModel
+public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataService hotComicsDataService,ILogger<HotPageViewModel> logger)
+    : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    private int _hotComicsPageIndex = 0;
-    private int _monthHotComicsPageIndex = 0;
-    public NavBarType NavBarType => NavBarType.Hot;
-    public string Title => "最热";
+    private int _hotComicsPageIndex;
+    private int _monthHotComicsPageIndex;
+    public override NavBarType NavBarType => NavBarType.Hot;
+    public override string Title => "最热";
     public ViewModelBase? Header => null;
 
     [ObservableProperty] private bool _isLoading;
 
     [ObservableProperty] private bool _hasMore = true;
-
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
@@ -49,20 +49,36 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
     [RelayCommand]
     private async Task LoadMoreMonthHotComics()
     {
-        var dataList = await hotComicsDataService.LoadMore(_monthHotComicsPageIndex++, "MONTH_VIEWS", State);
-        if (dataList.Count == 0)
+        await SafeLoadData(async () =>
         {
-            HasMore = false;
-        }
-        else
-        {
-            dataList.ForEach(MonthHotComicsMangaInfos.Add);
-        }
+            var dataList = await hotComicsDataService.LoadMore(_monthHotComicsPageIndex++, "MONTH_VIEWS", State);
+            if (dataList.Count == 0)
+            {
+                HasMore = false;
+            }
+            else
+            {
+                dataList.ForEach(MonthHotComicsMangaInfos.Add);
+            }
+        });
     }
 
     [RelayCommand]
     private async Task LoadMoreHotComics()
     {
+        await SafeLoadData(async () =>
+        {
+            var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++, "VIEWS", State);
+            if (dataList.Count == 0)
+            {
+                HasMore = false;
+            }
+            else
+            {
+                dataList.ForEach(HotComicsMangaInfos.Add);
+            }
+        });
+
         var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++, "VIEWS", State);
         if (dataList.Count == 0)
         {
@@ -82,14 +98,9 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
         messenger.Send(new OpenMangaMessage(mangaInfo));
     }
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
         await LoadMoreHotComics();
         await LoadMoreMonthHotComics();
-    }
-
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
     }
 }

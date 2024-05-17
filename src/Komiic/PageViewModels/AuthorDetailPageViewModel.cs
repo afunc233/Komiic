@@ -7,11 +7,15 @@ using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public partial class AuthorDetailPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi)
-    : ViewModelBase, IPageViewModel, IOpenMangaViewModel
+public partial class AuthorDetailPageViewModel(
+    IMessenger messenger,
+    IKomiicQueryApi komiicQueryApi,
+    ILogger<AuthorDetailPageViewModel> logger)
+    : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     [ObservableProperty] private Author _author = null!;
 
@@ -30,33 +34,27 @@ public partial class AuthorDetailPageViewModel(IMessenger messenger, IKomiicQuer
     [RelayCommand(CanExecute = nameof(HasMore), AllowConcurrentExecutions = false)]
     private async Task LoadMangaInfoByAuthor()
     {
-        
         HasMore = false;
-        var comicsByAuthorData = await komiicQueryApi.GetComicsByAuthor(
-            QueryDataEnum.ComicsByAuthor.GetQueryDataWithVariables(
-                new AuthorIdVariables()
-                {
-                    AuthorId = Author.id,
-                }));
-        if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
+        await SafeLoadData(async () =>
         {
-            comicsByAuthorData.Data.ComicsByAuthorList.ForEach(MangaInfos.Add);
-        }
+            var comicsByAuthorData = await komiicQueryApi.GetComicsByAuthor(
+                QueryDataEnum.ComicsByAuthor.GetQueryDataWithVariables(
+                    new AuthorIdVariables()
+                    {
+                        AuthorId = Author.id,
+                    }));
+            if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
+            {
+                comicsByAuthorData.Data.ComicsByAuthorList.ForEach(MangaInfos.Add);
+            }
+        });
     }
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
     }
 
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
-    }
-
-    public NavBarType NavBarType => NavBarType.AuthorDetail;
-    public string Title => "作者详情";
-    public ViewModelBase? Header { get; }
-
-    public bool IsLoading { get; }
+    public override NavBarType NavBarType => NavBarType.AuthorDetail;
+    public override string Title => "作者详情";
 }

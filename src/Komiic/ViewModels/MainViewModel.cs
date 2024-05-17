@@ -127,23 +127,41 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
     private NavBar? _selectedNavBar;
 
     [ObservableProperty] private IPageViewModel? _selectedContent;
+    [ObservableProperty] private bool _isTransitionReversed;
 
     private readonly IServiceProvider _serviceProvider;
 
-    private readonly IViewModelBase? _header;
-    public IViewModelBase? Header => SelectedContent?.Header ?? _header;
+    public IViewModelBase? Header { get; }
 
-    public MainViewModel(IServiceProvider serviceProvider) :
-        base(serviceProvider.GetRequiredService<IMessenger>())
+    partial void OnSelectedContentChanging(IPageViewModel? oldValue, IPageViewModel? newValue)
     {
-        this._serviceProvider = serviceProvider;
+        if (oldValue == null || newValue == null)
+        {
+            return;
+        }
 
-        _header = serviceProvider.GetRequiredService<HeaderViewModel>();
+        var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select((value, index) => (value.NavType, index)).ToList();
+
+        (NavBarType NavBarType, int Index ) indexOld = allNavBars.FirstOrDefault(x => x.NavType == oldValue.NavBarType);
+        (NavBarType NavBarType, int Index ) indexNew = allNavBars.FirstOrDefault(x => x.NavType == newValue.NavBarType);
+
+        IsTransitionReversed = indexOld.Index > indexNew.Index;
+    }
+
+
+    public MainViewModel(IServiceProvider serviceProvider, HeaderViewModel headerViewModel, IMessenger messenger) :
+        base(messenger)
+    {
+        _serviceProvider = serviceProvider;
+
+        Header = headerViewModel;
+
         SelectedNavBar = MenuItemsSource.FirstOrDefault();
 #pragma warning disable IL2026
         IsActive = true;
 #pragma warning restore IL2026
     }
+
 
     public void Receive(OpenMangaMessage message)
     {

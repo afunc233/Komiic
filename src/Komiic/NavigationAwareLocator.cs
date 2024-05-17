@@ -36,14 +36,14 @@ public class NavigationAwareLocator : IDataTemplate
         
         control.Loaded -= ControlOnLoaded;
         control.Unloaded -= ControlOnUnloaded;
-        await navigationAware.OnNavigatedFrom();
+        await navigationAware.NavigatedFrom();
     }
 
     private async void ControlOnLoaded(object? sender, RoutedEventArgs e)
     {
         if (sender is Control { DataContext: INavigationAware navigationAware })
         {
-            await navigationAware.OnNavigatedTo();
+            await navigationAware.NavigatedTo();
         }
     }
 

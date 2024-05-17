@@ -23,7 +23,7 @@ public partial class HeaderView : UserControl
 
         if (DataContext is HeaderViewModel headerViewModel)
         {
-           await headerViewModel.LoadData();
+            await headerViewModel.LoadData();
 #pragma warning disable IL2026
             headerViewModel.IsActive = true;
 #pragma warning restore IL2026
@@ -38,7 +38,7 @@ public partial class HeaderView : UserControl
         }
 
         if (sender is not ToggleButton toggleButton) return;
-        
+
         if (toggleButton.IsChecked == true)
         {
             Application.Current.RequestedThemeVariant = ThemeVariant.Light;

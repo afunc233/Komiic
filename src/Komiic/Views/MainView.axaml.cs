@@ -8,7 +8,7 @@ public partial class MainView : UserControl
     /// 绑定用
     /// </summary>
     public SplitView MainSplitView => SplitView;
-    
+
     public MainView()
     {
         InitializeComponent();

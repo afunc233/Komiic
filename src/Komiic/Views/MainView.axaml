@@ -43,6 +43,27 @@
                 <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
             </DockPanel>
         </SplitView.Pane>
-        <TransitioningContentControl Content="{Binding SelectedContent}" />
+        <Panel>
+            <TransitioningContentControl
+                Content="{Binding SelectedContent}"
+                HorizontalAlignment="Stretch"
+                IsTransitionReversed="{Binding IsTransitionReversed}"
+                VerticalAlignment="Stretch">
+                <TransitioningContentControl.PageTransition>
+                    <CompositePageTransition>
+                        <CompositePageTransition.PageTransitions>
+                            <PageSlide Duration="0:0:2" Orientation="Vertical" />
+                        </CompositePageTransition.PageTransitions>
+                    </CompositePageTransition>
+                </TransitioningContentControl.PageTransition>
+            </TransitioningContentControl>
+            <ProgressBar
+                HorizontalAlignment="Center"
+                IsHitTestVisible="False"
+                IsIndeterminate="{Binding SelectedContent.IsLoading, FallbackValue=False}"
+                IsVisible="{Binding SelectedContent.IsLoading, FallbackValue=False}"
+                VerticalAlignment="Center"
+                Width="200" />
+        </Panel>
     </SplitView>
 </UserControl>

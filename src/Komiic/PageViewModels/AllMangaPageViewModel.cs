@@ -10,12 +10,12 @@ using Komiic.Core.Contracts.Model;
 using Komiic.Data;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-
 public partial class AllMangaPageViewModel
-    : ViewModelBase, IPageViewModel, IOpenMangaViewModel
+    : AbsPageViewModel, IOpenMangaViewModel
 {
     [NotifyCanExecuteChangedFor(nameof(LoadCategoryMangeCommand))] [ObservableProperty]
     private bool _hasMore = true;
@@ -49,7 +49,8 @@ public partial class AllMangaPageViewModel
     private int _pageIndex = 0;
 
 
-    public AllMangaPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi)
+    public AllMangaPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,
+        ILogger<AllMangaPageViewModel> logger) : base(logger)
     {
         _komiicQueryApi = komiicQueryApi;
         _messenger = messenger;
@@ -62,6 +63,7 @@ public partial class AllMangaPageViewModel
         {
             return;
         }
+
         await LoadMange(true);
     }
 
@@ -71,6 +73,7 @@ public partial class AllMangaPageViewModel
         {
             return;
         }
+
         await LoadMange(true);
     }
 
@@ -84,28 +87,32 @@ public partial class AllMangaPageViewModel
         await LoadMange(true);
     }
 
-
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
-        var allCategoryData = await _komiicQueryApi.GetAllCategory(QueryDataEnum.AllCategory.GetQueryData());
-        if (allCategoryData is { Data.AllCategories.Count: > 0 })
+        await SafeLoadData(async () =>
         {
-            allCategoryData.Data.AllCategories.ForEach(AllCategories.Add);
-        }
+            var allCategoryData = await _komiicQueryApi.GetAllCategory(QueryDataEnum.AllCategory.GetQueryData());
+            if (allCategoryData is { Data.AllCategories.Count: > 0 })
+            {
+                allCategoryData.Data.AllCategories.ForEach(AllCategories.Add);
+            }
+        });
     }
 
 
     [RelayCommand(CanExecute = nameof(HasMore))]
     private async Task LoadCategoryMange()
     {
-        await LoadMange();
+        await SafeLoadData(async ()=>await LoadMange());
     }
+
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
     {
         await Task.CompletedTask;
         _messenger.Send(new OpenMangaMessage(mangaInfo));
     }
+
     private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 
@@ -153,17 +160,7 @@ public partial class AllMangaPageViewModel
         }
     }
 
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
-    }
+    public override NavBarType NavBarType => NavBarType.AllManga;
 
-    public NavBarType NavBarType => NavBarType.AllManga;
-
-    public string Title => "全部漫画";
-    public ViewModelBase? Header { get; }
-
-    public bool IsLoading { get; }
-
-
+    public override string Title => "全部漫画";
 }

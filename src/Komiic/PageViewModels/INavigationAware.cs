@@ -4,7 +4,7 @@ namespace Komiic.PageViewModels;
 
 public interface INavigationAware
 {
-    Task OnNavigatedTo(object? parameter = null);
+    Task NavigatedTo();
 
-    Task OnNavigatedFrom();
+    Task NavigatedFrom();
 }

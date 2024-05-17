@@ -15,17 +15,14 @@ namespace Komiic.PageViewModels;
 public partial class RecentUpdatePageViewModel(
     IMessenger messenger,
     IRecentUpdateDataService recentUpdateDataService,
-    ILogger<RecentUpdatePageViewModel> logger) : ViewModelBase, IPageViewModel, IOpenMangaViewModel
+    ILogger<RecentUpdatePageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    private int _recentUpdatePageIndex = 0;
+    private int _recentUpdatePageIndex;
 
-    public NavBarType NavBarType => NavBarType.RecentUpdate;
-    public string Title => "最近更新";
-    public ViewModelBase? Header { get; } = null;
-
+    public override NavBarType NavBarType => NavBarType.RecentUpdate;
+    public override string Title => "最近更新";
+    
     [ObservableProperty] private bool _hasMore = true;
-
-    [ObservableProperty] private bool _isLoading;
 
     public ObservableCollection<MangaInfo> RecentUpdateMangaInfos { get; } = [];
 
@@ -39,37 +36,22 @@ public partial class RecentUpdatePageViewModel(
     [RelayCommand]
     private async Task LoadMoreRecentUpdate()
     {
-        var dataList = await recentUpdateDataService.LoadMore(_recentUpdatePageIndex++);
-        if (dataList.Count == 0)
+        await SafeLoadData(async () =>
         {
-            HasMore = false;
-        }
-        else
-        {
-            dataList.ForEach(RecentUpdateMangaInfos.Add);
-        }
+            var dataList = await recentUpdateDataService.LoadMore(_recentUpdatePageIndex++);
+            if (dataList.Count == 0)
+            {
+                HasMore = false;
+            }
+            else
+            {
+                dataList.ForEach(RecentUpdateMangaInfos.Add);
+            }
+        });
     }
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override Task OnNavigatedTo()
     {
-        await Task.CompletedTask;
-        IsLoading = true;
-        try
-        {
-            await LoadMoreRecentUpdate();
-        }
-        catch (Exception e)
-        {
-            logger.LogError("LoadMoreRecentUpdate Error! {e.Message}:{e.StackTrace}",e.Message,e.StackTrace);
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
+        return LoadMoreRecentUpdate();
     }
 }

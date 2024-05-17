@@ -18,13 +18,20 @@ public partial class HeaderViewModel(IMessenger messenger, IKomiicAccountApi kom
 
     public async Task LoadData()
     {
-        var getImageLimitData = await komiicQueryApi.GetImageLimit(QueryDataEnum.GetImageLimit.GetQueryData());
-        if (getImageLimitData is { Data: not null })
+        try
         {
-            ImageLimit = getImageLimitData.Data.ImageLimit;
+            var getImageLimitData = await komiicQueryApi.GetImageLimit(QueryDataEnum.GetImageLimit.GetQueryData());
+            if (getImageLimitData is { Data: not null })
+            {
+                ImageLimit = getImageLimitData.Data.ImageLimit;
+            }
+        }
+        catch
+        {
+            // ignored
         }
     }
-    
+
     private Task? _loadDataTask;
 
     public async void Receive(LoadMangeImageDataMessage message)

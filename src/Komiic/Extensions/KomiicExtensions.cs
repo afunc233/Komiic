@@ -115,17 +115,23 @@ public static class KomiicExtensions
         services.AddRefitClient<IKomiicQueryApi>(refitSettings).ConfigureHttpClient(client =>
         {
             client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
+            client.Timeout = TimeSpan.FromSeconds(10);
         });
 
         // 账户相关 Api
         services.AddRefitClient<IKomiicAccountApi>(refitSettings).ConfigureHttpClient(client =>
         {
             client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
+            client.Timeout = TimeSpan.FromSeconds(10);
         });
 
         // Komiic http 给图片加载用 IHttpClientFactory 
         services.AddHttpClient(KomiicConst.Komiic,
-            client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); });
+            client =>
+            {
+                client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
 
         // 配置 HttpClientFactory
         services.ConfigureAll<HttpClientFactoryOptions>(options =>

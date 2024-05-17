@@ -40,6 +40,10 @@
         
         <!-- Behaviors -->
         <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0-build20240312-01"/>
+
+        <!-- HeroIcons -->
+        <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2" />
+        
     </ItemGroup>
 
 

@@ -7,15 +7,15 @@ using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
 using Komiic.Data;
 using Komiic.Messages;
-using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
 public partial class MangaViewerPageViewModel(
     IKomiicQueryApi komiicQueryApi,
     IMangeImageLoader imageLoader,
-    IMessenger messenger)
-    : ViewModelBase, IPageViewModel
+    IMessenger messenger,ILogger<MangaViewerPageViewModel> logger)
+    : AbsPageViewModel(logger)
 {
     [ObservableProperty] private MangaInfo _mangaInfo = null!;
 
@@ -26,33 +26,34 @@ public partial class MangaViewerPageViewModel(
     [ObservableProperty] private IMangeImageLoader _imageLoader = imageLoader;
     public ObservableCollection<MangeImageData> ImagesByChapterList { get; } = [];
 
-    public NavBarType NavBarType => NavBarType.MangaViewer;
-    public string Title => "";
-    public ViewModelBase? Header { get; }
+    public override NavBarType NavBarType => NavBarType.MangaViewer;
+    public override string Title => "";
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
-
         ImageLoader.ImageLoaded -= ImageLoaderOnImageLoaded;
         ImageLoader.ImageLoaded += ImageLoaderOnImageLoaded;
-        if (Chapter != null)
+        await SafeLoadData(async () =>
         {
-            var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(
-                QueryDataEnum.ImagesByChapterId.GetQueryDataWithVariables(
-                    new ChapterIdVariables()
-                    {
-                        ChapterId = Chapter.id
-                    }));
-            if (imagesByChapterIdData is { Data: not null })
+            if (Chapter != null)
             {
-                foreach (var imagesByChapterId in imagesByChapterIdData.Data.ImagesByChapterIdList)
+                var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(
+                    QueryDataEnum.ImagesByChapterId.GetQueryDataWithVariables(
+                        new ChapterIdVariables()
+                        {
+                            ChapterId = Chapter.id
+                        }));
+                if (imagesByChapterIdData is { Data: not null })
                 {
-                    ImagesByChapterList.Add(new MangeImageData(MangaInfo, Chapter, imagesByChapterId));
-                    await Task.Delay(1000);
+                    foreach (var imagesByChapterId in imagesByChapterIdData.Data.ImagesByChapterIdList)
+                    {
+                        ImagesByChapterList.Add(new MangeImageData(MangaInfo, Chapter, imagesByChapterId));
+                        await Task.Delay(1000);
+                    }
                 }
             }
-        }
+        });
     }
 
     private void ImageLoaderOnImageLoaded(object? sender, MangeImageData e)
@@ -60,7 +61,7 @@ public partial class MangaViewerPageViewModel(
         messenger.Send(new LoadMangeImageDataMessage(e));
     }
 
-    public async Task OnNavigatedFrom()
+    protected override async Task OnNavigatedFrom()
     {
         ImageLoader.ImageLoaded -= ImageLoaderOnImageLoaded;
         await Task.CompletedTask;

@@ -9,6 +9,7 @@ using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
@@ -19,14 +20,10 @@ public class GroupChaptersByComicId
     public List<ChaptersByComicId> Chapters { get; init; } = null!;
 }
 
-public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi)
-    : ViewModelBase, IPageViewModel, IOpenMangaViewModel
+public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,ILogger<MangeDetailPageViewModel> logger)
+    : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    [ObservableProperty] private string _title = "漫画详情";
-
-    [ObservableProperty] private ViewModelBase? _header;
-
-    [ObservableProperty] private bool _isLoading;
+    public override string Title =>"漫画详情";
 
     [ObservableProperty] private MangaInfo _mangaInfo = null!;
     [ObservableProperty] private ObservableCollection<MangaInfo> _recommendMangaInfoList = new();
@@ -51,7 +48,7 @@ public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQuery
         messenger.Send(new OpenMangaViewerMessage(MangaInfo, chaptersByComicId));
     }
 
-    public async Task OnNavigatedTo(object? parameter = null)
+    protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
 
@@ -108,10 +105,5 @@ public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQuery
         }
     }
 
-    public async Task OnNavigatedFrom()
-    {
-        await Task.CompletedTask;
-    }
-
-    public NavBarType NavBarType => NavBarType.MangeDetail;
+    public override NavBarType NavBarType => NavBarType.MangeDetail;
 }
