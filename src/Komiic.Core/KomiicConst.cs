@@ -4,6 +4,10 @@ public static class KomiicConst
 {
     public const string Komiic = nameof(Komiic);
     
+    public const string KomiicToken = nameof(KomiicToken);
+    
+    public const string KomiicCookie = nameof(KomiicCookie);
+    
     public const string KomiicApiUrl = "https://komiic.com/";
     
     public const string EnableCacheHeader = nameof(EnableCacheHeader);
@@ -23,5 +27,9 @@ public static class KomiicConst
     
     internal const string Second_30 = "00:00:30";
     
-    internal const string Second_10 = "00:00:30";
+    internal const string Second_10 = "00:00:10";
+    
+    internal const string Second_5 = "00:00:5";
+    
+    internal const string DisableCache = "";
 }

@@ -14,9 +14,8 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="Styles/KomiicStyles.axaml" />
+        <StyleInclude Source="avares://DialogHost.Avalonia/Styles.xaml" />
     </Application.Styles>
-    <Application.Resources>
-
-    </Application.Resources>
+    <Application.Resources />
 
 </Application>

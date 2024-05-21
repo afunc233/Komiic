@@ -4,7 +4,13 @@ namespace Komiic.Contracts.Services;
 
 public interface ITokenService
 {
-    public Task<string?> GetToken();
+    Task<string?> GetToken();
     
-    public void SetToken(string token);
+    Task SetToken(string token,bool save = true);
+    
+    void ClearToken();
+    
+    Task<bool> IsTokenValid();
+    
+    Task LoadToken();
 }

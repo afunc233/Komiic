@@ -49,7 +49,6 @@ public partial class MangaViewerPageViewModel(
                     foreach (var imagesByChapterId in imagesByChapterIdData.Data.ImagesByChapterIdList)
                     {
                         ImagesByChapterList.Add(new MangeImageData(MangaInfo, Chapter, imagesByChapterId));
-                        await Task.Delay(1000);
                     }
                 }
             }

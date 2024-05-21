@@ -7,6 +7,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:asyncLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+    xmlns:komiic="clr-namespace:Komiic"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Komiic.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -26,44 +28,48 @@
             </StackPanel>
         </DataTemplate>
     </UserControl.DataTemplates>
-    <SplitView
-        CompactPaneLength="{OnFormFactor Default=48,
-                                         Mobile=48}"
-        DisplayMode="CompactInline"
-        IsPaneOpen="{OnFormFactor Default=True,
-                                  Mobile=False}"
-        OpenPaneLength="160"
-        x:Name="SplitView">
-        <SplitView.Pane>
-            <DockPanel>
-                <ListBox
-                    DockPanel.Dock="Bottom"
-                    ItemsSource="{Binding FooterMenuItemsSource}"
-                    SelectedItem="{Binding SelectedNavBar}" />
-                <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
-            </DockPanel>
-        </SplitView.Pane>
-        <Panel>
-            <TransitioningContentControl
-                Content="{Binding SelectedContent}"
-                HorizontalAlignment="Stretch"
-                IsTransitionReversed="{Binding IsTransitionReversed}"
-                VerticalAlignment="Stretch">
-                <TransitioningContentControl.PageTransition>
-                    <CompositePageTransition>
-                        <CompositePageTransition.PageTransitions>
-                            <PageSlide Duration="0:0:2" Orientation="Vertical" />
-                        </CompositePageTransition.PageTransitions>
-                    </CompositePageTransition>
-                </TransitioningContentControl.PageTransition>
-            </TransitioningContentControl>
-            <ProgressBar
-                HorizontalAlignment="Center"
-                IsHitTestVisible="False"
-                IsIndeterminate="{Binding SelectedContent.IsLoading, FallbackValue=False}"
-                IsVisible="{Binding SelectedContent.IsLoading, FallbackValue=False}"
-                VerticalAlignment="Center"
-                Width="200" />
-        </Panel>
-    </SplitView>
+    <Panel>
+
+        <SplitView
+            CompactPaneLength="{OnFormFactor Default=48,
+                                             Mobile=48}"
+            DisplayMode="CompactInline"
+            IsPaneOpen="{OnFormFactor Default=True,
+                                      Mobile=False}"
+            OpenPaneLength="160"
+            x:Name="SplitView">
+            <SplitView.Pane>
+                <DockPanel>
+                    <ListBox
+                        DockPanel.Dock="Bottom"
+                        ItemsSource="{Binding FooterMenuItemsSource}"
+                        SelectedItem="{Binding SelectedNavBar}" />
+                    <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
+                </DockPanel>
+            </SplitView.Pane>
+            <Panel>
+                <TransitioningContentControl
+                    Content="{Binding SelectedContent}"
+                    HorizontalAlignment="Stretch"
+                    IsTransitionReversed="{Binding IsTransitionReversed}"
+                    VerticalAlignment="Stretch">
+                    <TransitioningContentControl.PageTransition>
+                        <CompositePageTransition>
+                            <CompositePageTransition.PageTransitions>
+                                <PageSlide Duration="0:0:2" Orientation="Vertical" />
+                            </CompositePageTransition.PageTransitions>
+                        </CompositePageTransition>
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
+                <ProgressBar
+                    HorizontalAlignment="Center"
+                    IsHitTestVisible="False"
+                    IsIndeterminate="{Binding SelectedContent.IsLoading, FallbackValue=False}"
+                    IsVisible="{Binding SelectedContent.IsLoading, FallbackValue=False}"
+                    VerticalAlignment="Center"
+                    Width="200" />
+            </Panel>
+        </SplitView>
+        <dialogHostAvalonia:DialogHost CloseOnClickAway="True" x:Name="MainDialogHost" />
+    </Panel>
 </UserControl>

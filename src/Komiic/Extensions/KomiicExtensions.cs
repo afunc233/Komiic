@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts;
 using Komiic.Contracts.Services;
 using Komiic.Core;
 using Komiic.Core.Contracts.Api;
@@ -31,13 +32,24 @@ public static class KomiicExtensions
         // 注入图片加载器
         services.AddImageLoader();
 
+        // 启动时读取Token信息
+        services.AddSingleton<IActivationHandler, LoadTokenActivationHandler>();
+        
+        // 启动时读取账号信息
+        services.AddSingleton<IActivationHandler, LoadAccountActivationHandler>();
+        
         // 注入后台服务
         services.AddHostedService<KomiicHostedService>();
+        
+        // 账户信息
+        services.AddSingleton<IAccountService, AccountService>();
 
         // 注入数据服务
         services.AddSingleton<IRecentUpdateDataService, RecentUpdateDataService>();
         services.AddSingleton<IHotComicsDataService, HotComicsDataService>();
 
+        
+        
         // 注入页面
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<RecentUpdatePageViewModel>();
@@ -51,6 +63,7 @@ public static class KomiicExtensions
 
         services.AddSingleton<HeaderViewModel>();
         services.AddSingleton<MainViewModel>();
+        services.AddSingleton<LoginViewModel>();
     }
 
     private static void AddImageLoader(this IServiceCollection services)
@@ -85,6 +98,9 @@ public static class KomiicExtensions
         
         if (!OperatingSystem.IsBrowser())
         {
+            services.AddSingleton<ICookieService, CookieService>();
+            
+            services.AddSingleton<IActivationHandler, LoadCookiesActivationHandler>();
             // 注入 cookie
             services.AddSingleton<CookieContainer>();
         }
@@ -102,11 +118,11 @@ public static class KomiicExtensions
         // http 缓存
         if (OperatingSystem.IsBrowser())
         {
-            services.AddSingleton<IJsonCacheService, MockJsonCacheService>();
+            services.AddSingleton<ICacheService, MockCacheService>();
         }
         else
         {
-            services.AddSingleton<IJsonCacheService, DiskJsonCacheService>();
+            services.AddSingleton<ICacheService, DiskCacheService>();
         }
 
         services.AddScoped<HttpCacheHandler>();

@@ -24,6 +24,8 @@ public class App : Application
     
     private readonly ILogger? _logger = LogManager.GetCurrentClassLogger();
 
+    
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

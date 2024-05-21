@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Komiic.Http;
 
-public class HttpCacheHandler(IJsonCacheService cacheService, ILogger<HttpCacheHandler> logger) : DelegatingHandler
+public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandler> logger) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
@@ -36,15 +36,14 @@ public class HttpCacheHandler(IJsonCacheService cacheService, ILogger<HttpCacheH
                     var key = await (request.Content?.ReadAsStringAsync(cancellationToken) ??
                                      Task.FromResult(string.Empty));
 
-                    var localJsonUrl = cacheService.GetLocalJsonUrl(key, cacheTimeSpan);
+                    var localJson = await cacheService.GetLocalCacheStr(key, cacheTimeSpan);
 
-                    if (!string.IsNullOrWhiteSpace(localJsonUrl))
+                    if (!string.IsNullOrWhiteSpace(localJson))
                     {
-                        var json = await File.ReadAllTextAsync(localJsonUrl, cancellationToken);
                         return new HttpResponseMessage
                         {
                             RequestMessage = request,
-                            Content = new StringContent(json)
+                            Content = new StringContent(localJson)
                         };
                     }
 
@@ -55,7 +54,7 @@ public class HttpCacheHandler(IJsonCacheService cacheService, ILogger<HttpCacheH
                     var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
                     if (!string.IsNullOrWhiteSpace(responseJson))
                     {
-                        await cacheService.SetLocalJson(key, responseJson);
+                        await cacheService.SetLocalCache(key, responseJson);
                     }
 
                     return response;

@@ -50,7 +50,7 @@ internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
             ImageLoaded?.Invoke(this, mangeImageData);
             return bitmap;
         }
-
+        
         return new Bitmap(localUrl);
     }
 }

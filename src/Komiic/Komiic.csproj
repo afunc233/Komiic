@@ -19,6 +19,7 @@
 
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="DialogHost.Avalonia" Version="0.8.0-avalonia11dot1-1" />
 
         <!-- Hosting -->
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-preview.3.24172.9"/>

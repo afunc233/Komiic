@@ -3,7 +3,7 @@ using Refit;
 
 namespace Komiic.Core.Contracts.Api;
 
-[Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Hour_12)]
+[Headers("Authorization: Bearer")]
 public interface IKomiicAccountApi
 {
     #region Login/Logout
@@ -29,7 +29,6 @@ public interface IKomiicAccountApi
     #region RourceLimit
 
     [Post(KomiicConst.QueryUrl)]
-    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Second_10)]
     Task<ResponseData<GetImageLimitData>?> GetImageLimit([Body] QueryData queryData);
 
     #endregion

@@ -21,12 +21,27 @@
         </StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Button Content="搜" />
-            <Button Content="登录" Foreground="Blue" />
-            <TextBlock Text="/" VerticalAlignment="Center" />
-            <HyperlinkButton
-                Content="註冊"
-                Foreground="Blue"
-                NavigateUri="https://komiic.com/register/" />
+            <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNull}}" Orientation="Horizontal">
+                <Button
+                    Command="{Binding OpenLoginCommand}"
+                    Content="登录"
+                    Foreground="Blue" />
+                <TextBlock Text="/" VerticalAlignment="Center" />
+                <HyperlinkButton
+                    Content="註冊"
+                    Foreground="Blue"
+                    NavigateUri="https://komiic.com/register/" />
+            </StackPanel>
+            <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNotNull}}" Orientation="Horizontal">
+                <DropDownButton Content="{Binding AccountData.nickname, FallbackValue='未登入'}">
+                    <DropDownButton.Flyout>
+                        <MenuFlyout Placement="Bottom" ShowMode="Standard">
+                            <MenuItem Header="我的賬戶" />
+                            <MenuItem Command="{Binding LogoutCommand}" Header="登出" />
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+            </StackPanel>
             <ToggleButton
                 Content="日"
                 IsChecked="True"
