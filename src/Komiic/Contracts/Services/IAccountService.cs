@@ -12,9 +12,15 @@ public interface IAccountService
     
     Task LoadAccount();
     
-    Task<GetImageLimitData?> GetImageLimit();
+    ImageLimit? ImageLimit { get;  }
+    
+    event EventHandler ImageLimitChanged;
+    
+    Task LoadImageLimit();
 
     Task Logout();
     
     Task<bool> Login(string username, string password);
+
+    Task<bool> SetNextChapterMode(string mode);
 }

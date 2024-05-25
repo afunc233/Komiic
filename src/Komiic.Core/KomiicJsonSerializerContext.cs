@@ -6,7 +6,7 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(ErrorInfo))]
 [JsonSerializable(typeof(ResponseData))]
 // [JsonSerializable(typeof(ResponseData<>))]
-[JsonSerializable(typeof(LoginResponseData))]
+[JsonSerializable(typeof(TokenResponseData))]
 [JsonSerializable(typeof(AccountData))]
 [JsonSerializable(typeof(Account))]
 [JsonSerializable(typeof(Account))]

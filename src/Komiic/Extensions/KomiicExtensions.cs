@@ -35,6 +35,9 @@ public static class KomiicExtensions
         // 启动时读取Token信息
         services.AddSingleton<IActivationHandler, LoadTokenActivationHandler>();
         
+        // 啓動時刷新授权信息
+        services.AddSingleton<IActivationHandler, RefreshAuthActivationHandler>();
+        
         // 启动时读取账号信息
         services.AddSingleton<IActivationHandler, LoadAccountActivationHandler>();
         
@@ -64,6 +67,7 @@ public static class KomiicExtensions
         services.AddSingleton<HeaderViewModel>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<LoginViewModel>();
+        services.AddSingleton<AccountInfoPageViewModel>();
     }
 
     private static void AddImageLoader(this IServiceCollection services)

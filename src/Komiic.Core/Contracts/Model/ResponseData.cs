@@ -25,7 +25,7 @@ public class ResponseData<T> : ResponseData
 
 #region 账户信息
 
-public class LoginResponseData : ResponseData
+public class TokenResponseData : ResponseData
 {
     [JsonPropertyName("token")] public string? Token { get; set; }
 }
@@ -37,7 +37,6 @@ public class AccountData
 
 public class Account
 {
-
     public string id { get; set; }
     public string email { get; set; }
     public string nickname { get; set; }
@@ -224,8 +223,7 @@ public class ComicByCategoryData
 
 public class AllAuthorsData
 {
-    [JsonPropertyName("authors")]
-    public List<Author> AuthorList { get; set; } = [];
+    [JsonPropertyName("authors")] public List<Author> AuthorList { get; set; } = [];
 }
 
 public class Author
@@ -248,6 +246,26 @@ public class ComicsByAuthorData
 
 #endregion
 
+#region updateProfileImage
+
+public class UpdateProfileImageData
+{
+    [JsonPropertyName("updateProfileImage")]
+    public bool UpdateProfileImage { get; set; }
+}
+
+#endregion
+
+#region SetNextChapterMode
+
+public class SetNextChapterModeData
+{
+    // "setNextChapterMode": true
+    [JsonPropertyName("setNextChapterMode")]
+    public bool SetNextChapterMode { get; set; }
+}
+
+#endregion
 
 // ReSharper restore InconsistentNaming
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。

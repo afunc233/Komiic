@@ -20,32 +20,45 @@ public class AccountService(
     public async Task LoadAccount()
     {
         await Task.CompletedTask;
-        if (await tokenService.IsTokenValid())
+
+        bool? valid = await tokenService.IsTokenValid();
+        
+        if (!valid.HasValue)
         {
-            try
+            return;
+        }
+
+        if (!valid.Value)
+        {
+            await tokenService.RefreshToken();
+        }
+
+        try
+        {
+            var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
+            if (accountData is { Data: not null })
             {
-                var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
-                if (accountData is { Data: not null })
-                {
-                    AccountData = accountData.Data.Account;
-                    AccountChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "LoadAccount error !");
+                AccountData = accountData.Data.Account;
+                AccountChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+        catch (Exception e)
+        {
+            logger.LogError(e, "LoadAccount error !");
+        }
     }
+
+    public ImageLimit? ImageLimit { get; private set; }
+    public event EventHandler? ImageLimitChanged;
 
     public async Task<bool> Login(string username, string password)
     {
         try
         {
-            var accountData = await komiicAccountApi.Login(new LoginData(username, password));
-            if (accountData is { Token: not null })
+            var tokenResponseData = await komiicAccountApi.Login(new LoginData(username, password));
+            if (tokenResponseData is { Token: not null })
             {
-                await tokenService.SetToken(accountData.Token);
+                await tokenService.SetToken(tokenResponseData.Token);
                 await LoadAccount();
                 await cookieService.SaveCookies();
                 return true;
@@ -60,20 +73,22 @@ public class AccountService(
         return false;
     }
 
-    public async Task<GetImageLimitData?> GetImageLimit()
+
+    public async Task LoadImageLimit()
     {
         try
         {
-            var accountData = await komiicAccountApi.GetImageLimit(QueryDataEnum.GetImageLimit.GetQueryData());
-
-            return accountData?.Data;
+            var imageLimitData = await komiicAccountApi.GetImageLimit(QueryDataEnum.GetImageLimit.GetQueryData());
+            if (imageLimitData is { Data.ImageLimit: not null })
+            {
+                ImageLimit = imageLimitData.Data.ImageLimit;
+                ImageLimitChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
         catch (Exception e)
         {
             logger.LogError(e, "GetImageLimit error !");
         }
-
-        return default;
     }
 
     public async Task Logout()
@@ -89,5 +104,29 @@ public class AccountService(
         {
             logger.LogError(e, "Logout error !");
         }
+    }
+
+    public async Task<bool> SetNextChapterMode(string mode)
+    {
+        await Task.CompletedTask;
+        try
+        {
+            var setNextChapterModeData =
+                await komiicAccountApi.SetNextChapterMode(
+                    QueryDataEnum.SetNextChapterMode.GetQueryDataWithVariables(new NextChapterModeVariables
+                    {
+                        NextChapterMode = mode
+                    }));
+            if (setNextChapterModeData is { Data: not null })
+            {
+                return setNextChapterModeData.Data.SetNextChapterMode;
+            }
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "SetNextChapterMode error !");
+        }
+
+        return false;
     }
 }

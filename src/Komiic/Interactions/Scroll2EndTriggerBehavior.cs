@@ -11,7 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Komiic.Interactions;
 
-public class Scroll2EndTriggerBehavior : Trigger
+public class Scroll2EndTriggerBehavior : Behavior
 {
     /// <summary>
     /// Identifies the <seealso cref="Distance2End"/> avalonia property.
@@ -132,12 +132,6 @@ public class Scroll2EndTriggerBehavior : Trigger
                     LoadMoreDataCmd?.Execute(e);
                 }
             }
-
-            var result = Interaction.ExecuteActions(AssociatedObject, Actions, e);
-            if (result.Any(it => it is bool and false))
-            {
-            }
-
             break;
         }
     }

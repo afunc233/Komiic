@@ -34,6 +34,8 @@ public enum QueryDataEnum
     ImagesByChapterId,
     AccountQuery,
     FavoriteNewUpdatedQuery,
+    UpdateProfileImage,
+    SetNextChapterMode,
 }
 
 public static class QueryDataExt
@@ -128,6 +130,16 @@ public static class QueryDataExt
                 //"favoriteNewUpdatedQuery",
                 "query favoriteNewUpdatedQuery {\n  getLatestUpdatedDateInFavorite\n}"
             },
+            {
+                QueryDataEnum.UpdateProfileImage,
+                //"favoriteNewUpdatedQuery",
+                "mutation updateProfileImage($text: String!, $textColor: String!, $backgroundColor: String!) {\n  updateProfileImage(\n    text: $text\n    textColor: $textColor\n    backgroundColor: $backgroundColor\n  )\n}"
+            },
+            {
+                QueryDataEnum.SetNextChapterMode,
+                //"favoriteNewUpdatedQuery",
+                "mutation setNextChapterMode($mode: String!) {\n  setNextChapterMode(mode: $mode)\n}"
+            },
         };
 
     private static string FirstCharToLowerStringBuilder(this QueryDataEnum queryData)
@@ -209,4 +221,21 @@ public class CategoryIdPaginationVariables : PaginationVariables
 public class AuthorIdVariables
 {
     [JsonPropertyName("authorId")] public string AuthorId { get; init; } = null!;
+}
+
+public class UpdateProfileImageVariables
+{
+    //"text": "a",
+    [JsonPropertyName("text")] public string Text { get; set; } = "";
+
+    //"textColor": "#F03F3F",
+    [JsonPropertyName("textColor")] public string TextColor { get; set; } = "";
+
+    //"backgroundColor": "#98C2EB"
+    [JsonPropertyName("backgroundColor")] public string BackgroundColor { get; set; } = "";
+}
+
+public class  NextChapterModeVariables
+{
+    [JsonPropertyName("mode")] public string NextChapterMode { get; set; } = "";
 }

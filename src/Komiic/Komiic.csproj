@@ -44,6 +44,8 @@
 
         <!-- HeroIcons -->
         <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2" />
+        <!-- Jwt -->
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
         
     </ItemGroup>
 

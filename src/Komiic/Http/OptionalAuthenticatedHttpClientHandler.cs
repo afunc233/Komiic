@@ -30,6 +30,10 @@ public class OptionalAuthenticatedHttpClientHandler(
                 request.Headers.Authorization = null;
             }
         }
+        else
+        {
+            request.Headers.Authorization = null;
+        }
 
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }

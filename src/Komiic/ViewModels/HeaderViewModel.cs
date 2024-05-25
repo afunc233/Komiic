@@ -16,6 +16,8 @@ public partial class HeaderViewModel
     private readonly IServiceProvider _serviceProvider;
     private readonly IAccountService _accountService;
 
+    private readonly IMessenger _messenger;
+
     [ObservableProperty] private ImageLimit _imageLimit = new()
     {
         limit = 300,
@@ -28,9 +30,17 @@ public partial class HeaderViewModel
         base(messenger)
     {
         _serviceProvider = serviceProvider;
+        _messenger = messenger;
         _accountService = accountService;
         AccountData = _accountService.AccountData;
         _accountService.AccountChanged += (_, _) => { AccountData = accountService.AccountData; };
+        _accountService.ImageLimitChanged += (_, _) =>
+        {
+            if (accountService.ImageLimit is not null)
+            {
+                ImageLimit = accountService.ImageLimit;
+            }
+        };
     }
 
     [RelayCommand]
@@ -51,22 +61,17 @@ public partial class HeaderViewModel
         await Task.CompletedTask;
         await _accountService.Logout();
     }
-    
+
+    [RelayCommand]
+    private async Task OpenAccountInfo()
+    {
+        _messenger.Send(new OpenAccountInfoMessage(AccountData, ImageLimit));
+        await Task.CompletedTask;
+    }
 
     public async Task LoadData()
     {
-        try
-        {
-            var imageLimitData = await _accountService.GetImageLimit();
-            if (imageLimitData is { ImageLimit: not null })
-            {
-                ImageLimit = imageLimitData.ImageLimit;
-            }
-        }
-        catch
-        {
-            // ignored
-        }
+        await _accountService.LoadImageLimit();
     }
 
     private Task? _loadDataTask;

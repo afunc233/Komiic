@@ -1,0 +1,147 @@
+﻿<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Pages.AccountInfoPage"
+    x:DataType="pageViewModels:AccountInfoPageViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:icon="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
+    xmlns:interactions="clr-namespace:Komiic.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border
+        Classes="BoxShadow"
+        HorizontalAlignment="Center"
+        Margin="0,20,0,0"
+        VerticalAlignment="Top"
+        Width="600">
+        <StackPanel Orientation="Vertical">
+            <TextBlock
+                FontSize="{StaticResource TabItemHeaderFontSize}"
+                HorizontalAlignment="Center"
+                Margin="0,20,0,0"
+                Text="帳號設定" />
+            <StackPanel Margin="10" Orientation="Vertical">
+
+                <StackPanel.Styles>
+                    <Style Selector="StackPanel.AccountInfo">
+                        <Setter Property="Height" Value="50" />
+                        <Setter Property="Orientation" Value="Horizontal" />
+                    </Style>
+
+                    <Style Selector="Button">
+                        <Setter Property="Height" Value="25" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                </StackPanel.Styles>
+                <StackPanel Classes="AccountInfo">
+                    <Border
+                        Background="{Binding AccountData.profileBackgroundColor}"
+                        CornerRadius="25"
+                        Height="{Binding $self.Bounds.Width}"
+                        Width="50">
+                        <Viewbox>
+                            <TextBlock Foreground="{Binding AccountData.profileTextColor}" Text="{Binding AccountData.profileText, FallbackValue='無'}" />
+                        </Viewbox>
+                    </Border>
+                    <Button>
+                        <icon:HeroIcon Kind="Solid" Type="Pencil" />
+                    </Button>
+                </StackPanel>
+                <StackPanel Classes="AccountInfo">
+                    <TextBlock
+                        FontSize="18"
+                        Text="{Binding AccountData.nickname, FallbackValue='無', StringFormat='{}暱稱:{0}'}"
+                        VerticalAlignment="Center" />
+                    <Button>
+                        <icon:HeroIcon Kind="Solid" Type="Pencil" />
+                    </Button>
+                </StackPanel>
+                <StackPanel Classes="AccountInfo">
+                    <TextBlock
+                        FontSize="18"
+                        Text="{Binding AccountData.email, FallbackValue='無', StringFormat='{}Email:{0}'}"
+                        VerticalAlignment="Center" />
+                    <Button>
+                        <icon:HeroIcon Kind="Solid" Type="Pencil" />
+                    </Button>
+                </StackPanel>
+                <TextBlock
+                    FontSize="18"
+                    Text="{Binding AccountData.dateCreated, FallbackValue='無', StringFormat='{}你的賬號創建於:{0}'}"
+                    VerticalAlignment="Center" />
+
+
+                <StackPanel Classes="AccountInfo">
+                    <TextBlock
+                        FontSize="18"
+                        Text="{Binding AccountData.totalDonateAmount, FallbackValue='無', StringFormat='{}已贊助: ${0}'}"
+                        VerticalAlignment="Center" />
+                    <Button>
+                        <icon:HeroIcon Kind="Solid" Type="Trophy" />
+                    </Button>
+                </StackPanel>
+                <TextBlock
+                    FontSize="18"
+                    Text="{Binding AccountData.monthDonateAmount, FallbackValue='無', StringFormat='{}這個月贊助了: ${0}'}"
+                    VerticalAlignment="Center" />
+                <Border
+                    Background="Gray"
+                    Height="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="-3,10"
+                    Opacity="0.8" />
+
+                <TextBlock FontSize="18">
+                    <TextBlock.Inlines>
+                        <Run Text="圖片讀取/上限: " />
+                        <Run FontWeight="Bold" Text="{Binding ImageLimit.usage, FallbackValue='無'}" />
+                        <Run Text="/" />
+                        <Run FontWeight="Bold" Text="{Binding ImageLimit.limit, FallbackValue='無'}" />
+                    </TextBlock.Inlines>
+                </TextBlock>
+
+                <TextBlock FontSize="18" Text="{Binding ImageLimit.resetInSeconds, FallbackValue='無', StringFormat='{}下次重置於:{0:HH:mm:ss}'}" />
+
+                <Border
+                    Background="Gray"
+                    Height="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="-3,10"
+                    Opacity="0.8" />
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="下拉閱讀模式" VerticalAlignment="Center" />
+                    <StackPanel
+                        IsEnabled="{Binding !ToggleNextChapterModeCommand.IsRunning}"
+                        Margin="15,0,0,0"
+                        Orientation="Vertical">
+                        <ToggleButton Content="下拉到底下一話" IsChecked="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=NextChapterMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=SCROLL, FallbackValue=false}">
+                            <Interaction.Behaviors>
+                                <interactions:RadioButtonCheckedBehavior Value="True">
+                                    <InvokeCommandAction Command="{Binding ToggleNextChapterModeCommand}" CommandParameter="SCROLL" />
+                                </interactions:RadioButtonCheckedBehavior>
+                            </Interaction.Behaviors>
+                        </ToggleButton>
+                        <ToggleButton Content="按紐到下一話" IsChecked="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=NextChapterMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=BUTTON, FallbackValue=false}">
+                            <Interaction.Behaviors>
+                                <interactions:RadioButtonCheckedBehavior Value="True">
+                                    <InvokeCommandAction Command="{Binding ToggleNextChapterModeCommand}" CommandParameter="BUTTON" />
+                                </interactions:RadioButtonCheckedBehavior>
+                            </Interaction.Behaviors>
+                        </ToggleButton>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <Button
+                Command="{Binding LoadDataCommand}"
+                Content="刷新"
+                HorizontalAlignment="Right"
+                Margin="0,0,10,10" />
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Komiic.ViewModels;
 
 public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMangaMessage>,
-    IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>
+    IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>,IRecipient<OpenAccountInfoMessage>
 {
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
@@ -185,6 +185,16 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         var viewModel = _serviceProvider.GetRequiredService<AuthorDetailPageViewModel>();
 
         viewModel.Author = message.Author;
+        SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenAccountInfoMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<AccountInfoPageViewModel>();
+
+        viewModel.AccountData = message.AccountData;
+        viewModel.ImageLimit = message.ImageLimit;
+        
         SelectedContent = viewModel;
     }
 }

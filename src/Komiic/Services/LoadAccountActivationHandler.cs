@@ -6,7 +6,7 @@ namespace Komiic.Services;
 
 public class LoadAccountActivationHandler(IAccountService accountService) : IActivationHandler
 {
-    int IActivationHandler.Order => 1;
+    int IActivationHandler.Order => 10;
 
     async Task IActivationHandler.HandleAsync()
     {

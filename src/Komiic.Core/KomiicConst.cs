@@ -16,6 +16,8 @@ public static class KomiicConst
     
     internal  const string LogoutUrl = "/auth/logout";
     
+    internal   const string RefreshAuthUrl = "/auth/refresh";
+    
     internal  const string QueryUrl = "/api/query";
 
     

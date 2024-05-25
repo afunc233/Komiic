@@ -10,7 +10,9 @@ public interface ITokenService
     
     void ClearToken();
     
-    Task<bool> IsTokenValid();
+    Task<bool?> IsTokenValid();
     
     Task LoadToken();
+    
+    Task RefreshToken();
 }

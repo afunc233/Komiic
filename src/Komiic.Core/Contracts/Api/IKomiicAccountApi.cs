@@ -9,11 +9,15 @@ public interface IKomiicAccountApi
     #region Login/Logout
 
     [Post(KomiicConst.LoginUrl)]
-    Task<LoginResponseData> Login([Body] LoginData loginData);
+    Task<TokenResponseData> Login([Body] LoginData loginData);
 
     [Post(KomiicConst.LogoutUrl)]
     Task Logout();
 
+    [Post(KomiicConst.RefreshAuthUrl)]
+    [Headers("Authorization:")]
+    Task<TokenResponseData> RefreshAuth();
+    
     #endregion
 
     #region UserInfo
@@ -30,6 +34,20 @@ public interface IKomiicAccountApi
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<GetImageLimitData>?> GetImageLimit([Body] QueryData queryData);
+
+    #endregion
+
+    #region UpdateProfileImage
+
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<UpdateProfileImageData>> UpdateProfileImage([Body] QueryData<UpdateProfileImageVariables> queryData);
+
+    #endregion
+
+    #region setNextChapterMode
+
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<SetNextChapterModeData>> SetNextChapterMode([Body] QueryData<NextChapterModeVariables> queryData);
 
     #endregion
 }
