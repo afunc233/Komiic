@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Komiic.ViewModels;
 
 public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMangaMessage>,
-    IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>,IRecipient<OpenAccountInfoMessage>
+    IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>, IRecipient<OpenAccountInfoMessage>
 {
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
@@ -89,21 +89,13 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         }
     ];
 
-    public NavBar? SelectedNavBar
+    partial void OnSelectedNavBarChanged(NavBar? value)
     {
-        get => _selectedNavBar;
-        set
+        if (value == null)
         {
-            if (value != null)
-            {
-                SetProperty(ref _selectedNavBar, value);
-                UpdateSelectedContent(value);
-            }
+            return;
         }
-    }
 
-    private void UpdateSelectedContent(NavBar value)
-    {
         switch (value.NavType)
         {
             case NavBarType.Main:
@@ -124,7 +116,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         }
     }
 
-    private NavBar? _selectedNavBar;
+    [ObservableProperty] private NavBar? _selectedNavBar;
 
     [ObservableProperty] private IPageViewModel? _selectedContent;
     [ObservableProperty] private bool _isTransitionReversed;
@@ -133,6 +125,23 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
 
     public IViewModelBase? Header { get; }
 
+    partial void OnSelectedContentChanging(IPageViewModel? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select(it => it.NavType)
+            .ToList();
+        if (allNavBars.Any(it => it == value.NavBarType)) return;
+        
+#pragma warning disable MVVMTK0034
+        _selectedNavBar = null;
+        OnPropertyChanged(nameof(SelectedNavBar));
+#pragma warning restore MVVMTK0034
+    }
+
     partial void OnSelectedContentChanging(IPageViewModel? oldValue, IPageViewModel? newValue)
     {
         if (oldValue == null || newValue == null)
@@ -140,7 +149,8 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             return;
         }
 
-        var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select((value, index) => (value.NavType, index)).ToList();
+        var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select((value, index) => (value.NavType, index))
+            .ToList();
 
         (NavBarType NavBarType, int Index ) indexOld = allNavBars.FirstOrDefault(x => x.NavType == oldValue.NavBarType);
         (NavBarType NavBarType, int Index ) indexNew = allNavBars.FirstOrDefault(x => x.NavType == newValue.NavBarType);
@@ -194,7 +204,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
 
         viewModel.AccountData = message.AccountData;
         viewModel.ImageLimit = message.ImageLimit;
-        
+
         SelectedContent = viewModel;
     }
 }

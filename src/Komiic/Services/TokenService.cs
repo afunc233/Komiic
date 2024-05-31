@@ -5,6 +5,7 @@ using Komiic.Core;
 using Komiic.Core.Contracts.Api;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading;
 
 namespace Komiic.Services;
 
@@ -17,10 +18,13 @@ public class TokenService(
 {
     private string? _token;
 
+    private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
     private readonly JwtSecurityTokenHandler _tokenHandler = new();
-    public Task<string?> GetToken()
+
+    public async Task<string?> GetToken()
     {
-        return Task.FromResult(_token);
+        await RefreshToken();
+        return _token;
     }
 
     public async Task SetToken(string token, bool save = true)
@@ -38,18 +42,17 @@ public class TokenService(
         await cacheService.ClearLocalCache(KomiicConst.KomiicToken);
     }
 
-    public async Task<bool?> IsTokenValid()
+    private bool? IsTokenValid()
     {
         if (string.IsNullOrWhiteSpace(_token))
         {
             return null;
         }
 
-        await Task.CompletedTask;
         try
         {
             var token = _tokenHandler.ReadToken(_token);
-            
+
             if (token is JwtSecurityToken jwtToken)
             {
                 var expires = jwtToken.ValidTo;
@@ -63,7 +66,7 @@ public class TokenService(
         {
             logger.LogError(e, "IsTokenValid error !");
         }
-        
+
         return false;
     }
 
@@ -78,19 +81,20 @@ public class TokenService(
 
     public async Task RefreshToken()
     {
-        var valid = await IsTokenValid();
-        if (!valid.HasValue)
-        {
-            return;
-        }
-
-        if (valid.Value)
-        {
-            return;
-        }
-
         try
         {
+            await _semaphoreSlim.WaitAsync();
+            bool? valid = IsTokenValid();
+            if (!valid.HasValue)
+            {
+                return;
+            }
+
+            if (valid.Value)
+            {
+                return;
+            }
+
             var tokenResponseData = await komiicAccountApi.RefreshAuth();
             if (tokenResponseData is { Token: not null })
             {
@@ -101,6 +105,12 @@ public class TokenService(
         catch (Exception e)
         {
             logger.LogError(e, "RefreshToken error !");
+        }
+        finally
+        {
+            {
+                _semaphoreSlim.Release();
+            }
         }
     }
 }

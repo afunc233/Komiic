@@ -24,9 +24,6 @@ public static class KomiicConst
     
     internal  const string QueryUrl = "/api/query";
 
-    
-    internal const string Hour_12 = "12:00:00";
-    
     internal const string Minute_15 = "00:15:00";
     
     internal const string Minute_5 = "00:05:00";

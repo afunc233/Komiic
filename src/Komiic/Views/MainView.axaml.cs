@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
@@ -7,8 +8,10 @@ using Komiic.Messages;
 
 namespace Komiic.Views;
 
-public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>, IRecipient<CloseDialogMessage<bool>>
+public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>, IRecipient<CloseDialogMessage<bool>>,
+    IRecipient<OpenNotificationMessage>
 {
+    private IManagedNotificationManager? _notificationManager;
     /// <summary>
     /// 绑定用
     /// </summary>
@@ -30,6 +33,7 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
+        _notificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this));
         WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
@@ -49,5 +53,10 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
         {
             MainDialogHost.CurrentSession.Close(message.Result);
         }
+    }
+
+    public void Receive(OpenNotificationMessage message)
+    {
+        _notificationManager?.Show(message.Content);
     }
 }

@@ -23,17 +23,7 @@ public class AccountService(
     {
         await Task.CompletedTask;
 
-        bool? valid = await tokenService.IsTokenValid();
-
-        if (!valid.HasValue)
-        {
-            return;
-        }
-
-        if (!valid.Value)
-        {
-            await tokenService.RefreshToken();
-        }
+        await tokenService.RefreshToken();
 
         try
         {
@@ -70,8 +60,7 @@ public class AccountService(
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            logger.LogError(e, "Login error !");
         }
 
         return false;
