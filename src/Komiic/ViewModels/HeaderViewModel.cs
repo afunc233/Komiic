@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts.Services;
+using Komiic.Core;
 using Komiic.Core.Contracts.Model;
 using Komiic.Messages;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ public partial class HeaderViewModel
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IAccountService _accountService;
+    private readonly ICacheService _cacheService;
 
     private readonly IMessenger _messenger;
 
@@ -26,10 +28,11 @@ public partial class HeaderViewModel
 
     [ObservableProperty] private Account? _accountData;
 
-    public HeaderViewModel(IServiceProvider serviceProvider, IMessenger messenger, IAccountService accountService) :
-        base(messenger)
+    public HeaderViewModel(IServiceProvider serviceProvider, ICacheService cacheService, IMessenger messenger,
+        IAccountService accountService) : base(messenger)
     {
         _serviceProvider = serviceProvider;
+        _cacheService = cacheService;
         _messenger = messenger;
         _accountService = accountService;
         AccountData = _accountService.AccountData;
@@ -48,6 +51,8 @@ public partial class HeaderViewModel
     {
         await Task.CompletedTask;
         var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
+        dialogContent.Username = await _cacheService.GetLocalCacheStr(KomiicConst.KomiicUsername);
+        dialogContent.Password = await _cacheService.GetLocalCacheStr(KomiicConst.KomiicPassword);
         var result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
         if (result)
         {

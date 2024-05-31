@@ -36,6 +36,8 @@ public enum QueryDataEnum
     FavoriteNewUpdatedQuery,
     UpdateProfileImage,
     SetNextChapterMode,
+    AddReadComicHistory,
+    AddFavorite,
 }
 
 public static class QueryDataExt
@@ -139,6 +141,11 @@ public static class QueryDataExt
                 QueryDataEnum.SetNextChapterMode,
                 //"favoriteNewUpdatedQuery",
                 "mutation setNextChapterMode($mode: String!) {\n  setNextChapterMode(mode: $mode)\n}"
+            },
+            {
+                QueryDataEnum.AddReadComicHistory,
+                //"favoriteNewUpdatedQuery",
+                "mutation addReadComicHistory($comicId: ID!, $chapterId: ID!, $page: Int!) {\n  addReadComicHistory(comicId: $comicId, chapterId: $chapterId, page: $page) {\n    id\n    comicId\n    chapters {\n      id\n      chapterId\n      page\n      __typename\n    }\n    startDate\n    lastDate\n    chapterType\n    __typename\n  }\n}"
             },
         };
 

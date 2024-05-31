@@ -4,15 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts.Services;
-using Komiic.Core.Contracts.Api;
-using Komiic.Core.Contracts.Model;
 using Komiic.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace Komiic.ViewModels;
 
 public partial class LoginViewModel(
-    ITokenService tokenService,
     IMessenger messenger,
     IAccountService accountService,
     ILogger<LoginViewModel> logger) : ViewModelBase

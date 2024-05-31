@@ -81,6 +81,7 @@
 
         <StackPanel
             HorizontalAlignment="Center"
+            IsHitTestVisible="False"
             Orientation="Horizontal"
             VerticalAlignment="Center">
             <TextBlock

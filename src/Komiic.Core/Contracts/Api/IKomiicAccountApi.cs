@@ -15,9 +15,9 @@ public interface IKomiicAccountApi
     Task Logout();
 
     [Post(KomiicConst.RefreshAuthUrl)]
-    [Headers("Authorization:")]
+    [Headers("Authorization:", "Referer:https://komiic.com/")]
     Task<TokenResponseData> RefreshAuth();
-    
+
     #endregion
 
     #region UserInfo
@@ -40,7 +40,8 @@ public interface IKomiicAccountApi
     #region UpdateProfileImage
 
     [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<UpdateProfileImageData>> UpdateProfileImage([Body] QueryData<UpdateProfileImageVariables> queryData);
+    Task<ResponseData<UpdateProfileImageData>> UpdateProfileImage(
+        [Body] QueryData<UpdateProfileImageVariables> queryData);
 
     #endregion
 

@@ -32,9 +32,10 @@ public class TokenService(
         }
     }
 
-    public void ClearToken()
+    public async Task ClearToken()
     {
-        cacheService.ClearLocalCache(KomiicConst.KomiicToken);
+        _token = null;
+        await cacheService.ClearLocalCache(KomiicConst.KomiicToken);
     }
 
     public async Task<bool?> IsTokenValid()

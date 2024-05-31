@@ -7,6 +7,10 @@ public static class KomiicConst
     public const string KomiicToken = nameof(KomiicToken);
     
     public const string KomiicCookie = nameof(KomiicCookie);
+
+    public const string KomiicUsername = nameof(KomiicUsername);
+    
+    public const string KomiicPassword = nameof(KomiicPassword);
     
     public const string KomiicApiUrl = "https://komiic.com/";
     

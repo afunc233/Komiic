@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -41,6 +42,17 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
         }
 
         await Task.CompletedTask;
+    }
+
+    public async Task ClearAllCookies()
+    {
+        await Task.CompletedTask;
+        foreach (var cookie in cookieContainer.GetAllCookies().OfType<Cookie>())
+        {
+            cookie.Expired = true;
+        }
+
+        await SaveCookies();
     }
 
     public async Task SaveCookies()

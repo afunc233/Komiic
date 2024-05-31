@@ -135,14 +135,14 @@ public static class KomiicExtensions
         services.AddRefitClient<IKomiicQueryApi>(refitSettings).ConfigureHttpClient(client =>
         {
             client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
-            client.Timeout = TimeSpan.FromSeconds(10);
+            client.Timeout = TimeSpan.FromSeconds(20);
         });
 
         // 账户相关 Api
         services.AddRefitClient<IKomiicAccountApi>(refitSettings).ConfigureHttpClient(client =>
         {
             client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
-            client.Timeout = TimeSpan.FromSeconds(10);
+            client.Timeout = TimeSpan.FromSeconds(20);
         });
 
         // Komiic http 给图片加载用 IHttpClientFactory 
@@ -160,6 +160,7 @@ public static class KomiicExtensions
             {
                 var primaryHandler = builder.Services.GetRequiredService<OptionalAuthenticatedHttpClientHandler>();
 
+                primaryHandler.AutomaticDecompression = DecompressionMethods.All;
                 if (!OperatingSystem.IsBrowser())
                 {
 #if !DEBUG

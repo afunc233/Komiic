@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -34,7 +33,7 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
                     }
 
                     var key = await (request.Content?.ReadAsStringAsync(cancellationToken) ??
-                                     Task.FromResult(string.Empty));
+                                     Task.FromResult($"{request.Method}.{request.RequestUri}.{request.Headers}"));
 
                     var localJson = await cacheService.GetLocalCacheStr(key, cacheTimeSpan);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Komiic.Contracts.Services;
+using Komiic.Core;
 using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ namespace Komiic.Services;
 
 public class AccountService(
     ITokenService tokenService,
+    ICacheService cacheService,
     ICookieService cookieService,
     IKomiicAccountApi komiicAccountApi,
     ILogger<AccountService> logger) : IAccountService
@@ -22,7 +24,7 @@ public class AccountService(
         await Task.CompletedTask;
 
         bool? valid = await tokenService.IsTokenValid();
-        
+
         if (!valid.HasValue)
         {
             return;
@@ -55,6 +57,8 @@ public class AccountService(
     {
         try
         {
+            await cacheService.SetLocalCache(KomiicConst.KomiicUsername, username);
+            await cacheService.SetLocalCache(KomiicConst.KomiicPassword, password);
             var tokenResponseData = await komiicAccountApi.Login(new LoginData(username, password));
             if (tokenResponseData is { Token: not null })
             {
@@ -95,10 +99,12 @@ public class AccountService(
     {
         try
         {
-            tokenService.ClearToken();
+            await tokenService.ClearToken();
             AccountData = null;
             AccountChanged?.Invoke(this, EventArgs.Empty);
             await komiicAccountApi.Logout();
+            await cookieService.ClearAllCookies();
+            await LoadImageLimit();
         }
         catch (Exception e)
         {

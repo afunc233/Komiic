@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Komiic.ViewModels;
 
 namespace Komiic.PageViewModels;
 

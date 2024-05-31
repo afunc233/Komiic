@@ -5,6 +5,8 @@ namespace Komiic.Contracts.Services;
 public interface ICookieService
 {
     Task LoadCookies();
+
+    Task ClearAllCookies();
     
     Task SaveCookies();
 }

@@ -8,7 +8,7 @@ public interface ITokenService
     
     Task SetToken(string token,bool save = true);
     
-    void ClearToken();
+    Task ClearToken();
     
     Task<bool?> IsTokenValid();
     
