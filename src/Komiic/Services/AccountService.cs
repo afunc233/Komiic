@@ -22,9 +22,6 @@ public class AccountService(
     public async Task LoadAccount()
     {
         await Task.CompletedTask;
-
-        await tokenService.RefreshToken();
-
         try
         {
             var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());

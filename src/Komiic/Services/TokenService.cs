@@ -81,9 +81,25 @@ public class TokenService(
 
     public async Task RefreshToken()
     {
+        {
+            // 首次驗證
+            bool? valid = IsTokenValid();
+            if (!valid.HasValue)
+            {
+                return;
+            }
+
+            if (valid.Value)
+            {
+                return;
+            }
+        }
+
         try
         {
             await _semaphoreSlim.WaitAsync();
+
+            // 二次驗證
             bool? valid = IsTokenValid();
             if (!valid.HasValue)
             {
@@ -108,9 +124,7 @@ public class TokenService(
         }
         finally
         {
-            {
-                _semaphoreSlim.Release();
-            }
+            _semaphoreSlim.Release();
         }
     }
 }
