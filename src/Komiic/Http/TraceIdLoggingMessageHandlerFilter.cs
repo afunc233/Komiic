@@ -23,7 +23,7 @@ internal class TraceIdLoggingMessageHandlerFilter(ILoggerFactory loggerFactory) 
             next(builder);
 
             var outerLogger = _loggerFactory.CreateLogger(
-                $"{(string.IsNullOrWhiteSpace(builder.Name) ? "UnNamedHttpClient" : builder.Name)}.{nameof(HttpLogHandler)}");
+                $"{(string.IsNullOrWhiteSpace(builder.Name) ? "UnNamedHttpClient" : builder.Name)}");
 
             RemoveOtherLogger(builder.AdditionalHandlers, typeof(LoggingScopeHttpMessageHandler));
             RemoveOtherLogger(builder.AdditionalHandlers, typeof(LoggingHttpMessageHandler));
