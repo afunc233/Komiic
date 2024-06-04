@@ -115,15 +115,20 @@ public class TokenService(
             if (tokenResponseData is { Token: not null })
             {
                 await SetToken(tokenResponseData.Token);
-                await cookieService.SaveCookies();
+            }
+            else
+            {
+                await  ClearToken();
             }
         }
         catch (Exception e)
         {
+            await  ClearToken();
             logger.LogError(e, "RefreshToken error !");
         }
         finally
         {
+            await cookieService.SaveCookies();
             _semaphoreSlim.Release();
         }
     }

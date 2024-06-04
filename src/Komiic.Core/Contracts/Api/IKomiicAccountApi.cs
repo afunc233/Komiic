@@ -15,7 +15,7 @@ public interface IKomiicAccountApi
     Task Logout();
 
     [Post(KomiicConst.RefreshAuthUrl)]
-    [Headers("Referer:https://komiic.com/")]
+    [Headers("Authorization:", "Referer:https://komiic.com/")]
     Task<TokenResponseData> RefreshAuth();
 
     #endregion
