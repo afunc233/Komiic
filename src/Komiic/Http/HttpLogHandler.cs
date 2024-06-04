@@ -86,14 +86,23 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
             DoRequestPipelineEnd(logger, response.StatusCode, correlationId, acceptedData, null);
         }
 
+        private static readonly HttpRequestOptionsKey<string> CorrelationIdKey = new("X-Correlation-ID");
+
         private static string GetCorrelationIdFromRequest(HttpRequestMessage? request)
         {
-            var correlationId = Guid.NewGuid().ToString();
-            if (request == null) return correlationId;
-            if (request.Headers.TryGetValues("X-Correlation-ID", out var values))
-                correlationId = values.First();
+            if (request == null) return Guid.NewGuid().ToString();
+
+            string? correlationId = null;
+
+            if (request.Options.TryGetValue(CorrelationIdKey, out string? optionCorrelationId) &&
+                !string.IsNullOrWhiteSpace(optionCorrelationId))
+                correlationId = optionCorrelationId;
             else
-                request.Headers.Add("X-Correlation-ID", correlationId);
+            {
+                correlationId ??= Guid.NewGuid().ToString();
+                request.Options.Set(CorrelationIdKey, correlationId);
+            }
+
             return correlationId;
         }
     }
