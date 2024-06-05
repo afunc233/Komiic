@@ -21,11 +21,9 @@ public class App : Application
         .ConfigureServices(KomiicExtensions.ConfigureServices)
         .UseNLog(new NLogProviderOptions())
         .Build();
-    
+
     private readonly ILogger? _logger = LogManager.GetCurrentClassLogger();
 
-    
-    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -43,6 +41,7 @@ public class App : Application
             AsyncImageLoader.ImageLoader.AsyncImageLoader =
                 AsyncImageLoader.ImageBrushLoader.AsyncImageLoader = new DiskCachedWebImageLoader(cacheFolder);
         }
+
         _logger?.Debug(nameof(Initialize));
     }
 
@@ -56,6 +55,7 @@ public class App : Application
                     DataContext = _host.Services.GetRequiredService<MainViewModel>(),
                     SplashScreen = new MainAppSplashContent(_host.StartAsync()),
                 };
+                desktop.ShutdownRequested += async (_, _) => { await _host.StopAsync(); };
                 break;
             case ISingleViewApplicationLifetime singleViewPlatform:
                 singleViewPlatform.MainView = new MainView
@@ -67,7 +67,7 @@ public class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
-        
+
         _logger?.Debug(nameof(OnFrameworkInitializationCompleted));
     }
 }

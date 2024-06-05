@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -18,10 +19,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using NLog;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Timeout;
 using Refit;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Komiic.Extensions;
 
@@ -216,5 +219,46 @@ public static class KomiicExtensions
                 builder.AdditionalHandlers.Add(builder.Services.GetRequiredService<HttpCacheHandler>());
             });
         });
+    }
+
+
+    public static void ConfigNLog(this string appName)
+    {
+        // Step 1. Create configuration object 
+        var config = new NLog.Config.LoggingConfiguration();
+
+        var fileTarget = new NLog.Targets.FileTarget();
+        config.AddTarget("file", fileTarget);
+
+        // Step 3. Set target properties 
+        fileTarget.FileName = "${basedir}/logs/" + appName + "_${shortdate}.log";
+        fileTarget.Layout = @"${date:format=HH\:mm\:ss} ${uppercase:${level}} ${message}";
+        fileTarget.MaxArchiveFiles = 10;
+        fileTarget.ArchiveAboveSize = 1048576;
+        var minLevel = NLog.LogLevel.Warn;
+
+        if (ShouldTraceLog(appName))
+        {
+            minLevel = NLog.LogLevel.Trace;
+        }
+
+        // Step 4. Define rules
+        var fileRule = new NLog.Config.LoggingRule("*", minLevel, fileTarget);
+
+        var microsoftLogRule = new NLog.Config.LoggingRule("Microsoft.*", NLog.LogLevel.Warn, fileTarget);
+        var httpClientLogRule =
+            new NLog.Config.LoggingRule("System.Net.Http.HttpClient", NLog.LogLevel.Warn, fileTarget);
+
+        config.LoggingRules.Add(fileRule);
+        config.LoggingRules.Add(microsoftLogRule);
+        config.LoggingRules.Add(httpClientLogRule);
+
+        LogManager.Configuration = config;
+    }
+
+    private static bool ShouldTraceLog(string appName)
+    {
+        string debugStateFile = Path.Combine(AppContext.BaseDirectory, $"{appName}.debug");
+        return File.Exists(debugStateFile);
     }
 }

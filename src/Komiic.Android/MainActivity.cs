@@ -16,6 +16,7 @@ public class MainActivity : AvaloniaMainActivity<App>
 {
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
+        $"{nameof(Komiic)}.{nameof(Android)}".ConfigNLog();
         return base.CustomizeAppBuilder(builder)
             .WithHarmonyOSSansSCFont();
     }
