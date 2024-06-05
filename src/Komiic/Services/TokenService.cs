@@ -51,11 +51,12 @@ public class TokenService(
 
         try
         {
-            var token = _tokenHandler.ReadToken(_token);
+            var jwtToken = _tokenHandler.ReadJwtToken(_token);
 
-            if (token is JwtSecurityToken jwtToken)
+            if (jwtToken is not null)
             {
                 var expires = jwtToken.ValidTo;
+
                 if (expires > DateTime.UtcNow)
                 {
                     return true;
@@ -64,7 +65,7 @@ public class TokenService(
         }
         catch (Exception e)
         {
-            logger.LogError(e, "IsTokenValid error !");
+            logger.LogError(e, "IsTokenValid error ! {Token}", _token);
         }
 
         return false;
@@ -118,17 +119,20 @@ public class TokenService(
             }
             else
             {
-                await  ClearToken();
+                await cookieService.ClearAllCookies();
+                await ClearToken();
             }
         }
         catch (Exception e)
         {
-            await  ClearToken();
+            await cookieService.ClearAllCookies();
+            await ClearToken();
             logger.LogError(e, "RefreshToken error !");
         }
         finally
         {
             await cookieService.SaveCookies();
+            await cookieService.LoadCookies();
             _semaphoreSlim.Release();
         }
     }

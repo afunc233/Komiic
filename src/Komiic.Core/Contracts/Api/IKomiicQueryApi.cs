@@ -3,17 +3,15 @@ using Refit;
 
 namespace Komiic.Core.Contracts.Api;
 
-[Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute_15)]
+[Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute15)]
 public interface IKomiicQueryApi
 {
     #region 首页
 
     [Post(KomiicConst.QueryUrl)]
-    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute_15)]
     Task<ResponseData<RecentUpdateData>> GetRecentUpdate([Body] QueryData<PaginationVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
-    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute_15)]
     Task<ResponseData<HotComicsData>> GetHotComics([Body] QueryData<PaginationVariables> queryData);
 
     #endregion
@@ -42,7 +40,6 @@ public interface IKomiicQueryApi
     /// <param name="queryData"></param>
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
-    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute_5)]
     Task<ResponseData<RecommendComicByIdData>> GetRecommendComicById([Body] QueryData<ComicIdVariables> queryData);
 
     /// <summary>

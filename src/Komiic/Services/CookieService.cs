@@ -20,16 +20,17 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
         TypeInfoResolver = JsonTypeInfoResolver.Combine(KomiicCookieJsonSerializerContext.Default,
             new DefaultJsonTypeInfoResolver())
     };
-    
+
     public async Task LoadCookies()
     {
         try
         {
-            var localCookies = await cacheService.GetLocalCacheStr(KomiicConst.KomiicCookie);
+            await ClearAllCookies(false);
+            string? localCookies = await cacheService.GetLocalCacheStr(KomiicConst.KomiicCookie);
 
             if (!string.IsNullOrWhiteSpace(localCookies))
             {
-                var cookies = JsonSerializer.Deserialize<CookieCollection>(localCookies,JsonSerializerOptions);
+                var cookies = JsonSerializer.Deserialize<CookieCollection>(localCookies, JsonSerializerOptions);
                 if (cookies != null)
                 {
                     cookieContainer.Add(cookies);
@@ -44,22 +45,24 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
         await Task.CompletedTask;
     }
 
-    public async Task ClearAllCookies()
+    public async Task ClearAllCookies(bool save)
     {
         await Task.CompletedTask;
         foreach (var cookie in cookieContainer.GetAllCookies().OfType<Cookie>())
         {
+            cookie.Expires = DateTime.UtcNow.AddDays(-1);
             cookie.Expired = true;
         }
 
-        await SaveCookies();
+        if (save)
+            await SaveCookies();
     }
 
     public async Task SaveCookies()
     {
         var cookies = cookieContainer.GetAllCookies();
 
-        var json = JsonSerializer.Serialize(cookies,JsonSerializerOptions);
+        string json = JsonSerializer.Serialize(cookies, JsonSerializerOptions);
         await cacheService.SetLocalCache(KomiicConst.KomiicCookie, json);
 
         await Task.CompletedTask;

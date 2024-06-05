@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +16,6 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
 
         using (Log.BeginRequestPipelineScope(logger, request))
         {
-            // 按理解 这里应该已经走过 HttpHeaderHandler 了 所以 RequestPipelineStart 可以打印 Header
             Log.RequestPipelineStart(logger, request);
             var response = await base.SendAsync(request, cancellationToken);
             await Log.RequestPipelineEnd(logger, response);
@@ -39,32 +36,30 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
             LoggerMessage.DefineScope<HttpMethod, Uri?, string>(
                 "HTTP {HttpMethod} {Uri} {CorrelationId}");
 
-        private static readonly Action<ILogger, HttpMethod, Uri?, string, string, Exception?> DoRequestPipelineStart =
-            LoggerMessage.Define<HttpMethod, Uri?, string, string>(
-                LogLevel.Information,
+        private static readonly Action<ILogger, string, HttpRequestMessage, Exception?> DoRequestPipelineStart =
+            LoggerMessage.Define<string, HttpRequestMessage>(
+                LogLevel.Debug,
                 EventIds.PipelineStart,
-                "Start request {HttpMethod} {Uri} [Correlation: {CorrelationId}], \n[Header:\n{Header}\n]");
+                "Start request [Correlation:{CorrelationId}],\n[HttpRequestMessage:\n{HttpRequestMessage}\n]");
 
-        private static readonly Action<ILogger, HttpStatusCode, string, string, Exception?> DoRequestPipelineEnd =
-            LoggerMessage.Define<HttpStatusCode, string, string>(LogLevel.Information, EventIds.PipelineEnd,
-                "End request - {StatusCode}, [Correlation: {CorrelationId}], \n[Data:\n{AcceptedData}\n]");
+        private static readonly Action<ILogger, string, HttpResponseMessage, string, Exception?> DoRequestPipelineEnd =
+            LoggerMessage.Define<string, HttpResponseMessage, string>(LogLevel.Debug, EventIds.PipelineEnd,
+                "End request [Correlation:{CorrelationId}]\n{HttpResponseMessage},\n[Data:\n{AcceptedData}\n]");
 
         public static IDisposable? BeginRequestPipelineScope(ILogger logger, HttpRequestMessage request)
         {
-            var correlationId = GetCorrelationIdFromRequest(request);
+            string correlationId = GetCorrelationIdFromRequest(request);
             return DoBeginRequestPipelineScope(logger, request.Method, request.RequestUri, correlationId);
         }
 
         public static void RequestPipelineStart(ILogger logger, HttpRequestMessage request)
         {
-            var correlationId = GetCorrelationIdFromRequest(request);
-            var header = string.Join("\n", request.Headers.Select(it => $"{it.Key}={it.Value.FirstOrDefault()}"));
-
-            DoRequestPipelineStart(logger, request.Method, request.RequestUri, correlationId, header, null);
+            string correlationId = GetCorrelationIdFromRequest(request);
+            DoRequestPipelineStart(logger, correlationId, request, null);
         }
 
-        private static readonly List<string> StrMediaTypeList = new()
-            { "application/json", "application/xml", "text/html", "application/grpc", "text/plain" };
+        private static readonly List<string> StrMediaTypeList =
+            ["application/json", "application/xml", "text/html", "application/grpc", "text/plain"];
 
         public static async Task RequestPipelineEnd(ILogger logger, HttpResponseMessage response)
         {
@@ -78,12 +73,12 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
                 }
                 else
                 {
-                    acceptedData += $"-{httpContentHeaders.ContentType?.MediaType}";
+                    acceptedData += $"-{httpContentHeaders.ContentType?.MediaType ?? "unknown-mediaType"}";
                 }
             }
 
-            var correlationId = GetCorrelationIdFromRequest(response.RequestMessage);
-            DoRequestPipelineEnd(logger, response.StatusCode, correlationId, acceptedData, null);
+            string correlationId = GetCorrelationIdFromRequest(response.RequestMessage);
+            DoRequestPipelineEnd(logger, correlationId, response, acceptedData, null);
         }
 
         private static readonly HttpRequestOptionsKey<string> CorrelationIdKey = new("X-Correlation-ID");

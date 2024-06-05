@@ -13,7 +13,7 @@ public class NavigationAwareLocator : IDataTemplate
         if (data is null)
             return null;
 
-        var name = data.GetType().FullName!.Replace("PageViewModel", "Page", StringComparison.Ordinal);
+        string name = data.GetType().FullName!.Replace("PageViewModel", "Page", StringComparison.Ordinal);
 #pragma warning disable IL2057
         var type = Type.GetType(name);
 #pragma warning restore IL2057

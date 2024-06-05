@@ -24,15 +24,15 @@ public static class KomiicConst
     
     internal  const string QueryUrl = "/api/query";
 
-    internal const string Minute_15 = "00:15:00";
+    internal const string Minute15 = "00:15:00";
     
-    internal const string Minute_5 = "00:05:00";
+    internal const string Minute5 = "00:05:00";
     
-    internal const string Second_30 = "00:00:30";
+    internal const string Second30 = "00:00:30";
     
-    internal const string Second_10 = "00:00:10";
+    internal const string Second10 = "00:00:10";
     
-    internal const string Second_5 = "00:00:5";
+    internal const string Second5 = "00:00:5";
     
     internal const string DisableCache = "";
 }

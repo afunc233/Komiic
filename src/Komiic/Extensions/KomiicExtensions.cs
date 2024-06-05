@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts;
 using Komiic.Contracts.Services;
@@ -15,6 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Extensions.Http;
+using Polly.Timeout;
 using Refit;
 
 namespace Komiic.Extensions;
@@ -84,6 +90,26 @@ public static class KomiicExtensions
         services.AddTransient<IMangeImageLoader, MangeImageLoader>();
     }
 
+    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)
+    {
+        var retryPolicy = HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .Or<TimeoutRejectedException>()
+            .Or<TaskCanceledException>()
+            .WaitAndRetryAsync(4, i => TimeSpan.FromSeconds(Math.Pow(2, i)),
+                onRetry: (result, span, index, _) =>
+                {
+                    var exception = result.Exception;
+                    logger.LogWarning(exception == null
+                        ? $"index:{index} Retrying request after {span.TotalSeconds} seconds. result: {result.Result}"
+                        : $"index:{index} Retrying request after {span.TotalSeconds} seconds. exception: {exception}");
+                });
+
+        // var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(2);
+        // return Policy.WrapAsync(retryPolicy, timeoutPolicy);
+        return retryPolicy;
+    }
+
     private static void AddKomiicHttp(this IServiceCollection services)
     {
         services.AddSingleton(_ =>
@@ -137,31 +163,31 @@ public static class KomiicExtensions
 
         services.AddScoped<HttpCacheHandler>();
 
+
         // 查询相关 Api
         services.AddRefitClient<IKomiicQueryApi>(service => service.GetRequiredService<RefitSettings>(),
-            nameof(IKomiicQueryApi)).ConfigureHttpClient(
-            client =>
-            {
-                client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
-                client.Timeout = TimeSpan.FromSeconds(20);
-            });
+                nameof(IKomiicQueryApi))
+            .ConfigureHttpClient(
+                client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
+            .AddPolicyHandler(
+                (serviceProvider, _) =>
+                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicQueryApi>>()));
 
         // 账户相关 Api
         services.AddRefitClient<IKomiicAccountApi>(service => service.GetRequiredService<RefitSettings>(),
-            nameof(IKomiicAccountApi)).ConfigureHttpClient(
-            client =>
-            {
-                client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
-                client.Timeout = TimeSpan.FromSeconds(20);
-            });
+                nameof(IKomiicAccountApi))
+            .ConfigureHttpClient(
+                client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
+            .AddPolicyHandler(
+                (serviceProvider, _) =>
+                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicAccountApi>>()));
 
         // Komiic http 给图片加载用 IHttpClientFactory 
         services.AddHttpClient(KomiicConst.Komiic,
-            client =>
-            {
-                client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl);
-                client.Timeout = TimeSpan.FromSeconds(30);
-            });
+                client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
+            .AddPolicyHandler(
+                (serviceProvider, _) =>
+                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IHttpClientFactory>>()));
 
         // 配置 HttpClientFactory
         services.ConfigureAll<HttpClientFactoryOptions>(options =>

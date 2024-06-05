@@ -29,8 +29,8 @@ internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
     private async Task<Bitmap?> LoadAsync(MangeImageData mangeImageData)
     {
         await Task.CompletedTask;
-        var url = mangeImageData.GetImageUrl();
-        var localUrl = cacheService.GetLocalImageUrl(url);
+        string url = mangeImageData.GetImageUrl();
+        string? localUrl = cacheService.GetLocalImageUrl(url);
 
         if (string.IsNullOrWhiteSpace(localUrl))
         {
@@ -40,7 +40,7 @@ internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
             request.Headers.Referrer = mangeImageData.GetReferrer();
 
             var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-            var dataArr = await response.Content.ReadAsByteArrayAsync();
+            byte[] dataArr = await response.Content.ReadAsByteArrayAsync();
 
             using var memoryStream = new MemoryStream(dataArr);
             var bitmap = new Bitmap(memoryStream);

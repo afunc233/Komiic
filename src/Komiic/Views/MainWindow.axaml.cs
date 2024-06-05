@@ -147,7 +147,7 @@ public partial class MainWindow : Window
         // TODO 在 ubuntu 下 BeginMoveDrag 导致 DoubleTapped 触发有些问题 考虑自己移动 而不是 调用 BeginMoveDrag
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
-            this.BeginMoveDrag(e);
+            BeginMoveDrag(e);
         }
     }
 

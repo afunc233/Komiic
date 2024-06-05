@@ -12,7 +12,7 @@ public class ViewLocator : IDataTemplate
         if (data is null)
             return null;
 
-        var name = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
+        string name = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
 #pragma warning disable IL2057
         var type = Type.GetType(name);
 #pragma warning restore IL2057

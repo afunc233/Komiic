@@ -14,11 +14,14 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        var cacheKey = string.Empty;
         try
         {
             if (request.Headers.TryGetValues(KomiicConst.EnableCacheHeader, out var cacheValues))
             {
-                var cacheTimeSpanStr = cacheValues.FirstOrDefault();
+                // 移除無關 header
+                request.Headers.Remove(KomiicConst.EnableCacheHeader);
+                string? cacheTimeSpanStr = cacheValues.FirstOrDefault();
 
                 if (!string.IsNullOrWhiteSpace(cacheTimeSpanStr))
                 {
@@ -32,10 +35,10 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
                         logger.LogError(e, "{cacheTimeSpanStr} Parse Error", cacheTimeSpanStr);
                     }
 
-                    var key = await (request.Content?.ReadAsStringAsync(cancellationToken) ??
-                                     Task.FromResult($"{request.Method}.{request.RequestUri}.{request.Headers}"));
+                    cacheKey = await (request.Content?.ReadAsStringAsync(cancellationToken) ??
+                                      Task.FromResult($"{request.Method}.{request.RequestUri}.{request.Headers}"));
 
-                    var localJson = await cacheService.GetLocalCacheStr(key, cacheTimeSpan);
+                    string? localJson = await cacheService.GetLocalCacheStr(cacheKey, cacheTimeSpan);
 
                     if (!string.IsNullOrWhiteSpace(localJson))
                     {
@@ -45,28 +48,28 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
                             Content = new StringContent(localJson)
                         };
                     }
-
-                    var response = await base.SendAsync(request, cancellationToken);
-
-                    if (!response.IsSuccessStatusCode) return response;
-
-                    var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
-                    if (!string.IsNullOrWhiteSpace(responseJson))
-                    {
-                        await cacheService.SetLocalCache(key, responseJson);
-                    }
-
-                    return response;
                 }
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-
             logger.LogError(e, "HttpCacheHandler load cache fail ");
         }
 
-        return await base.SendAsync(request, cancellationToken);
+        if (string.IsNullOrWhiteSpace(cacheKey))
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+
+        var response = await base.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode) return response;
+
+        string responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
+        if (!string.IsNullOrWhiteSpace(responseJson))
+        {
+            await cacheService.SetLocalCache(cacheKey, responseJson);
+        }
+
+        return response;
     }
 }

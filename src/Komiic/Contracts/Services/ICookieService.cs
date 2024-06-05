@@ -6,7 +6,7 @@ public interface ICookieService
 {
     Task LoadCookies();
 
-    Task ClearAllCookies();
+    Task ClearAllCookies(bool save = true);
     
     Task SaveCookies();
 }

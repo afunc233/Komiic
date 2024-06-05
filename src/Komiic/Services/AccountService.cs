@@ -24,6 +24,10 @@ public class AccountService(
         await Task.CompletedTask;
         try
         {
+            string? token = await tokenService.GetToken();
+
+            if (string.IsNullOrWhiteSpace(token)) return;
+            
             var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
             if (accountData is { Data: not null })
             {
@@ -46,6 +50,8 @@ public class AccountService(
         {
             await cacheService.SetLocalCache(KomiicConst.KomiicUsername, username);
             await cacheService.SetLocalCache(KomiicConst.KomiicPassword, password);
+            await tokenService.ClearToken();
+            await cookieService.ClearAllCookies();
             var tokenResponseData = await komiicAccountApi.Login(new LoginData(username, password));
             if (tokenResponseData is { Token: not null })
             {

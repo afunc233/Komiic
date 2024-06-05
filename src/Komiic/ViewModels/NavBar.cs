@@ -11,7 +11,7 @@ public class NavBar : ViewModelBase
     public NavBarType NavType
     {
         get => _navType;
-        init => this.SetProperty(ref _navType, value);
+        init => SetProperty(ref _navType, value);
     }
 
     private string _barName = "";
@@ -22,7 +22,7 @@ public class NavBar : ViewModelBase
     public string BarName
     {
         get => _barName;
-        set => this.SetProperty(ref _barName, value);
+        set => SetProperty(ref _barName, value);
     }
 
     private string _foreground = "#ffffff";
@@ -33,7 +33,7 @@ public class NavBar : ViewModelBase
     public string Foreground
     {
         get => _foreground;
-        set => this.SetProperty(ref _foreground, value);
+        set => SetProperty(ref _foreground, value);
     }
 
     private string _checkedForeground = "#ff0000";
@@ -44,7 +44,7 @@ public class NavBar : ViewModelBase
     public string CheckedForeground
     {
         get => _checkedForeground;
-        set => this.SetProperty(ref _checkedForeground, value);
+        set => SetProperty(ref _checkedForeground, value);
     }
 
 
@@ -53,7 +53,7 @@ public class NavBar : ViewModelBase
     public string IconUrl
     {
         get => _iconUrl;
-        set => this.SetProperty(ref _iconUrl, value);
+        set => SetProperty(ref _iconUrl, value);
     }
 
     private string _checkedIconUrl = "";
@@ -61,6 +61,6 @@ public class NavBar : ViewModelBase
     public string CheckedIconUrl
     {
         get => _checkedIconUrl;
-        set => this.SetProperty(ref _checkedIconUrl, value);
+        set => SetProperty(ref _checkedIconUrl, value);
     }
 }

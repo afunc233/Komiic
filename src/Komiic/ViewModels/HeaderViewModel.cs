@@ -53,7 +53,7 @@ public partial class HeaderViewModel
         var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
         dialogContent.Username = await _cacheService.GetLocalCacheStr(KomiicConst.KomiicUsername);
         dialogContent.Password = await _cacheService.GetLocalCacheStr(KomiicConst.KomiicPassword);
-        var result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
+        bool result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
         if (result)
         {
             await LoadData();

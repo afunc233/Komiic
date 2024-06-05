@@ -23,6 +23,7 @@
 
         <!-- Hosting -->
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-preview.3.24172.9"/>
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.0-preview.4.24267.6" />
 
         <!-- NLog -->
         <PackageReference Include="NLog.Extensions.Hosting" Version="5.3.11"/>

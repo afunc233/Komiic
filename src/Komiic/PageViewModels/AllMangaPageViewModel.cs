@@ -46,7 +46,7 @@ public partial class AllMangaPageViewModel
     private readonly IKomiicQueryApi _komiicQueryApi;
     private readonly IMessenger _messenger;
 
-    private int _pageIndex = 0;
+    private int _pageIndex;
 
 
     public AllMangaPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,
@@ -103,7 +103,7 @@ public partial class AllMangaPageViewModel
     [RelayCommand(CanExecute = nameof(HasMore))]
     private async Task LoadCategoryMange()
     {
-        await SafeLoadData(async ()=>await LoadMange());
+        await SafeLoadData(async () => await LoadMange());
     }
 
     [RelayCommand]
@@ -118,7 +118,12 @@ public partial class AllMangaPageViewModel
 
     private async Task LoadMange(bool clearBefore = false)
     {
-        await _semaphoreSlim.WaitAsync();
+        bool success = await _semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(1));
+        if (!success)
+        {
+            return;
+        }
+
         try
         {
             if (clearBefore)
@@ -152,6 +157,7 @@ public partial class AllMangaPageViewModel
         }
         catch (Exception e)
         {
+            HasMore = false;
             Console.WriteLine(e);
         }
         finally
