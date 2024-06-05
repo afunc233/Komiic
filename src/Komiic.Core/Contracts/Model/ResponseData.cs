@@ -141,25 +141,6 @@ public class RecommendComicByIdData
     public List<string> RecommendComicList { get; set; } = null!;
 }
 
-public class MessageCountByComicIdData
-{
-    [JsonPropertyName("messageCountByComicId")]
-    public int MessageCountByComicIdCount { get; set; }
-}
-
-public class LastMessageByComicIdData
-{
-    [JsonPropertyName("lastMessageByComicId")]
-    public LastMessageByComicId LastMessageByComicId { get; set; }
-}
-
-public class LastMessageByComicId
-{
-    public string comicId { get; set; }
-    public string message { get; set; }
-    public string __typename { get; set; }
-}
-
 public class ChaptersByComicIdData
 {
     [JsonPropertyName("chaptersByComicId")]
@@ -263,6 +244,280 @@ public class SetNextChapterModeData
     // "setNextChapterMode": true
     [JsonPropertyName("setNextChapterMode")]
     public bool SetNextChapterMode { get; set; }
+}
+
+#endregion
+
+#region Favorite
+
+public class AddFavoriteData
+{
+    // "removeFavorite": true
+    public Favorite addFavorite { get; set; }
+}
+
+public class RemoveFavoriteData
+{
+    // "removeFavorite": true
+    public bool removeFavorite { get; set; }
+}
+
+public class FavoriteData
+{
+    public string getLatestUpdatedDateInFavorite { get; set; }
+    public List<Favorite> favoritesV2 { get; set; }
+}
+
+public class Favorite
+{
+    public string id { get; set; }
+    public string comicId { get; set; }
+    public string dateAdded { get; set; }
+    public string lastAccess { get; set; }
+    public string bookReadProgress { get; set; }
+    public string chapterReadProgress { get; set; }
+    public string __typename { get; set; }
+}
+
+public class LastReadByComicIdData
+{
+    public List<LastReadByComicId> lastReadByComicIds { get; set; }
+}
+
+public class LastReadByComicId
+{
+    public string comicId { get; set; }
+    public object book { get; set; }
+    public object chapter { get; set; }
+    public string __typename { get; set; }
+}
+
+#endregion
+
+#region 推薦
+
+public class RecommendComicIdsData
+{
+    [JsonPropertyName("recommendComicIds")]
+    public List<string> recommendComicIds { get; set; }
+}
+
+#endregion
+
+#region 書櫃
+
+public class FolderData
+{
+    public List<Folder> folders { get; set; }
+}
+
+public class Folder
+{
+    public string id { get; set; }
+    public string key { get; set; }
+    public string name { get; set; }
+    public int views { get; set; }
+    public int comicCount { get; set; }
+    public string dateCreated { get; set; }
+    public string dateUpdated { get; set; }
+    public string __typename { get; set; }
+}
+
+public class FolderByKeyData
+{
+    public FolderByKey folder { get; set; }
+}
+
+public class FolderByKey
+{
+    public string id { get; set; }
+    public string key { get; set; }
+    public string name { get; set; }
+    public int views { get; set; }
+    public string dateCreated { get; set; }
+    public string dateUpdated { get; set; }
+    public int comicCount { get; set; }
+    public FolderAccount account { get; set; }
+    public string __typename { get; set; }
+}
+
+public class FolderAccount
+{
+    public string id { get; set; }
+    public string nickname { get; set; }
+    public string __typename { get; set; }
+}
+
+public class FolderComicIdsData
+{
+    public string folderId { get; set; }
+    public string key { get; set; }
+    public List<string> comicIds { get; set; }
+    public string __typename { get; set; }
+}
+
+public class UpdateFolderNameData
+{
+    // "updateFolderName": true
+    public bool updateFolderName { get; set; }
+}
+
+public class RemoveFolderData
+{
+    // "updateFolderName": true
+    public bool removeFolder { get; set; }
+}
+
+public class AddComicToFolderData
+{
+    // "updateFolderName": true
+    public bool addComicToFolder { get; set; }
+}
+
+public class ComicInAccountFoldersData
+{
+    // "updateFolderName": true
+    public List<string> comicInAccountFolders { get; set; }
+}
+
+public class AddMessageToComicData
+{
+    public AddMessageToComic addMessageToComic { get; set; }
+}
+
+public class AddMessageToComic
+{
+    public string id { get; set; }
+    public string message { get; set; }
+    public string comicId { get; set; }
+    public Account account { get; set; }
+    public ReplyTo replyTo { get; set; }
+    public string dateCreated { get; set; }
+    public string dateUpdated { get; set; }
+    public string __typename { get; set; }
+}
+
+public class ReplyTo
+{
+    public string id { get; set; }
+    public string message { get; set; }
+    public Account account { get; set; }
+    public string __typename { get; set; }
+}
+
+public class MessageChanData
+{
+    public List<MessageChan> messageChan { get; set; }
+}
+
+public class MessageChan
+{
+    public string id { get; set; }
+    public string comicId { get; set; }
+    public Account account { get; set; }
+    public string message { get; set; }
+    public object replyTo { get; set; }
+    public int upCount { get; set; }
+    public int downCount { get; set; }
+    public string dateUpdated { get; set; }
+    public string dateCreated { get; set; }
+    public string __typename { get; set; }
+}
+
+public class MessageCountByComicIdData
+{
+    [JsonPropertyName("messageCountByComicId")]
+    public int MessageCountByComicIdCount { get; set; }
+}
+
+public class LastMessageByComicIdData
+{
+    [JsonPropertyName("lastMessageByComicId")]
+    public LastMessageByComicId LastMessageByComicId { get; set; }
+}
+
+public class LastMessageByComicId
+{
+    public string comicId { get; set; }
+    public string message { get; set; }
+    public string __typename { get; set; }
+}
+
+public class MessagesByComicIdData
+{
+    public List<MessagesByComicId> getMessagesByComicId { get; set; }
+}
+
+public class MessagesByComicId
+{
+    public string id { get; set; }
+    public string comicId { get; set; }
+    public Account account { get; set; }
+    public string message { get; set; }
+    public ReplyTo replyTo { get; set; }
+    public int upCount { get; set; }
+    public int downCount { get; set; }
+    public string dateUpdated { get; set; }
+    public string dateCreated { get; set; }
+    public string __typename { get; set; }
+}
+
+public class VoteMessageData
+{
+    public bool voteMessage { get; set; }
+}
+
+public class MessageVotesByComicIdData
+{
+    public List<MessageVotesByComicId> messageVotesByComicId { get; set; }
+}
+
+public class MessageVotesByComicId
+{
+    public string messageId { get; set; }
+    public bool up { get; set; }
+    public string __typename { get; set; }
+}
+
+public class DeleteMessageData
+{
+    public bool deleteMessage { get; set; }
+}
+#endregion
+
+#region 歷史
+
+public class ReadComicHistoryData
+{
+    public List<ComicHistory> readComicHistory { get; set; }
+}
+
+public class ComicHistory
+{
+    public string id { get; set; }
+    public string comicId { get; set; }
+    public List<Chapters> chapters { get; set; }
+    public string startDate { get; set; }
+    public string lastDate { get; set; }
+    public string chapterType { get; set; }
+    public string __typename { get; set; }
+}
+
+public class Chapters
+{
+    public string id { get; set; }
+    public string chapterId { get; set; }
+    public int page { get; set; }
+    public string __typename { get; set; }
+}
+
+public class ReadComicHistoryByIdData
+{
+    public ComicHistory readComicHistoryById { get; set; }
+}
+public class AddReadComicHistoryData
+{
+    public ComicHistory addReadComicHistory { get; set; }
 }
 
 #endregion
