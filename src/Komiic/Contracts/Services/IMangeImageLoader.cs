@@ -8,6 +8,6 @@ namespace Komiic.Contracts.Services;
 public interface IMangeImageLoader
 {
     Task<Bitmap?> ProvideImageAsync(MangeImageData imageData);
-    
-    event EventHandler<MangeImageData>? ImageLoaded;
+
+    event EventHandler<KvValue<MangeImageData, bool>>? ImageLoaded;
 }

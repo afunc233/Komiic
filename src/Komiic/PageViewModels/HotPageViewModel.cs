@@ -27,9 +27,9 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
-        new KvValue("全部", ""),
-        new KvValue("連載", "ONGOING"),
-        new KvValue("完結", "END")
+        new ("全部", ""),
+        new ("連載", "ONGOING"),
+        new ("完結", "END")
     ];
 
     [ObservableProperty] private string? _state = "";

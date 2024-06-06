@@ -12,19 +12,13 @@ namespace Komiic.Http;
 
 internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheService cacheService) : IMangeImageLoader
 {
-    private readonly ConcurrentDictionary<MangeImageData, Task<Bitmap?>> _memoryCache = new();
-
     async Task<Bitmap?> IMangeImageLoader.ProvideImageAsync(MangeImageData imageData)
     {
-        var bitmap = await _memoryCache.GetOrAdd(imageData, LoadAsync).ConfigureAwait(false);
-        // If load failed - remove from cache and return
-        // Next load attempt will try to load image again
-        if (bitmap == null) _memoryCache.TryRemove(imageData, out _);
+        var bitmap = await LoadAsync(imageData).ConfigureAwait(false);
         return bitmap;
     }
 
-    public event EventHandler<MangeImageData>? ImageLoaded;
-
+    public event EventHandler<KvValue<MangeImageData, bool>>? ImageLoaded;
 
     private async Task<Bitmap?> LoadAsync(MangeImageData mangeImageData)
     {
@@ -47,10 +41,12 @@ internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
 
             await cacheService.SetLocalImage(url, dataArr);
 
-            ImageLoaded?.Invoke(this, mangeImageData);
+            ImageLoaded?.Invoke(this, new(mangeImageData, true));
             return bitmap;
         }
-        
+
+        ImageLoaded?.Invoke(this, new(mangeImageData, false));
+
         return new Bitmap(localUrl);
     }
 }

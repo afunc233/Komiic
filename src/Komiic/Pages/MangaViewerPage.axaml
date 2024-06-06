@@ -37,10 +37,9 @@
             <TextBlock FontSize="32" Text="{CompiledBinding Chapter.size}" />
         </StackPanel>
         <ItemsControl
-            ContainerClearing="ItemsControl_OnContainerClearing"
-            ContainerIndexChanged="ItemsControl_OnContainerIndexChanged"
             ContainerPrepared="ItemsControl_OnContainerPrepared"
-            ItemsSource="{CompiledBinding ImagesByChapterList}">
+            ItemsSource="{CompiledBinding ImagesByChapterList}"
+            x:Name="MangaViewerItemsControl">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />

@@ -72,7 +72,7 @@ public interface IKomiicQueryApi
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<AllCategoryData>> GetAllCategory([Body] QueryData queryData);
-    
+
     /// <summary>
     /// 根據分類獲取漫画
     /// </summary>
@@ -91,33 +91,35 @@ public interface IKomiicQueryApi
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<ComicsByAuthorData>> GetComicsByAuthor([Body] QueryData<AuthorIdVariables> queryData);
+
     #endregion
 
     #region 喜愛
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<AddFavoriteData>> AddFavorite([Body] QueryData<ComicIdVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<RemoveFavoriteData>> RemoveFavorite([Body] QueryData<ComicIdVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<FavoriteData>> GetFavorites([Body] QueryData<FavoritePaginationVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<LastReadByComicIdData>> GetComicsLastRead([Body] QueryData<ComicIdsVariables> queryData);
 
     #endregion
 
     #region 推薦
-    
+
     [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<RecommendComicIdsData>> GetRecommendComicIds([Body] QueryData<RecommendComicIdsPaginationVariables> queryData);
+    Task<ResponseData<RecommendComicIdsData>> GetRecommendComicIds(
+        [Body] QueryData<RecommendComicIdsPaginationVariables> queryData);
 
     #endregion
-    
+
     #region 書櫃
-    
+
     /// <summary>
     /// 獲取書櫃圖片 https://komiic.com/api/folder/image/IzSzen1J
     /// IzSzen1J : folderKey
@@ -126,31 +128,32 @@ public interface IKomiicQueryApi
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<FolderData>> GetMyFolder([Body] QueryData queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<FolderByKeyData>> GetFolderByKey([Body] QueryData<KeyVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<FolderComicIdsData>> GetFolderComicIds([Body] QueryData<FolderComicIdsVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<UpdateFolderNameData>> UpdateFolderName([Body] QueryData<UpdateFolderNameVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<RemoveFolderData>> RemoveFolder([Body] QueryData<FolderIdVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<AddComicToFolderData>> AddComicToFolder([Body] QueryData<FolderIdAndComicIdVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<ComicInAccountFoldersData>> ComicInAccountFolders([Body] QueryData<ComicIdVariables> queryData);
+
     #endregion
 
     #region 評論/回復
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<AddMessageToComicData>> AddMessageToComic([Body] QueryData<AddMessageToComicVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<MessageChanData>> GetMessageChan([Body] QueryData<MessageIdVariables> queryData);
 
@@ -169,16 +172,17 @@ public interface IKomiicQueryApi
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<LastMessageByComicIdData>> GetLastMessageByComicId([Body] QueryData<ComicIdVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<MessagesByComicIdData>> GetMessagesByComicId([Body] QueryData<ComicIdPaginationVariables> queryData);
-    
+    Task<ResponseData<MessagesByComicIdData>> GetMessagesByComicId(
+        [Body] QueryData<ComicIdPaginationVariables> queryData);
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<VoteMessageData>> VoteMessage([Body] QueryData<VoteMessageVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<MessageVotesByComicIdData>> MessageVotesByComicId([Body] QueryData<ComicIdsVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<DeleteMessageData>> DeleteMessage([Body] QueryData<MessageIdVariables> queryData);
 
@@ -188,16 +192,19 @@ public interface IKomiicQueryApi
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<ReadComicHistoryData>> ReadComicHistory([Body] QueryData<PaginationVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Second10)]
     Task<ResponseData<ReadComicHistoryByIdData>> ReadComicHistoryById([Body] QueryData<ComicIdVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<AddReadComicHistoryData>> AddReadComicHistory([Body] QueryData<AddReadComicHistoryVariables> queryData);
-    
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Second5)]
+    Task<ResponseData<AddReadComicHistoryData>> AddReadComicHistory(
+        [Body] QueryData<AddReadComicHistoryVariables> queryData);
+
     [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<AddReadComicHistoryData>> DeleteComicReadHistory([Body] QueryData<AddReadComicHistoryVariables> queryData);
-    
+    Task<ResponseData<AddReadComicHistoryData>> DeleteComicReadHistory(
+        [Body] QueryData<AddReadComicHistoryVariables> queryData);
 
     #endregion
 }
