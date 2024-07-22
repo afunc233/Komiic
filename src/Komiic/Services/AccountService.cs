@@ -27,7 +27,7 @@ public class AccountService(
             string? token = await tokenService.GetToken();
 
             if (string.IsNullOrWhiteSpace(token)) return;
-            
+
             var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
             if (accountData is { Data: not null })
             {
@@ -94,7 +94,12 @@ public class AccountService(
             await tokenService.ClearToken();
             AccountData = null;
             AccountChanged?.Invoke(this, EventArgs.Empty);
-            await komiicAccountApi.Logout();
+            var responseData = await komiicAccountApi.Logout();
+            if (responseData.Code == 200)
+            {
+                logger.LogDebug("Logout success !");
+            }
+
             await cookieService.ClearAllCookies();
             await LoadImageLimit();
         }

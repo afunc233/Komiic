@@ -16,7 +16,7 @@ public static class KomiicConst
     
     public const string EnableCacheHeader = nameof(EnableCacheHeader);
     
-    internal  const string LoginUrl = "/auth/login";
+    internal  const string LoginUrl = "/api/login";
     
     internal  const string LogoutUrl = "/auth/logout";
     
@@ -24,7 +24,7 @@ public static class KomiicConst
     
     internal  const string QueryUrl = "/api/query";
 
-    internal const string Minute15 = "00:15:00";
+    internal const string Minute30 = "00:30:00";
     
     internal const string Minute5 = "00:05:00";
     

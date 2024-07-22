@@ -28,6 +28,15 @@ public class ResponseData<T> : ResponseData
 public class TokenResponseData : ResponseData
 {
     [JsonPropertyName("token")] public string? Token { get; set; }
+    
+    [JsonPropertyName("code")] public long? Code { get; set; }
+    
+    [JsonPropertyName("expire")] public DateTime? Expire { get; set; }
+}
+
+public class LogoutResponseData : ResponseData
+{
+    [JsonPropertyName("code")] public long? Code { get; set; }
 }
 
 public class AccountData

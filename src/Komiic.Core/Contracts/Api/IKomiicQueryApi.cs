@@ -3,7 +3,7 @@ using Refit;
 
 namespace Komiic.Core.Contracts.Api;
 
-[Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute15)]
+[Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute30)]
 public interface IKomiicQueryApi
 {
     #region 首页

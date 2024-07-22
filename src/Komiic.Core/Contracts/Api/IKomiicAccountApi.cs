@@ -12,7 +12,7 @@ public interface IKomiicAccountApi
     Task<TokenResponseData> Login([Body] LoginData loginData);
 
     [Post(KomiicConst.LogoutUrl)]
-    Task Logout();
+    Task<LogoutResponseData> Logout();
 
     [Post(KomiicConst.RefreshAuthUrl)]
     [Headers("Authorization:", "Referer:https://komiic.com/")]
