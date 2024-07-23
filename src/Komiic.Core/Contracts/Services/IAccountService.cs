@@ -1,11 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Model;
 
-namespace Komiic.Contracts.Services;
+namespace Komiic.Core.Contracts.Services;
 
 public interface IAccountService
 {
+    string? CacheUserName { get;  }
+   
+    string? CachePassword { get;  }
+    
     Account? AccountData { get;  }
     
     event EventHandler AccountChanged;

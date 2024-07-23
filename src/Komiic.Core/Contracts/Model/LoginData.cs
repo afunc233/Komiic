@@ -2,9 +2,8 @@
 
 namespace Komiic.Core.Contracts.Model;
 
-public class LoginData(string email,string password)
+public record LoginData
 {
-    [JsonPropertyName("email")] public string Email { get; set; } = email;
-    [JsonPropertyName("password")] public string Password { get; set; } = password;
-
+    [JsonPropertyName("email")] public required string Email { get; set; }
+    [JsonPropertyName("password")] public required string Password { get; set; }
 }

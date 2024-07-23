@@ -13,7 +13,7 @@ internal static class Program
         Logger = LogManager.GetCurrentClassLogger();
     }
 
-    private static readonly Logger? Logger;
+    private static readonly Logger Logger;
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -28,11 +28,11 @@ internal static class Program
         }
         catch (Exception e)
         {
-            Logger?.Fatal(e, $"{e.Message}:{e.StackTrace}", e.Message, e.StackTrace);
+            Logger.Fatal(e, $"{e.Message}:{e.StackTrace}", e.Message, e.StackTrace);
         }
         finally
         {
-            Logger?.Debug($"Application terminated");
+            Logger.Debug($"Application terminated");
         }
     }
 

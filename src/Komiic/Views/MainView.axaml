@@ -8,7 +8,6 @@
     xmlns:asyncLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
-    xmlns:komiic="clr-namespace:Komiic"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Komiic.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

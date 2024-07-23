@@ -2,9 +2,6 @@
 
 namespace Komiic.Core.Contracts.Model;
 
-// TODO 优化这里，取消 pragma
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
-// ReSharper disable InconsistentNaming
 public class ErrorInfo
 {
     [JsonPropertyName("message")] public string? Message { get; set; }
@@ -28,9 +25,9 @@ public class ResponseData<T> : ResponseData
 public class TokenResponseData : ResponseData
 {
     [JsonPropertyName("token")] public string? Token { get; set; }
-    
+
     [JsonPropertyName("code")] public long? Code { get; set; }
-    
+
     [JsonPropertyName("expire")] public DateTime? Expire { get; set; }
 }
 
@@ -41,24 +38,31 @@ public class LogoutResponseData : ResponseData
 
 public class AccountData
 {
-    [JsonPropertyName("account")] public Account Account { get; set; }
+    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
 }
 
 public class Account
 {
-    public string id { get; set; }
-    public string email { get; set; }
-    public string nickname { get; set; }
-    public string dateCreated { get; set; }
-    public object[] favoriteComicIds { get; set; }
-    public string profileText { get; set; }
-    public string profileTextColor { get; set; }
-    public string profileBackgroundColor { get; set; }
-    public int totalDonateAmount { get; set; }
-    public int monthDonateAmount { get; set; }
-    public string profileImageUrl { get; set; }
-    public string nextChapterMode { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("email")] public string Email { get; set; } = null!;
+    [JsonPropertyName("nickname")] public string Nickname { get; set; } = null!;
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("favoriteComicIds")] public object[] FavoriteComicIds { get; set; } = [];
+    [JsonPropertyName("profileText")] public string ProfileText { get; set; } = null!;
+    [JsonPropertyName("profileTextColor")] public string ProfileTextColor { get; set; } = null!;
+
+    [JsonPropertyName("profileBackgroundColor")]
+    public string ProfileBackgroundColor { get; set; } = null!;
+
+    [JsonPropertyName("totalDonateAmount")]
+    public int TotalDonateAmount { get; set; }
+
+    [JsonPropertyName("monthDonateAmount")]
+    public int MonthDonateAmount { get; set; }
+
+    [JsonPropertyName("profileImageUrl")] public string ProfileImageUrl { get; set; } = null!;
+    [JsonPropertyName("nextChapterMode")] public string NextChapterMode { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class FavoriteNewUpdatedData
@@ -73,34 +77,30 @@ public class FavoriteNewUpdatedData
 
 public class AuthorSimple
 {
-    public string id { get; set; }
-    public string name { get; set; }
-    public string __typename { get; set; }
-}
-
-public class Categories
-{
-    public string id { get; set; }
-    public string name { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("name")] public string Name { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class MangaInfo
 {
-    public string id { get; set; }
-    public string title { get; set; }
-    public string status { get; set; }
-    public int year { get; set; }
-    public string imageUrl { get; set; }
-    public List<AuthorSimple> authors { get; set; }
-    public List<Categories> categories { get; set; }
-    public string dateUpdated { get; set; }
-    public int monthViews { get; set; }
-    public int views { get; set; }
-    public int favoriteCount { get; set; }
-    public string lastBookUpdate { get; set; }
-    public string lastChapterUpdate { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("title")] public string Title { get; set; } = null!;
+    [JsonPropertyName("status")] public string Status { get; set; } = null!;
+    [JsonPropertyName("year")] public int Year { get; set; }
+    [JsonPropertyName("imageUrl")] public string ImageUrl { get; set; } = null!;
+    [JsonPropertyName("authors")] public List<AuthorSimple> Authors { get; set; } = null!;
+    [JsonPropertyName("categories")] public List<Category> Categories { get; set; } = null!;
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("monthViews")] public int MonthViews { get; set; }
+    [JsonPropertyName("views")] public int Views { get; set; }
+    [JsonPropertyName("favoriteCount")] public int FavoriteCount { get; set; }
+    [JsonPropertyName("lastBookUpdate")] public string LastBookUpdate { get; set; } = null!;
+
+    [JsonPropertyName("lastChapterUpdate")]
+    public string LastChapterUpdate { get; set; } = null!;
+
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class RecentUpdateData
@@ -119,10 +119,10 @@ public class HotComicsData
 
 public class ImageLimit
 {
-    public int limit { get; set; }
-    public int usage { get; set; }
-    public string resetInSeconds { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("limit")] public int Limit { get; set; }
+    [JsonPropertyName("usage")] public int Usage { get; set; }
+    [JsonPropertyName("resetInSeconds")] public string ResetInSeconds { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class GetImageLimitData
@@ -158,13 +158,13 @@ public class ChaptersByComicIdData
 
 public class ChaptersByComicId
 {
-    public string id { get; set; }
-    public string serial { get; set; }
-    public string type { get; set; }
-    public string dateCreated { get; set; }
-    public string dateUpdated { get; set; }
-    public int size { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("serial")] public string Serial { get; set; } = null!;
+    [JsonPropertyName("type")] public string Type { get; set; } = null!;
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("size")] public int Size { get; set; }
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 #endregion
@@ -179,11 +179,11 @@ public class ImagesByChapterIdData
 
 public class ImagesByChapterId
 {
-    public string id { get; set; }
-    public string kid { get; set; }
-    public int height { get; set; }
-    public int width { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("kid")] public string Kid { get; set; } = null!;
+    [JsonPropertyName("height")] public int Height { get; set; }
+    [JsonPropertyName("width")] public int Width { get; set; }
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 #endregion
@@ -197,9 +197,9 @@ public class AllCategoryData
 
 public class Category
 {
-    public string id { get; set; }
-    public string name { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("name")] public string Name { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class ComicByCategoryData
@@ -218,14 +218,14 @@ public class AllAuthorsData
 
 public class Author
 {
-    public string id { get; set; }
-    public string name { get; set; }
-    public string chName { get; set; }
-    public string enName { get; set; }
-    public string wikiLink { get; set; }
-    public int comicCount { get; set; }
-    public int views { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("name")] public string Name { get; set; } = null!;
+    [JsonPropertyName("chName")] public string ChName { get; set; } = null!;
+    [JsonPropertyName("enName")] public string EnName { get; set; } = null!;
+    [JsonPropertyName("wikiLink")] public string WikiLink { get; set; } = null!;
+    [JsonPropertyName("comicCount")] public int ComicCount { get; set; }
+    [JsonPropertyName("views")] public int Views { get; set; }
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class ComicsByAuthorData
@@ -261,44 +261,52 @@ public class SetNextChapterModeData
 
 public class AddFavoriteData
 {
+    [JsonPropertyName("addFavorite")]
     // "removeFavorite": true
-    public Favorite addFavorite { get; set; }
+    public Favorite AddFavorite { get; set; } = null!;
 }
 
 public class RemoveFavoriteData
 {
+    [JsonPropertyName("removeFavorite")]
     // "removeFavorite": true
-    public bool removeFavorite { get; set; }
+    public bool RemoveFavorite { get; set; }
 }
 
 public class FavoriteData
 {
-    public string getLatestUpdatedDateInFavorite { get; set; }
-    public List<Favorite> favoritesV2 { get; set; }
+    [JsonPropertyName("getLatestUpdatedDateInFavorite")]
+    public string GetLatestUpdatedDateInFavorite { get; set; } = null!;
+
+    [JsonPropertyName("favoritesV2")] public List<Favorite> FavoritesV2 { get; set; } = null!;
 }
 
 public class Favorite
 {
-    public string id { get; set; }
-    public string comicId { get; set; }
-    public string dateAdded { get; set; }
-    public string lastAccess { get; set; }
-    public string bookReadProgress { get; set; }
-    public string chapterReadProgress { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("dateAdded")] public string DateAdded { get; set; } = null!;
+    [JsonPropertyName("lastAccess")] public string LastAccess { get; set; } = null!;
+    [JsonPropertyName("bookReadProgress")] public string BookReadProgress { get; set; } = null!;
+
+    [JsonPropertyName("chapterReadProgress")]
+    public string ChapterReadProgress { get; set; } = null!;
+
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class LastReadByComicIdData
 {
-    public List<LastReadByComicId> lastReadByComicIds { get; set; }
+    [JsonPropertyName("lastReadByComicIds")]
+    public List<LastReadByComicId> LastReadByComicIds { get; set; } = null!;
 }
 
 public class LastReadByComicId
 {
-    public string comicId { get; set; }
-    public object book { get; set; }
-    public object chapter { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("book")] public object Book { get; set; } = null!;
+    [JsonPropertyName("chapter")] public object Chapter { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 #endregion
@@ -308,7 +316,7 @@ public class LastReadByComicId
 public class RecommendComicIdsData
 {
     [JsonPropertyName("recommendComicIds")]
-    public List<string> recommendComicIds { get; set; }
+    public List<string> RecommendComicIds { get; set; } = null!;
 }
 
 #endregion
@@ -317,219 +325,227 @@ public class RecommendComicIdsData
 
 public class FolderData
 {
-    public List<Folder> folders { get; set; }
+    [JsonPropertyName("folders")] public List<Folder> Folders { get; set; } = null!;
 }
 
 public class Folder
 {
-    public string id { get; set; }
-    public string key { get; set; }
-    public string name { get; set; }
-    public int views { get; set; }
-    public int comicCount { get; set; }
-    public string dateCreated { get; set; }
-    public string dateUpdated { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("key")] public string Key { get; set; } = null!;
+    [JsonPropertyName("name")] public string Name { get; set; } = null!;
+    [JsonPropertyName("views")] public int Views { get; set; }
+    [JsonPropertyName("comicCount")] public int ComicCount { get; set; }
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class FolderByKeyData
 {
-    public FolderByKey folder { get; set; }
+    [JsonPropertyName("folder")] public FolderByKey Folder { get; set; } = null!;
 }
 
 public class FolderByKey
 {
-    public string id { get; set; }
-    public string key { get; set; }
-    public string name { get; set; }
-    public int views { get; set; }
-    public string dateCreated { get; set; }
-    public string dateUpdated { get; set; }
-    public int comicCount { get; set; }
-    public FolderAccount account { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("key")] public string Key { get; set; } = null!;
+    [JsonPropertyName("name")] public string Name { get; set; } = null!;
+    [JsonPropertyName("views")] public int Views { get; set; }
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("comicCount")] public int ComicCount { get; set; }
+    [JsonPropertyName("account")] public FolderAccount Account { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class FolderAccount
 {
-    public string id { get; set; }
-    public string nickname { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("nickname")] public string Nickname { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class FolderComicIdsData
 {
-    public string folderId { get; set; }
-    public string key { get; set; }
-    public List<string> comicIds { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("folderId")] public string FolderId { get; set; } = null!;
+    [JsonPropertyName("key")] public string Key { get; set; } = null!;
+    [JsonPropertyName("comicIds")] public List<string> ComicIds { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class UpdateFolderNameData
 {
+    [JsonPropertyName("updateFolderName")]
     // "updateFolderName": true
-    public bool updateFolderName { get; set; }
+    public bool UpdateFolderName { get; set; }
 }
 
 public class RemoveFolderData
 {
+    [JsonPropertyName("removeFolder")]
     // "updateFolderName": true
-    public bool removeFolder { get; set; }
+    public bool RemoveFolder { get; set; }
 }
 
 public class AddComicToFolderData
 {
+    [JsonPropertyName("addComicToFolder")]
     // "updateFolderName": true
-    public bool addComicToFolder { get; set; }
+    public bool AddComicToFolder { get; set; }
 }
 
 public class ComicInAccountFoldersData
 {
+    [JsonPropertyName("comicInAccountFolders")]
     // "updateFolderName": true
-    public List<string> comicInAccountFolders { get; set; }
+    public List<string> ComicInAccountFolders { get; set; } = null!;
 }
 
 public class AddMessageToComicData
 {
-    public AddMessageToComic addMessageToComic { get; set; }
+    [JsonPropertyName("addMessageToComic")]
+    public AddMessageToComic AddMessageToComic { get; set; } = null!;
 }
 
 public class AddMessageToComic
 {
-    public string id { get; set; }
-    public string message { get; set; }
-    public string comicId { get; set; }
-    public Account account { get; set; }
-    public ReplyTo replyTo { get; set; }
-    public string dateCreated { get; set; }
-    public string dateUpdated { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("message")] public string Message { get; set; } = null!;
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
+    [JsonPropertyName("replyTo")] public ReplyTo ReplyTo { get; set; } = null!;
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class ReplyTo
 {
-    public string id { get; set; }
-    public string message { get; set; }
-    public Account account { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("message")] public string Message { get; set; } = null!;
+    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class MessageChanData
 {
-    public List<MessageChan> messageChan { get; set; }
+    [JsonPropertyName("messageChan")] public List<MessageChan> MessageChan { get; set; } = null!;
 }
 
 public class MessageChan
 {
-    public string id { get; set; }
-    public string comicId { get; set; }
-    public Account account { get; set; }
-    public string message { get; set; }
-    public object replyTo { get; set; }
-    public int upCount { get; set; }
-    public int downCount { get; set; }
-    public string dateUpdated { get; set; }
-    public string dateCreated { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
+    [JsonPropertyName("message")] public string Message { get; set; } = null!;
+    [JsonPropertyName("replyTo")] public object ReplyTo { get; set; } = null!;
+    [JsonPropertyName("upCount")] public int UpCount { get; set; }
+    [JsonPropertyName("downCount")] public int DownCount { get; set; }
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class MessageCountByComicIdData
 {
     [JsonPropertyName("messageCountByComicId")]
-    public int MessageCountByComicIdCount { get; set; }
+    public int? MessageCountByComicIdCount { get; set; }
 }
 
 public class LastMessageByComicIdData
 {
     [JsonPropertyName("lastMessageByComicId")]
-    public LastMessageByComicId LastMessageByComicId { get; set; }
+    public LastMessageByComicId LastMessageByComicId { get; set; } = null!;
 }
 
 public class LastMessageByComicId
 {
-    public string comicId { get; set; }
-    public string message { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("message")] public string Message { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class MessagesByComicIdData
 {
-    public List<MessagesByComicId> getMessagesByComicId { get; set; }
+    [JsonPropertyName("getMessagesByComicId")]
+    public List<MessagesByComicId> GetMessagesByComicId { get; set; } = null!;
 }
 
 public class MessagesByComicId
 {
-    public string id { get; set; }
-    public string comicId { get; set; }
-    public Account account { get; set; }
-    public string message { get; set; }
-    public ReplyTo replyTo { get; set; }
-    public int upCount { get; set; }
-    public int downCount { get; set; }
-    public string dateUpdated { get; set; }
-    public string dateCreated { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
+    [JsonPropertyName("message")] public string Message { get; set; } = null!;
+    [JsonPropertyName("replyTo")] public ReplyTo ReplyTo { get; set; } = null!;
+    [JsonPropertyName("upCount")] public int UpCount { get; set; }
+    [JsonPropertyName("downCount")] public int DownCount { get; set; }
+    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
+    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class VoteMessageData
 {
-    public bool voteMessage { get; set; }
+    [JsonPropertyName("voteMessage")] public bool VoteMessage { get; set; }
 }
 
 public class MessageVotesByComicIdData
 {
-    public List<MessageVotesByComicId> messageVotesByComicId { get; set; }
+    [JsonPropertyName("messageVotesByComicId")]
+    public List<MessageVotesByComicId> MessageVotesByComicId { get; set; } = null!;
 }
 
 public class MessageVotesByComicId
 {
-    public string messageId { get; set; }
-    public bool up { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("messageId")] public string MessageId { get; set; } = null!;
+    [JsonPropertyName("up")] public bool Up { get; set; }
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class DeleteMessageData
 {
-    public bool deleteMessage { get; set; }
+    [JsonPropertyName("deleteMessage")] public bool DeleteMessage { get; set; }
 }
+
 #endregion
 
 #region 歷史
 
 public class ReadComicHistoryData
 {
-    public List<ComicHistory> readComicHistory { get; set; }
+    [JsonPropertyName("readComicHistory")] public List<ComicHistory> ReadComicHistory { get; set; } = null!;
 }
 
 public class ComicHistory
 {
-    public string id { get; set; }
-    public string comicId { get; set; }
-    public List<Chapters> chapters { get; set; }
-    public string startDate { get; set; }
-    public string lastDate { get; set; }
-    public string chapterType { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
+    [JsonPropertyName("chapters")] public List<Chapters> Chapters { get; set; } = null!;
+    [JsonPropertyName("startDate")] public string StartDate { get; set; } = null!;
+    [JsonPropertyName("lastDate")] public string LastDate { get; set; } = null!;
+    [JsonPropertyName("chapterType")] public string ChapterType { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class Chapters
 {
-    public string id { get; set; }
-    public string chapterId { get; set; }
-    public int page { get; set; }
-    public string __typename { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("chapterId")] public string ChapterId { get; set; } = null!;
+    [JsonPropertyName("page")] public int Page { get; set; }
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
 public class ReadComicHistoryByIdData
 {
-    public ComicHistory readComicHistoryById { get; set; }
+    [JsonPropertyName("readComicHistoryById")]
+    public ComicHistory ReadComicHistoryById { get; set; } = null!;
 }
+
 public class AddReadComicHistoryData
 {
-    public ComicHistory addReadComicHistory { get; set; }
+    [JsonPropertyName("addReadComicHistory")]
+    public ComicHistory AddReadComicHistory { get; set; } = null!;
 }
 
 #endregion
-
-// ReSharper restore InconsistentNaming
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。

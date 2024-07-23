@@ -3,15 +3,18 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public partial class AuthorsPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,ILogger<AuthorsPageViewModel> logger)
+public partial class AuthorsPageViewModel(
+    IMessenger messenger,
+    IAuthorDataService authorDataService,
+    ILogger<AuthorsPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenAuthorViewModel
 {
     private int _pageIndex;
@@ -26,20 +29,10 @@ public partial class AuthorsPageViewModel(IMessenger messenger, IKomiicQueryApi 
     {
         await SafeLoadData(async () =>
         {
-            var authorsData = await komiicQueryApi.GetAllAuthors(QueryDataEnum.Authors.GetQueryDataWithVariables(
-                new PaginationVariables()
-                {
-                    Pagination = new Pagination()
-                    {
-                        Limit = 50,
-                        Offset = (_pageIndex++) * 50,
-                        OrderBy = "DATE_UPDATED"
-                    }
-                }));
-
-            if (authorsData is { Data.AuthorList.Count: > 0 })
+            var authorsData = await authorDataService.GetAllAuthors(_pageIndex++);
+            if (authorsData is { Count: > 0 })
             {
-                authorsData.Data.AuthorList.ForEach(AllAuthors.Add);
+                authorsData.ForEach(AllAuthors.Add);
                 HasMore = true;
             }
             else

@@ -16,7 +16,7 @@
             <TextBlock
                 FontSize="{StaticResource TabItemHeaderFontSize}"
                 HorizontalAlignment="Center"
-                Text="{Binding Author.name, StringFormat={}作者:{0}}" />
+                Text="{Binding Author.Name, StringFormat={}作者:{0}}" />
             <Border
                 BorderBrush="Gray"
                 BorderThickness="0,1,0,0"

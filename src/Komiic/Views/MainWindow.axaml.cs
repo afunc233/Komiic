@@ -5,6 +5,7 @@ using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Rendering;
 using Avalonia.Styling;
 
 namespace Komiic.Views;
@@ -22,9 +23,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 #if DEBUG
-        // RendererDiagnostics.DebugOverlays = RendererDebugOverlays.None | RendererDebugOverlays.Fps |
-        //                                     RendererDebugOverlays.LayoutTimeGraph |
-        //                                     RendererDebugOverlays.RenderTimeGraph;
+        RendererDiagnostics.DebugOverlays = RendererDebugOverlays.None | RendererDebugOverlays.Fps |
+                                            RendererDebugOverlays.LayoutTimeGraph |
+                                            RendererDebugOverlays.RenderTimeGraph;
 #endif
     }
 

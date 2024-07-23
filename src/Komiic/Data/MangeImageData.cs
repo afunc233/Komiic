@@ -10,12 +10,12 @@ public static class MangeImageDataExt
 {
     public static string GetImageUrl(this MangeImageData imageData)
     {
-        return $"/api/image/{imageData.ImagesByChapterId.kid}";
+        return $"/api/image/{imageData.ImagesByChapterId.Kid}";
     }
 
     public static Uri GetReferrer(this MangeImageData mangeImageData)
     {
         return new Uri(
-            $"{KomiicConst.KomiicApiUrl}/comic/{mangeImageData.MangaInfo.id}/chapter/{mangeImageData.Chapter.id}");
+            $"{KomiicConst.KomiicApiUrl}/comic/{mangeImageData.MangaInfo.Id}/chapter/{mangeImageData.Chapter.Id}");
     }
 }

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Contracts.Services;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -13,8 +13,7 @@ namespace Komiic.PageViewModels;
 
 public partial class MainPageViewModel(
     IMessenger messenger,
-    IRecentUpdateDataService recentUpdateDataService,
-    IHotComicsDataService hotComicsDataService,
+    IComicDataService comicDataService,
     ILogger<MainPageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     private int _recentUpdatePageIndex;
@@ -22,7 +21,9 @@ public partial class MainPageViewModel(
 
     [ObservableProperty] private bool _isLoading;
 
-    [NotifyCanExecuteChangedFor(nameof(OpenMangaCommand))] [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoadMoreRecentUpdateCommand))]
+    [NotifyCanExecuteChangedFor(nameof(LoadMoreHotComicsCommand))]
+    [ObservableProperty]
     private bool _hasMore = true;
 
     public override NavBarType NavBarType => NavBarType.Main;
@@ -43,12 +44,14 @@ public partial class MainPageViewModel(
         messenger.Send(new OpenMangaMessage(mangaInfo));
     }
 
-    [RelayCommand]
+    private bool CanLoadMore() => !IsLoading && HasMore && IsDataError;
+
+    [RelayCommand(CanExecute = nameof(CanLoadMore))]
     private async Task LoadMoreRecentUpdate()
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await recentUpdateDataService.LoadMore(_recentUpdatePageIndex++);
+            var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
             if (dataList.Count == 0)
             {
                 HasMore = false;
@@ -60,12 +63,13 @@ public partial class MainPageViewModel(
         });
     }
 
-    [RelayCommand]
+
+    [RelayCommand(CanExecute = nameof(CanLoadMore))]
     private async Task LoadMoreHotComics()
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++);
+            var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++);
             if (dataList.Count == 0)
             {
                 HasMore = false;

@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using Komiic.Contracts.Services;
 using Komiic.Data;
 
 namespace Komiic.Controls;
@@ -63,8 +62,8 @@ public class MangeImageView : TemplatedControl
             return;
         }
 
-        _image.Width = MangeImageData.ImagesByChapterId.width;
-        _image.Height = MangeImageData.ImagesByChapterId.height;
+        _image.Width = MangeImageData.ImagesByChapterId.Width;
+        _image.Height = MangeImageData.ImagesByChapterId.Height;
     }
 
     private async void LoadImage()

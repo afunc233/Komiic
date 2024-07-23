@@ -34,12 +34,12 @@ public enum QueryDataEnum
     FavoriteNewUpdatedQuery,
     UpdateProfileImage,
     SetNextChapterMode,
-    
+
     AddReadComicHistory,
     ReadComicHistory,
     ReadComicHistoryById,
     DeleteComicReadHistory,
-    
+
     AddFavorite,
     RemoveFavorite,
     FavoritesQuery,
@@ -340,7 +340,7 @@ public class FavoritePagination : Pagination
 public class FavoritePaginationVariables
 {
     [JsonPropertyName("pagination")]
-    public FavoritePagination Pagination { get; set; } = new FavoritePagination()
+    public FavoritePagination Pagination { get; set; } = new FavoritePagination
     {
         OrderBy = "COMIC_DATE_UPDATED",
     };
@@ -354,7 +354,7 @@ public class RecommendComicIdsPaginationVariables : PaginationVariables
 
 public class KeyVariables
 {
-    [JsonPropertyName("key")] public string Key { get; set; }
+    [JsonPropertyName("key")] public string Key { get; set; } = "";
 }
 
 public class FolderComicIdsVariables : PaginationVariables
@@ -397,7 +397,7 @@ public class AddMessageToComicVariables
 
 public class MessageIdVariables
 {
-// "messageId": "4261"
+    // "messageId": "4261"
     [JsonPropertyName("messageId")] public string MessageId { get; set; } = "";
 }
 
@@ -408,15 +408,17 @@ public class ComicIdPaginationVariables : PaginationVariables
 
 public class VoteMessageVariables : MessageIdVariables
 {
-    [JsonPropertyName("up")] public bool Up { get; init; } = false;
+    [JsonPropertyName("up")] public bool Up { get; init; }
 }
 
 public class AddReadComicHistoryVariables
 {
     // "comicId": "2806",
-    public string comicId { get; set; }
+    [JsonPropertyName("comicId")] public string ComicId { get; init; } = "";
     //  "chapterId": "88432",
-    public string chapterId { get; set; }
+
+    [JsonPropertyName("chapterId")] public string ChapterId { get; init; } = "";
+
     //  "page": 0
-    public int page { get; set; }
+    [JsonPropertyName("page")] public int Page { get; init; }
 }

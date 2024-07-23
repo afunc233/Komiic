@@ -19,14 +19,12 @@
 
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>
-        <PackageReference Include="DialogHost.Avalonia" Version="0.8.0-avalonia11dot1-1" />
 
         <!-- Hosting -->
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-preview.3.24172.9"/>
-        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.0-preview.4.24267.6" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(HostingVersion)"/>
 
         <!-- NLog -->
-        <PackageReference Include="NLog.Extensions.Hosting" Version="5.3.11"/>
+        <PackageReference Include="NLog.Extensions.Hosting" Version="$(NLogVersion)"/>
 
         <!-- CommunityToolkit.Mvvm -->
         <PackageReference Include="CommunityToolkit.Mvvm" Version="$(CommunityToolkitVersion)"/>
@@ -39,15 +37,15 @@
         <!-- Svg -->
         <PackageReference Include="Svg.SourceGenerator.Skia" Version="1.0.0.18"/>
         <PackageReference Include="Avalonia.Controls.Skia" Version="11.1.0-build20240312-01"/>
-        
+
         <!-- Behaviors -->
         <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0-build20240312-01"/>
 
         <!-- HeroIcons -->
-        <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2" />
-        <!-- Jwt -->
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
-        
+        <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2"/>
+
+        <!-- DialogHost -->
+        <PackageReference Include="DialogHost.Avalonia" Version="0.8.0-avalonia11dot1-1"/>
     </ItemGroup>
 
 
@@ -57,8 +55,8 @@
 
 
     <ItemGroup>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

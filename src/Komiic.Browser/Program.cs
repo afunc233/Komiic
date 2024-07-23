@@ -14,6 +14,6 @@ internal static class Program
         .WithHarmonyOSSansSCFont()
         .StartBrowserAppAsync("out");
 
-    public static AppBuilder BuildAvaloniaApp()
+    private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>();
 }

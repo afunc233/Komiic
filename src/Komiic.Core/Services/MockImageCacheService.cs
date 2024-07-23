@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Komiic.Contracts.Services;
+﻿using Komiic.Core.Contracts.Services;
 
-namespace Komiic.Services;
+namespace Komiic.Core.Services;
 
 public class MockImageCacheService : IImageCacheService
 {

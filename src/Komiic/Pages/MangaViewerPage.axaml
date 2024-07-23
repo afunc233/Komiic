@@ -34,7 +34,7 @@
                 Text="0"
                 x:Name="CurrentPageTextBlock" />
             <TextBlock FontSize="32" Text="/" />
-            <TextBlock FontSize="32" Text="{CompiledBinding Chapter.size}" />
+            <TextBlock FontSize="32" Text="{CompiledBinding Chapter.Size}" />
         </StackPanel>
         <ItemsControl
             ContainerPrepared="ItemsControl_OnContainerPrepared"

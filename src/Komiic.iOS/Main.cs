@@ -13,7 +13,7 @@ public static class Application
         Logger = LogManager.GetCurrentClassLogger();
     }
 
-    private static readonly Logger? Logger;
+    private static readonly Logger Logger;
 
     // This is the main entry point of the application.
     static void Main(string[] args)
@@ -26,7 +26,7 @@ public static class Application
         }
         catch (Exception e)
         {
-            Logger?.Fatal(e);
+            Logger.Fatal(e);
         }
     }
 }

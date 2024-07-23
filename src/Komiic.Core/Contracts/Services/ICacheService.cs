@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Komiic.Contracts.Services;
+﻿namespace Komiic.Core.Contracts.Services;
 
 public interface ICacheService
 {

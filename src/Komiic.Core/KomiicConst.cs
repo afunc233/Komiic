@@ -4,17 +4,17 @@ public static class KomiicConst
 {
     public const string Komiic = nameof(Komiic);
     
-    public const string KomiicToken = nameof(KomiicToken);
+    internal const string KomiicToken = nameof(KomiicToken);
     
-    public const string KomiicCookie = nameof(KomiicCookie);
+    internal const string KomiicCookie = nameof(KomiicCookie);
 
-    public const string KomiicUsername = nameof(KomiicUsername);
+    internal const string KomiicUsername = nameof(KomiicUsername);
     
-    public const string KomiicPassword = nameof(KomiicPassword);
+    internal const string KomiicPassword = nameof(KomiicPassword);
     
     public const string KomiicApiUrl = "https://komiic.com/";
     
-    public const string EnableCacheHeader = nameof(EnableCacheHeader);
+    internal const string EnableCacheHeader = nameof(EnableCacheHeader);
     
     internal  const string LoginUrl = "/api/login";
     

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Contracts.Services;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ namespace Komiic.PageViewModels;
 
 public partial class RecentUpdatePageViewModel(
     IMessenger messenger,
-    IRecentUpdateDataService recentUpdateDataService,
+    IComicDataService comicDataService,
     ILogger<RecentUpdatePageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     private int _recentUpdatePageIndex;
@@ -37,7 +37,7 @@ public partial class RecentUpdatePageViewModel(
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await recentUpdateDataService.LoadMore(_recentUpdatePageIndex++);
+            var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
             if (dataList.Count == 0)
             {
                 HasMore = false;

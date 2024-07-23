@@ -33,7 +33,7 @@
             </StackPanel>
         </Panel>
         <ListBox
-            DisplayMemberBinding="{Binding name}"
+            DisplayMemberBinding="{Binding Name}"
             DockPanel.Dock="Top"
             ItemsSource="{Binding AllCategories}"
             Margin="20"

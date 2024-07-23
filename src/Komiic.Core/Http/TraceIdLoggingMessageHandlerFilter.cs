@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using Microsoft.Extensions.Http;
+﻿using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Http.Logging;
 using Microsoft.Extensions.Logging;
 
-namespace Komiic.Http;
+namespace Komiic.Core.Http;
 
 
-internal class TraceIdLoggingMessageHandlerFilter(ILoggerFactory loggerFactory) : IHttpMessageHandlerBuilderFilter
+public class TraceIdLoggingMessageHandlerFilter(ILoggerFactory loggerFactory) : IHttpMessageHandlerBuilderFilter
 {
     private readonly ILoggerFactory _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
 

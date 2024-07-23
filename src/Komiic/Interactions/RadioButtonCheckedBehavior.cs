@@ -26,7 +26,7 @@ public class RadioButtonCheckedBehavior : Trigger
         AvaloniaProperty.Register<RadioButtonCheckedBehavior, bool?>(nameof(Value));
 
     /// <summary>
-    /// Gets or sets the routing event <see cref="RoutingStrategies"/>. This is a avalonia property.
+    /// Gets or sets the routing event <see cref="RoutingStrategies"/>. This is an avalonia property.
     /// </summary>
     public RoutingStrategies RoutingStrategies
     {
@@ -35,7 +35,7 @@ public class RadioButtonCheckedBehavior : Trigger
     }
 
     /// <summary>
-    /// Gets or sets the value to be compared with the value of <see cref="ToggleButton.IsChecked"/>. This is a avalonia property.
+    /// Gets or sets the value to be compared with the value of <see cref="ToggleButton.IsChecked"/>. This is an avalonia property.
     /// </summary>
     public bool? Value
     {

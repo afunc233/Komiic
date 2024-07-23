@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Data;
 using Komiic.Messages;
 using Komiic.ViewModels;
@@ -14,13 +15,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public partial class AllMangaPageViewModel
-    : AbsPageViewModel, IOpenMangaViewModel
+public partial class AllMangaPageViewModel(
+    IMessenger messenger,
+    ICategoryDataService categoryDataService,
+    ILogger<AllMangaPageViewModel> logger)
+    : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     [NotifyCanExecuteChangedFor(nameof(LoadCategoryMangeCommand))] [ObservableProperty]
     private bool _hasMore = true;
 
-    [ObservableProperty] private Category? _selectedCategory = new() { id = "0", name = "全部" };
+    [ObservableProperty] private Category? _selectedCategory;
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
@@ -43,19 +47,8 @@ public partial class AllMangaPageViewModel
 
     public ObservableCollection<MangaInfo> AllMangaInfos { get; } = [];
 
-    private readonly IKomiicQueryApi _komiicQueryApi;
-    private readonly IMessenger _messenger;
-
     private int _pageIndex;
 
-
-    public AllMangaPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,
-        ILogger<AllMangaPageViewModel> logger) : base(logger)
-    {
-        _komiicQueryApi = komiicQueryApi;
-        _messenger = messenger;
-        AllCategories.Add(SelectedCategory!);
-    }
 
     async partial void OnSelectedCategoryChanged(Category? value)
     {
@@ -91,10 +84,11 @@ public partial class AllMangaPageViewModel
     {
         await SafeLoadData(async () =>
         {
-            var allCategoryData = await _komiicQueryApi.GetAllCategory(QueryDataEnum.AllCategory.GetQueryData());
-            if (allCategoryData is { Data.AllCategories.Count: > 0 })
+            var allCategories = await categoryDataService.GetAllCategory();
+            if (allCategories is { Count: > 0 })
             {
-                allCategoryData.Data.AllCategories.ForEach(AllCategories.Add);
+                allCategories.ForEach(AllCategories.Add);
+                SelectedCategory = allCategories.FirstOrDefault();
             }
         });
     }
@@ -110,7 +104,7 @@ public partial class AllMangaPageViewModel
     private async Task OpenManga(MangaInfo mangaInfo)
     {
         await Task.CompletedTask;
-        _messenger.Send(new OpenMangaMessage(mangaInfo));
+        messenger.Send(new OpenMangaMessage(mangaInfo));
     }
 
     private readonly SemaphoreSlim _semaphoreSlim = new(1);
@@ -132,23 +126,14 @@ public partial class AllMangaPageViewModel
                 AllMangaInfos.Clear();
             }
 
-            var comicByCategoryData = await _komiicQueryApi.GetComicByCategory(
-                QueryDataEnum.ComicByCategory.GetQueryDataWithVariables(new CategoryIdPaginationVariables()
-                {
-                    CategoryId = SelectedCategory?.id ?? "0",
-                    Pagination = new Pagination()
-                    {
-                        Offset = (_pageIndex++) * 20,
-                        Limit = 20,
-                        OrderBy = OrderBy,
-                        Status = State ?? ""
-                    }
-                }));
+            var comicByCategoryData =
+                await categoryDataService.GetComicByCategory(SelectedCategory?.Id ?? "0", _pageIndex++, OrderBy,
+                    State ?? "");
 
-            if (comicByCategoryData is { Data.ComicByCategories.Count: > 0 })
+            if (comicByCategoryData is { Count: > 0 })
             {
                 HasMore = true;
-                comicByCategoryData.Data.ComicByCategories.ForEach(AllMangaInfos.Add);
+                comicByCategoryData.ForEach(AllMangaInfos.Add);
             }
             else
             {

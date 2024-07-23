@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
-using Komiic.Contracts.Services;
 using Komiic.Core;
+using Komiic.Core.Contracts.Services;
 using Komiic.Data;
 
-namespace Komiic.Http;
+namespace Komiic.Controls;
 
 internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheService cacheService) : IMangeImageLoader
 {

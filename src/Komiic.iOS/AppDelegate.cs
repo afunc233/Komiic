@@ -10,7 +10,9 @@ namespace Komiic.iOS;
 // application events from iOS.
 [Register("AppDelegate")]
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
+// ReSharper disable PartialTypeWithSinglePart
 public partial class AppDelegate : AvaloniaAppDelegate<App>
+// ReSharper restore PartialTypeWithSinglePart
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
 {
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)

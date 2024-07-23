@@ -37,24 +37,24 @@
                     <DropDownButton.Content>
                         <StackPanel Margin="0,0,10,0" Orientation="Horizontal">
                             <Border
-                                Background="{Binding AccountData.profileBackgroundColor, FallbackValue=#000000}"
+                                Background="{Binding AccountData.ProfileBackgroundColor, FallbackValue=#000000}"
                                 CornerRadius="13"
                                 Margin="0,0,10,0"
                                 Width="{Binding $self.Bounds.Height}">
                                 <Viewbox>
                                     <TextBlock
                                         FontSize="24"
-                                        Foreground="{Binding AccountData.profileTextColor, FallbackValue=#000000}"
+                                        Foreground="{Binding AccountData.ProfileTextColor, FallbackValue=#000000}"
                                         HorizontalAlignment="Center"
                                         Margin="2"
-                                        Text="{Binding AccountData.profileText, FallbackValue='無'}"
+                                        Text="{Binding AccountData.ProfileText, FallbackValue='無'}"
                                         VerticalAlignment="Center" />
                                 </Viewbox>
                             </Border>
                             <Viewbox>
                                 <TextBlock
                                     FontSize="22"
-                                    Text="{Binding AccountData.nickname, FallbackValue='未登入'}"
+                                    Text="{Binding AccountData.Nickname, FallbackValue='未登入'}"
                                     VerticalAlignment="Center" />
                             </Viewbox>
                         </StackPanel>
@@ -86,7 +86,7 @@
             VerticalAlignment="Center">
             <TextBlock
                 HorizontalAlignment="Center"
-                Text="{Binding ImageLimit.usage}"
+                Text="{Binding ImageLimit.Usage}"
                 TextAlignment="Center"
                 VerticalAlignment="Center" />
             <TextBlock
@@ -96,7 +96,7 @@
                 VerticalAlignment="Center" />
             <TextBlock
                 HorizontalAlignment="Center"
-                Text="{Binding ImageLimit.limit}"
+                Text="{Binding ImageLimit.Limit}"
                 TextAlignment="Center"
                 VerticalAlignment="Center" />
         </StackPanel>

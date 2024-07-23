@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Contracts.Services;
-using Komiic.Core.Contracts.Api;
+using Komiic.Controls;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Data;
 using Komiic.Messages;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace Komiic.PageViewModels;
 
 public partial class MangaViewerPageViewModel(
-    IKomiicQueryApi komiicQueryApi,
+    IMangaViewerDataService mangaViewerDataService,
     IMangeImageLoader imageLoader,
     IMessenger messenger,
     ILogger<MangaViewerPageViewModel> logger)
@@ -40,29 +40,20 @@ public partial class MangaViewerPageViewModel(
         {
             if (MangaInfo != null && Chapter != null)
             {
-                var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(
-                    QueryDataEnum.ImagesByChapterId.GetQueryDataWithVariables(
-                        new ChapterIdVariables()
-                        {
-                            ChapterId = Chapter.id
-                        }));
-                if (imagesByChapterIdData is { Data: not null })
+                var imagesByChapterIdData = await mangaViewerDataService.GetImagesByChapterId(Chapter.Id);
+                if (imagesByChapterIdData is { Count: > 0 })
                 {
-                    foreach (var imagesByChapterId in imagesByChapterIdData.Data.ImagesByChapterIdList)
+                    foreach (var imagesByChapterId in imagesByChapterIdData)
                     {
                         ImagesByChapterList.Add(new MangeImageData(MangaInfo, Chapter, imagesByChapterId));
                     }
                 }
 
-                var readComicHistoryData = await komiicQueryApi.ReadComicHistoryById(
-                    QueryDataEnum.ReadComicHistoryById.GetQueryDataWithVariables(new ComicIdVariables()
-                    {
-                        ComicId = MangaInfo.id
-                    }));
-                if (readComicHistoryData is { Data.readComicHistoryById.chapters: not null })
+                var readComicHistoryData = await mangaViewerDataService.ReadComicHistoryById(MangaInfo.Id);
+                if (readComicHistoryData is { Chapters: not null })
                 {
-                    HistoryPage = readComicHistoryData.Data.readComicHistoryById.chapters
-                        .FirstOrDefault(it => it.chapterId == Chapter.id)?.page ?? 0;
+                    HistoryPage = readComicHistoryData.Chapters
+                        .FirstOrDefault(it => it.ChapterId == Chapter.Id)?.Page ?? 0;
                 }
             }
         });
@@ -86,14 +77,9 @@ public partial class MangaViewerPageViewModel(
             return;
         }
 
-        var data = await komiicQueryApi.AddReadComicHistory(QueryDataEnum.AddReadComicHistory.GetQueryDataWithVariables(
-            new AddReadComicHistoryVariables()
-            {
-                comicId = mangeImage.Item1.MangaInfo.id,
-                chapterId = mangeImage.Item1.Chapter.id,
-                page = historyPage,
-            }));
-        if (data is { Data: not null })
+        var data = await mangaViewerDataService.AddReadComicHistory(mangeImage.Item1.MangaInfo.Id, mangeImage.Item1.Chapter.Id,
+            historyPage);
+        if (data is not null)
         {
         }
 

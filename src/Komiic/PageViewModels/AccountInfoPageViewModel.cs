@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Komiic.Contracts.Services;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
@@ -62,7 +62,7 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
         accountService.ImageLimitChanged -= AccountServiceOnImageLimitChanged;
         accountService.ImageLimitChanged += AccountServiceOnImageLimitChanged;
         
-        NextChapterMode = AccountData?.nextChapterMode;
+        NextChapterMode = AccountData?.NextChapterMode;
         return base.OnNavigatedTo();
     }
 

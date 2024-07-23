@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Komiic.Contracts.Services;
+using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Komiic.Services;
+namespace Komiic.Core.Services;
 
 public class DiskCacheService : ICacheService
 {

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Komiic.Contracts.Services;
-using Komiic.Core;
+﻿using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Komiic.Http;
+namespace Komiic.Core.Http;
 
 public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandler> logger) : DelegatingHandler
 {

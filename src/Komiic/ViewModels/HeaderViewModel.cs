@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Contracts.Services;
-using Komiic.Core;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,14 +15,13 @@ public partial class HeaderViewModel
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IAccountService _accountService;
-    private readonly ICacheService _cacheService;
 
     private readonly IMessenger _messenger;
 
     [ObservableProperty] private ImageLimit _imageLimit = new()
     {
-        limit = 300,
-        usage = 0,
+        Limit = 300,
+        Usage = 0,
     };
 
     [ObservableProperty] private Account? _accountData;
@@ -32,7 +30,6 @@ public partial class HeaderViewModel
         IAccountService accountService) : base(messenger)
     {
         _serviceProvider = serviceProvider;
-        _cacheService = cacheService;
         _messenger = messenger;
         _accountService = accountService;
         AccountData = _accountService.AccountData;
@@ -51,8 +48,8 @@ public partial class HeaderViewModel
     {
         await Task.CompletedTask;
         var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
-        dialogContent.Username = await _cacheService.GetLocalCacheStr(KomiicConst.KomiicUsername);
-        dialogContent.Password = await _cacheService.GetLocalCacheStr(KomiicConst.KomiicPassword);
+        dialogContent.Username = _accountService.CacheUserName;
+        dialogContent.Password = _accountService.CachePassword;
         bool result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
         if (result)
         {

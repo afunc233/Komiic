@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Komiic.Contracts;
-using Komiic.Contracts.Services;
+using Komiic.Core.Contracts.Services;
 
 namespace Komiic.Services;
 

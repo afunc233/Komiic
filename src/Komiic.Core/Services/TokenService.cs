@@ -1,15 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Komiic.Contracts.Services;
-using Komiic.Core;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Komiic.Core.Contracts.Api;
+using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
-using System.IdentityModel.Tokens.Jwt;
-using System.Threading;
 
-namespace Komiic.Services;
+namespace Komiic.Core.Services;
 
-public class TokenService(
+internal class TokenService(
     ICacheService cacheService,
     IKomiicAccountApi komiicAccountApi,
     ICookieService cookieService,

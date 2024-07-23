@@ -2,7 +2,18 @@
   <PropertyGroup>
     <MainTargetFramework>net8.0</MainTargetFramework>
     <Nullable>enable</Nullable>
+    
+<!--    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    
+  </PropertyGroup>
+  
+  <PropertyGroup>
     <AvaloniaVersion>11.2.999-cibuild0048316-alpha</AvaloniaVersion>
     <CommunityToolkitVersion>8.2.2</CommunityToolkitVersion>
+    <HostingVersion>9.0.0-preview.3.24172.9</HostingVersion>
+    <PollyVersion>9.0.0-preview.4.24267.6</PollyVersion>
+    <RefitVersion>7.0.0</RefitVersion>
+    <JwtVersion>7.5.2</JwtVersion>
+    <NLogVersion>5.3.11</NLogVersion>
   </PropertyGroup>
 </Project>

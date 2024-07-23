@@ -1,15 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
-using System.Threading.Tasks;
-using Komiic.Contracts.Services;
-using Komiic.Core;
+using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Komiic.Services;
+namespace Komiic.Core.Services;
 
 public class CookieService(CookieContainer cookieContainer, ICacheService cacheService, ILogger<CookieService> logger)
     : ICookieService
@@ -17,8 +13,7 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
     private static JsonSerializerOptions JsonSerializerOptions => new()
     {
         WriteIndented = true,
-        TypeInfoResolver = JsonTypeInfoResolver.Combine(KomiicCookieJsonSerializerContext.Default,
-            new DefaultJsonTypeInfoResolver())
+        TypeInfoResolver = JsonTypeInfoResolver.Combine(KomiicCookieJsonSerializerContext.Default)
     };
 
     public async Task LoadCookies()
@@ -70,4 +65,5 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
 }
 
 [JsonSerializable(typeof(CookieCollection))]
+[JsonSerializable(typeof(Cookie))]
 partial class KomiicCookieJsonSerializerContext : JsonSerializerContext;

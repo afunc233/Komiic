@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Komiic.Data;
 
-namespace Komiic.Contracts.Services;
+namespace Komiic.Controls;
 
 public interface IMangeImageLoader
 {

@@ -4,7 +4,7 @@ using Refit;
 namespace Komiic.Core.Contracts.Api;
 
 [Headers("Authorization: Bearer")]
-public interface IKomiicAccountApi
+internal interface IKomiicAccountApi
 {
     #region Login/Logout
 

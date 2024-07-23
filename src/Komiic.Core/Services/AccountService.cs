@@ -1,20 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
-using Komiic.Contracts.Services;
-using Komiic.Core;
-using Komiic.Core.Contracts.Api;
+﻿using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Komiic.Services;
+namespace Komiic.Core.Services;
 
-public class AccountService(
+internal class AccountService(
     ITokenService tokenService,
     ICacheService cacheService,
     ICookieService cookieService,
     IKomiicAccountApi komiicAccountApi,
     ILogger<AccountService> logger) : IAccountService
 {
+    public string? CacheUserName { get; private set; }
+
+    public string? CachePassword { get; private set; }
+
     public Account? AccountData { get; private set; }
 
     public event EventHandler? AccountChanged;
@@ -24,6 +25,9 @@ public class AccountService(
         await Task.CompletedTask;
         try
         {
+            CacheUserName = await cacheService.GetLocalCacheStr(KomiicConst.KomiicUsername);
+            CachePassword = await cacheService.GetLocalCacheStr(KomiicConst.KomiicPassword);
+
             string? token = await tokenService.GetToken();
 
             if (string.IsNullOrWhiteSpace(token)) return;
@@ -48,11 +52,12 @@ public class AccountService(
     {
         try
         {
-            await cacheService.SetLocalCache(KomiicConst.KomiicUsername, username);
-            await cacheService.SetLocalCache(KomiicConst.KomiicPassword, password);
+            var loginData = new LoginData { Email = username, Password = password };
+            await cacheService.SetLocalCache(KomiicConst.KomiicUsername, CacheUserName = username);
+            await cacheService.SetLocalCache(KomiicConst.KomiicPassword, CachePassword = password);
             await tokenService.ClearToken();
             await cookieService.ClearAllCookies();
-            var tokenResponseData = await komiicAccountApi.Login(new LoginData(username, password));
+            var tokenResponseData = await komiicAccountApi.Login(loginData);
             if (tokenResponseData is { Token: not null })
             {
                 await tokenService.SetToken(tokenResponseData.Token);

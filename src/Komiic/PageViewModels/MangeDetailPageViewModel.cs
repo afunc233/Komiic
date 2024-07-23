@@ -5,25 +5,28 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public class GroupChaptersByComicId
+public record GroupChaptersByComicId
 {
     public string Type { get; init; } = null!;
 
     public List<ChaptersByComicId> Chapters { get; init; } = null!;
 }
 
-public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQueryApi komiicQueryApi,ILogger<MangeDetailPageViewModel> logger)
+public partial class MangeDetailPageViewModel(
+    IMessenger messenger,
+    IMangaDetailDataService mangaDetailDataService,
+    ILogger<MangeDetailPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    public override string Title =>"漫画详情";
+    public override string Title => "漫画详情";
 
     [ObservableProperty] private MangaInfo _mangaInfo = null!;
     [ObservableProperty] private ObservableCollection<MangaInfo> _recommendMangaInfoList = new();
@@ -51,37 +54,27 @@ public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQuery
     protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
+        
+        // 传过来有值了，所以应该不需要获取数据了
+        // await komiicQueryApi.GetMangaInfoById(MangaInfo.id);
 
-        var comicIdVariables = new ComicIdVariables { ComicId = MangaInfo.id };
+        MessageCount = await mangaDetailDataService.GetMessageCountByComicId(MangaInfo.Id);
 
-        await komiicQueryApi.GetMangaInfoById(
-            QueryDataEnum.ComicById.GetQueryDataWithVariables(comicIdVariables));
+        var lastMessageByComicIdData = await mangaDetailDataService.GetLastMessageByComicId(MangaInfo.Id);
 
-        var messageCountByComicIdData = await komiicQueryApi.GetMessageCountByComicId(
-            QueryDataEnum.MessageCountByComicId.GetQueryDataWithVariables(comicIdVariables));
-
-        if (messageCountByComicIdData is { Data: not null })
+        if (lastMessageByComicIdData is not null)
         {
-            MessageCount = messageCountByComicIdData.Data.MessageCountByComicIdCount;
+            LastMessageByComicId = lastMessageByComicIdData;
         }
 
-        var lastMessageByComicIdData = await komiicQueryApi.GetLastMessageByComicId(
-            QueryDataEnum.LastMessageByComicId.GetQueryDataWithVariables(comicIdVariables));
+        var chapterByComicIdData = await mangaDetailDataService.GetChapterByComicId(MangaInfo.Id);
 
-        if (lastMessageByComicIdData is { Data: not null })
+        if (chapterByComicIdData is { Count: > 0 })
         {
-            LastMessageByComicId = lastMessageByComicIdData.Data.LastMessageByComicId;
-        }
-
-        var chapterByComicIdData = await komiicQueryApi.GetChapterByComicId(
-            QueryDataEnum.ChapterByComicId.GetQueryDataWithVariables(comicIdVariables));
-
-        if (chapterByComicIdData is { Data: not null } and { Data.ChaptersByComicIdList: not null })
-        {
-            foreach (var groupingChaptersByComicId in chapterByComicIdData.Data.ChaptersByComicIdList.GroupBy(it =>
-                         it.type))
+            foreach (var groupingChaptersByComicId in chapterByComicIdData.GroupBy(it =>
+                         it.Type))
             {
-                GroupingChaptersByComicIdList.Add(new GroupChaptersByComicId()
+                GroupingChaptersByComicIdList.Add(new()
                 {
                     Type = groupingChaptersByComicId.Key,
                     Chapters = groupingChaptersByComicId.ToList()
@@ -89,19 +82,10 @@ public partial class MangeDetailPageViewModel(IMessenger messenger, IKomiicQuery
             }
         }
 
-        var recommendComicData =
-            await komiicQueryApi.GetRecommendComicById(
-                QueryDataEnum.RecommendComicById.GetQueryDataWithVariables(comicIdVariables));
-        if (recommendComicData is { Data: not null })
+        var recommendMangaInfosById = await mangaDetailDataService.GetRecommendMangaInfosById(MangaInfo.Id);
+        if (recommendMangaInfosById is { Count: > 0 })
         {
-            var mangaInfoByIdsData = await komiicQueryApi.GetMangaInfoByIds(
-                QueryDataEnum.ComicByIds.GetQueryDataWithVariables(new ComicIdsVariables
-                    { ComicIdList = recommendComicData.Data.RecommendComicList }));
-
-            if (mangaInfoByIdsData is { Data: not null })
-            {
-                mangaInfoByIdsData.Data.ComicByIds.ForEach(RecommendMangaInfoList.Add);
-            }
+            recommendMangaInfosById.ForEach(RecommendMangaInfoList.Add);
         }
     }
 

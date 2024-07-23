@@ -4,6 +4,7 @@ using AsyncImageLoader.Loaders;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Komiic.Core;
 using Komiic.Extensions;
 using Komiic.ViewModels;
 using Komiic.Views;
@@ -18,6 +19,7 @@ namespace Komiic;
 public class App : Application
 {
     private readonly IHost _host = Host.CreateDefaultBuilder()
+        .ConfigureServices(KomiicCoreExtensions.ConfigureServices)
         .ConfigureServices(KomiicExtensions.ConfigureServices)
         .UseNLog(new NLogProviderOptions())
         .Build();

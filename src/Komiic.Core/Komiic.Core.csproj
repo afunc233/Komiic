@@ -7,7 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
+        
+        <!-- Hosting -->
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(HostingVersion)"/>
+        
+        <!-- Polly -->
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="$(PollyVersion)" />
+        
+        <!-- Refit -->
+        <PackageReference Include="Refit.HttpClientFactory" Version="$(RefitVersion)"/>
+
+        <!-- Jwt -->
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="$(JwtVersion)"/>
     </ItemGroup>
 
 </Project>

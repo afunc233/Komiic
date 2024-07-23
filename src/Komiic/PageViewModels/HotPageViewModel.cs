@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Contracts.Services;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Data;
 using Komiic.Messages;
 using Komiic.ViewModels;
@@ -12,14 +12,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
 
-public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataService hotComicsDataService,ILogger<HotPageViewModel> logger)
+public partial class HotPageViewModel(
+    IMessenger messenger,
+    IComicDataService comicDataService,
+    ILogger<HotPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     private int _hotComicsPageIndex;
     private int _monthHotComicsPageIndex;
     public override NavBarType NavBarType => NavBarType.Hot;
     public override string Title => "最热";
-    public ViewModelBase? Header => null;
 
     [ObservableProperty] private bool _isLoading;
 
@@ -27,9 +29,9 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
-        new ("全部", ""),
-        new ("連載", "ONGOING"),
-        new ("完結", "END")
+        new("全部", ""),
+        new("連載", "ONGOING"),
+        new("完結", "END")
     ];
 
     [ObservableProperty] private string? _state = "";
@@ -51,7 +53,7 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await hotComicsDataService.LoadMore(_monthHotComicsPageIndex++, "MONTH_VIEWS", State);
+            var dataList = await comicDataService.GetHotComic(_monthHotComicsPageIndex++, "MONTH_VIEWS", State);
             if (dataList.Count == 0)
             {
                 HasMore = false;
@@ -68,7 +70,7 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++, "VIEWS", State);
+            var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, "VIEWS", State);
             if (dataList.Count == 0)
             {
                 HasMore = false;
@@ -79,7 +81,7 @@ public partial class HotPageViewModel(IMessenger messenger, IHotComicsDataServic
             }
         });
 
-        var dataList = await hotComicsDataService.LoadMore(_hotComicsPageIndex++, "VIEWS", State);
+        var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, "VIEWS", State);
         if (dataList.Count == 0)
         {
             HasMore = false;

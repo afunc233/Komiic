@@ -11,7 +11,8 @@
             Background="Transparent"
             Classes="BoxShadow PointeroverBoxShadow"
             Cursor="Hand"
-            Margin="5">
+            Margin="5"
+            d:DesignWidth="50">
             <Interaction.Behaviors>
                 <EventTriggerBehavior EventName="PointerReleased">
                     <InvokeCommandAction Command="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).OpenMangaCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
@@ -23,20 +24,20 @@
                     Height="240"
                     Width="180">
                     <Border ClipToBounds="True" CornerRadius="6">
-                        <Image asyncImageLoader:ImageLoader.Source="{Binding imageUrl}" />
+                        <Image asyncImageLoader:ImageLoader.Source="{Binding ImageUrl}" />
                     </Border>
 
                     <Border HorizontalAlignment="Left" VerticalAlignment="Top">
-                        <TextBlock Text="{Binding views}" />
+                        <TextBlock Text="{Binding Views}" />
                     </Border>
                     <Border HorizontalAlignment="Right" VerticalAlignment="Top">
-                        <TextBlock Text="{Binding favoriteCount}" />
+                        <TextBlock Text="{Binding FavoriteCount}" />
                     </Border>
                 </Panel>
                 <TextBlock
                     FontWeight="Bold"
                     Margin="0,5"
-                    Text="{Binding title}"
+                    Text="{Binding Title}"
                     TextAlignment="Center"
                     TextTrimming="CharacterEllipsis"
                     Width="180" />
@@ -54,7 +55,7 @@
                     <StackPanel Background="CornflowerBlue" Orientation="Horizontal">
                         <TextBlock
                             HorizontalAlignment="Center"
-                            Text="{Binding lastChapterUpdate, StringFormat={}{0}話}"
+                            Text="{Binding LastChapterUpdate, StringFormat={}{0}話}"
                             VerticalAlignment="Center" />
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -62,7 +63,7 @@
                             VerticalAlignment="Center" />
                         <TextBlock
                             HorizontalAlignment="Center"
-                            Text="{Binding lastBookUpdate, StringFormat={}{0}卷}"
+                            Text="{Binding LastBookUpdate, StringFormat={}{0}卷}"
                             VerticalAlignment="Center" />
                     </StackPanel>
                 </DockPanel>
@@ -70,7 +71,7 @@
                     Background="#80808080"
                     Margin="0,2"
                     Padding="10,3"
-                    Text="{Binding dateUpdated}"
+                    Text="{Binding DateUpdated}"
                     TextAlignment="Left" />
             </StackPanel>
         </Border>
@@ -88,9 +89,9 @@
                 </EventTriggerBehavior>
             </Interaction.Behaviors>
             <StackPanel Margin="8">
-                <TextBlock FontSize="{StaticResource TextStyleExtraLargeFontSize}" Text="{Binding name}" />
-                <TextBlock Text="{Binding comicCount, StringFormat={}漫畫數:{0}}" />
-                <TextBlock Text="{Binding views, StringFormat={}觀看數:{0}}" />
+                <TextBlock FontSize="{StaticResource TextStyleExtraLargeFontSize}" Text="{Binding Name}" />
+                <TextBlock Text="{Binding ComicCount, StringFormat={}漫畫數:{0}}" />
+                <TextBlock Text="{Binding Views, StringFormat={}觀看數:{0}}" />
             </StackPanel>
         </Border>
     </DataTemplate>

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Core.Contracts.Api;
 using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ namespace Komiic.PageViewModels;
 
 public partial class AuthorDetailPageViewModel(
     IMessenger messenger,
-    IKomiicQueryApi komiicQueryApi,
+    IAuthorDataService authorDataService,
     ILogger<AuthorDetailPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
@@ -37,15 +37,10 @@ public partial class AuthorDetailPageViewModel(
         HasMore = false;
         await SafeLoadData(async () =>
         {
-            var comicsByAuthorData = await komiicQueryApi.GetComicsByAuthor(
-                QueryDataEnum.ComicsByAuthor.GetQueryDataWithVariables(
-                    new AuthorIdVariables()
-                    {
-                        AuthorId = Author.id,
-                    }));
-            if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
+            var comicsByAuthors = await authorDataService.GetComicsByAuthor(Author.Id);
+            if (comicsByAuthors is { Count: > 0 })
             {
-                comicsByAuthorData.Data.ComicsByAuthorList.ForEach(MangaInfos.Add);
+                comicsByAuthors.ForEach(MangaInfos.Add);
             }
         });
     }
