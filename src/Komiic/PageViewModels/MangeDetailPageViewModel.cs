@@ -51,10 +51,24 @@ public partial class MangeDetailPageViewModel(
         messenger.Send(new OpenMangaViewerMessage(MangaInfo, chaptersByComicId));
     }
 
+    [RelayCommand]
+    private async Task OpenCategory(Category category)
+    {
+        await Task.CompletedTask;
+        messenger.Send(new OpenCategoryMessage(category));
+    }
+
+    [RelayCommand]
+    private async Task OpenAuthor(Author author)
+    {
+        await Task.CompletedTask;
+        messenger.Send(new OpenAuthorMessage(author));
+    }
+
     protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
-        
+
         // 传过来有值了，所以应该不需要获取数据了
         // await komiicQueryApi.GetMangaInfoById(MangaInfo.id);
 

@@ -24,6 +24,8 @@ public partial class AllMangaPageViewModel(
     [NotifyCanExecuteChangedFor(nameof(LoadCategoryMangeCommand))] [ObservableProperty]
     private bool _hasMore = true;
 
+    [ObservableProperty] private Category? _wantSelectedCategory;
+
     [ObservableProperty] private Category? _selectedCategory;
 
     public ObservableCollection<KvValue> StateList { get; } =
@@ -88,7 +90,10 @@ public partial class AllMangaPageViewModel(
             if (allCategories is { Count: > 0 })
             {
                 allCategories.ForEach(AllCategories.Add);
-                SelectedCategory = allCategories.FirstOrDefault();
+
+                SelectedCategory =
+                    allCategories.FirstOrDefault(it => string.Equals(it?.Id, WantSelectedCategory?.Id ?? ""),
+                        allCategories.FirstOrDefault());
             }
         });
     }

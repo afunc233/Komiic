@@ -10,7 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Komiic.ViewModels;
 
 public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMangaMessage>,
-    IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>, IRecipient<OpenAccountInfoMessage>
+    IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>, IRecipient<OpenAccountInfoMessage>,
+    IRecipient<OpenCategoryMessage>
 {
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
@@ -135,7 +136,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select(it => it.NavType)
             .ToList();
         if (allNavBars.Any(it => it == value.NavBarType)) return;
-        
+
 #pragma warning disable MVVMTK0034
         _selectedNavBar = null;
         OnPropertyChanged(nameof(SelectedNavBar));
@@ -204,6 +205,15 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
 
         viewModel.AccountData = message.AccountData;
         viewModel.ImageLimit = message.ImageLimit;
+
+        SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenCategoryMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<AllMangaPageViewModel>();
+
+        viewModel.WantSelectedCategory = message.Category;
 
         SelectedContent = viewModel;
     }

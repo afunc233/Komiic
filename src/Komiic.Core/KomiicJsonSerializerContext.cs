@@ -11,7 +11,6 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(AccountData))]
 [JsonSerializable(typeof(Account))]
 [JsonSerializable(typeof(FavoriteNewUpdatedData))]
-[JsonSerializable(typeof(AuthorSimple))]
 [JsonSerializable(typeof(MangaInfo))]
 [JsonSerializable(typeof(RecentUpdateData))]
 [JsonSerializable(typeof(HotComicsData))]
@@ -33,7 +32,6 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(AllAuthorsData))]
 [JsonSerializable(typeof(Author))]
 [JsonSerializable(typeof(ComicsByAuthorData))]
-
 [JsonSerializable(typeof(UpdateProfileImageData))]
 [JsonSerializable(typeof(SetNextChapterModeData))]
 [JsonSerializable(typeof(AddFavoriteData))]
@@ -72,12 +70,8 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(Chapters))]
 [JsonSerializable(typeof(ReadComicHistoryByIdData))]
 [JsonSerializable(typeof(AddReadComicHistoryData))]
-
 [JsonSerializable(typeof(LoginData))]
-
-
 [JsonSerializable(typeof(QueryData))]
-
 [JsonSerializable(typeof(QueryData<>))]
 [JsonSerializable(typeof(QueryData<PaginationVariables>))]
 [JsonSerializable(typeof(QueryData<ComicIdVariables>))]
@@ -99,7 +93,6 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(QueryData<ComicIdPaginationVariables>))]
 [JsonSerializable(typeof(QueryData<VoteMessageVariables>))]
 [JsonSerializable(typeof(QueryData<AddReadComicHistoryVariables>))]
-
 [JsonSerializable(typeof(Pagination))]
 [JsonSerializable(typeof(PaginationVariables))]
 [JsonSerializable(typeof(ComicIdVariables))]

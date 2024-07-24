@@ -13,7 +13,8 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
     private static JsonSerializerOptions JsonSerializerOptions => new()
     {
         WriteIndented = true,
-        TypeInfoResolver = JsonTypeInfoResolver.Combine(KomiicCookieJsonSerializerContext.Default)
+        TypeInfoResolver = JsonTypeInfoResolver.Combine(KomiicCookieJsonSerializerContext.Default,
+            new DefaultJsonTypeInfoResolver())
     };
 
     public async Task LoadCookies()

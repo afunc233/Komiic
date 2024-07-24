@@ -75,13 +75,6 @@ public class FavoriteNewUpdatedData
 
 #region 首页
 
-public class AuthorSimple
-{
-    [JsonPropertyName("id")] public string Id { get; set; } = null!;
-    [JsonPropertyName("name")] public string Name { get; set; } = null!;
-    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
-}
-
 public class MangaInfo
 {
     [JsonPropertyName("id")] public string Id { get; set; } = null!;
@@ -89,7 +82,7 @@ public class MangaInfo
     [JsonPropertyName("status")] public string Status { get; set; } = null!;
     [JsonPropertyName("year")] public int Year { get; set; }
     [JsonPropertyName("imageUrl")] public string ImageUrl { get; set; } = null!;
-    [JsonPropertyName("authors")] public List<AuthorSimple> Authors { get; set; } = null!;
+    [JsonPropertyName("authors")] public List<Author> Authors { get; set; } = null!;
     [JsonPropertyName("categories")] public List<Category> Categories { get; set; } = null!;
     [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
     [JsonPropertyName("monthViews")] public int MonthViews { get; set; }

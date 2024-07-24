@@ -39,13 +39,44 @@
                                 FontSize="22"
                                 Margin="0,20,0,0"
                                 Text="{Binding MangaInfo.Year, StringFormat={}年份:{0}}" />
-                            <StackPanel Margin="0,20,0,0">
-                                <!--  TODO 這裡要顯示多個作者  -->
-                                <TextBlock FontSize="22" Text="{Binding MangaInfo.Authors[0].Name, StringFormat={}作者:{0}}" />
+                            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                                <TextBlock FontSize="22" Text="作者:" />
+
+                                <ItemsControl ItemsSource="{Binding MangaInfo.Authors}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.DataTemplates>
+                                        <DataTemplate DataType="model:Author">
+                                            <Button
+                                                Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).OpenAuthorCommand, FallbackValue={x:Null}}"
+                                                CommandParameter="{Binding}"
+                                                Content="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ItemsControl.DataTemplates>
+                                </ItemsControl>
+
                             </StackPanel>
-                            <StackPanel Margin="0,20,0,0">
-                                <!--  TODO 這裡要顯示多個類型  -->
-                                <TextBlock FontSize="22" Text="{Binding MangaInfo.Categories[0].Name, StringFormat={}類型:{0}}" />
+                            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                                <TextBlock FontSize="22" Text="類型:" />
+
+                                <ItemsControl ItemsSource="{Binding MangaInfo.Categories}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.DataTemplates>
+                                        <DataTemplate DataType="model:Category">
+                                            <Button
+                                                Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).OpenCategoryCommand, FallbackValue={x:Null}}"
+                                                CommandParameter="{Binding}"
+                                                Content="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ItemsControl.DataTemplates>
+                                </ItemsControl>
                             </StackPanel>
                             <StackPanel Margin="0,20,0,0">
                                 <TextBlock FontSize="22" Text="{Binding MangaInfo.Views, StringFormat={}點閱:{0}}" />

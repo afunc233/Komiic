@@ -1,19 +1,19 @@
 <Project>
-  <PropertyGroup>
-    <MainTargetFramework>net8.0</MainTargetFramework>
-    <Nullable>enable</Nullable>
-    
-<!--    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
-    
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <AvaloniaVersion>11.1.0</AvaloniaVersion>
-    <CommunityToolkitVersion>8.2.2</CommunityToolkitVersion>
-    <HostingVersion>9.0.0-preview.6.24327.7</HostingVersion>
-    <PollyVersion>9.0.0-preview.6.24328.4</PollyVersion>
-    <RefitVersion>7.1.2</RefitVersion>
-    <JwtVersion>8.0.1</JwtVersion>
-    <NLogVersion>5.3.11</NLogVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <MainTargetFramework>net8.0</MainTargetFramework>
+        <Nullable>enable</Nullable>
+
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NoWarn>$(NoWarn);SYSLIB1030;IL2026</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AvaloniaVersion>11.1.0</AvaloniaVersion>
+        <CommunityToolkitVersion>8.2.2</CommunityToolkitVersion>
+        <HostingVersion>9.0.0-preview.6.24327.7</HostingVersion>
+        <PollyVersion>9.0.0-preview.6.24328.4</PollyVersion>
+        <RefitVersion>7.1.2</RefitVersion>
+        <JwtVersion>8.0.1</JwtVersion>
+        <NLogVersion>5.3.11</NLogVersion>
+    </PropertyGroup>
 </Project>
