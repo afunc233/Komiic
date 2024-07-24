@@ -9,7 +9,7 @@
     <ItemGroup>
         
         <!-- Hosting -->
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(HostingVersion)"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0-preview.6.24327.7" />
         
         <!-- Polly -->
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="$(PollyVersion)" />
