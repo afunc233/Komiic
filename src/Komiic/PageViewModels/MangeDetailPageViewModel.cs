@@ -103,11 +103,14 @@ public partial class MangeDetailPageViewModel(
 
         MessageCount = await mangaDetailDataService.GetMessageCountByComicId(MangaInfo.Id);
 
-        var lastMessageByComicIdData = await mangaDetailDataService.GetLastMessageByComicId(MangaInfo.Id);
-
-        if (lastMessageByComicIdData is not null)
+        if (MessageCount > 0)
         {
-            LastMessageByComicId = lastMessageByComicIdData;
+            var lastMessageByComicIdData = await mangaDetailDataService.GetLastMessageByComicId(MangaInfo.Id);
+
+            if (lastMessageByComicIdData is not null)
+            {
+                LastMessageByComicId = lastMessageByComicIdData;
+            }
         }
 
         var chapterByComicIdData = await mangaDetailDataService.GetChapterByComicId(MangaInfo.Id);

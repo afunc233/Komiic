@@ -62,7 +62,6 @@
         <!--  Splash  -->
         <ContentControl
             Background="Transparent"
-            IsHitTestVisible="False"
             IsVisible="True"
             x:Name="SplashHost" />
         <!--  Splash  -->
