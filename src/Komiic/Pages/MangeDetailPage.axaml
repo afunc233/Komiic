@@ -101,7 +101,34 @@
                             Content=" 書櫃 "
                             CornerRadius="4"
                             Grid.Column="0"
-                            HorizontalAlignment="Center" />
+                            HorizontalAlignment="Center">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Text="你的書櫃" />
+                                        <ItemsControl ItemsSource="{Binding MyFolders}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="vm:FolderVm">
+                                                    <CheckBox
+                                                        Content="{Binding Folder.Name, Mode=OneTime}"
+                                                        IsChecked="{Binding InFolder}"
+                                                        x:Name="folderCheckBox">
+                                                        <Interaction.Behaviors>
+                                                            <DataTriggerBehavior Binding="{Binding #folderCheckBox.IsChecked}" Value="True">
+                                                                <InvokeCommandAction Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).AddToFolderCommand, FallbackValue={x:Null}}" CommandParameter="{Binding Folder}" />
+                                                            </DataTriggerBehavior>
+                                                            <DataTriggerBehavior Binding="{Binding #folderCheckBox.IsChecked}" Value="False">
+                                                                <InvokeCommandAction Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).RemoveFromFolderCommand, FallbackValue={x:Null}}" CommandParameter="{Binding Folder}" />
+                                                            </DataTriggerBehavior>
+                                                        </Interaction.Behaviors>
+                                                    </CheckBox>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
                         <Button
                             Content=" 留言 "
                             CornerRadius="4"

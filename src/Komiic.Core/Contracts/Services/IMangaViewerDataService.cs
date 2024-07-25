@@ -1,12 +1,11 @@
 ﻿using Komiic.Core.Contracts.Model;
-using Refit;
 
 namespace Komiic.Core.Contracts.Services;
 
 public interface IMangaViewerDataService
 {
-    Task<ResponseData<AddReadComicHistoryData>> AddReadComicHistory(
-        [Body] QueryData<AddReadComicHistoryVariables> queryData);
+    // Task<ResponseData<AddReadComicHistoryData>> AddReadComicHistory(
+    //     QueryData<AddReadComicHistoryVariables> queryData);
 
 
     Task<List<ImagesByChapterId>> GetImagesByChapterId(string chapterId);

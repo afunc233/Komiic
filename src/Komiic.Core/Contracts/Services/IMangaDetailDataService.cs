@@ -16,6 +16,15 @@ public interface IMangaDetailDataService
     
     Task<List<MangaInfo>> GetRecommendMangaInfosById(string comicId);
     
-    Task<List<MangaInfo>> GetMangaInfoByIds(List<string> comicIdList);
+    Task<List<MangaInfo>> GetMangaInfoByIds(params string[] comicIds);
+
+    Task<List<Folder>> GetMyFolders();
+
+    Task<bool> RemoveComicToFolder(string folderId,string comicId);
     
+    Task<bool> AddComicToFolder(string folderId,string comicId);
+    
+    Task<List<string>> ComicInAccountFolders(string comicId);
+    
+    Task<List<LastReadByComicId>> GetComicsLastRead(params string[] comicIds);
 }

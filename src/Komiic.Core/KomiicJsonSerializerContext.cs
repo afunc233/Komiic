@@ -40,6 +40,7 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(Favorite))]
 [JsonSerializable(typeof(LastReadByComicIdData))]
 [JsonSerializable(typeof(LastReadByComicId))]
+[JsonSerializable(typeof(BookOrChapter))]
 [JsonSerializable(typeof(RecommendComicIdsData))]
 [JsonSerializable(typeof(FolderData))]
 [JsonSerializable(typeof(Folder))]
@@ -115,4 +116,4 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(ComicIdPaginationVariables))]
 [JsonSerializable(typeof(VoteMessageVariables))]
 [JsonSerializable(typeof(AddReadComicHistoryVariables))]
-public partial class KomiicJsonSerializerContext : JsonSerializerContext;
+internal partial class KomiicJsonSerializerContext : JsonSerializerContext;

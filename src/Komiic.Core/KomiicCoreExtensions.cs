@@ -71,6 +71,10 @@ public static class KomiicCoreExtensions
             // 注入 cookie
             services.AddSingleton<CookieContainer>();
         }
+        else
+        {
+            services.AddSingleton<ICookieService, MockCookieService>();
+        }
 
         // 自定义日志
         services.Replace(ServiceDescriptor
@@ -127,9 +131,10 @@ public static class KomiicCoreExtensions
             {
                 var primaryHandler = builder.Services.GetRequiredService<OptionalAuthenticatedHttpClientHandler>();
 
-                primaryHandler.AutomaticDecompression = DecompressionMethods.All;
                 if (!OperatingSystem.IsBrowser())
                 {
+                    
+                    primaryHandler.AutomaticDecompression = DecompressionMethods.All;
 #if !DEBUG
                     primaryHandler.Proxy = null;
                     primaryHandler.UseProxy = false;

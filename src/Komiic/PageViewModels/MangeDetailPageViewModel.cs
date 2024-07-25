@@ -29,13 +29,17 @@ public partial class MangeDetailPageViewModel(
     public override string Title => "漫画详情";
 
     [ObservableProperty] private MangaInfo _mangaInfo = null!;
-    [ObservableProperty] private ObservableCollection<MangaInfo> _recommendMangaInfoList = new();
-
-    [ObservableProperty] private ObservableCollection<GroupChaptersByComicId> _groupingChaptersByComicIdList = new();
 
     [ObservableProperty] private int _messageCount;
 
     [ObservableProperty] private LastMessageByComicId _lastMessageByComicId = null!;
+
+
+    public ObservableCollection<FolderVm> MyFolders { get; } = [];
+
+    public ObservableCollection<MangaInfo> RecommendMangaInfoList { get; } = [];
+
+    public ObservableCollection<GroupChaptersByComicId> GroupingChaptersByComicIdList { get; } = [];
 
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
@@ -63,6 +67,31 @@ public partial class MangeDetailPageViewModel(
     {
         await Task.CompletedTask;
         messenger.Send(new OpenAuthorMessage(author));
+    }
+
+    [RelayCommand]
+    private async Task AddToFolder(Folder folder)
+    {
+        await Task.CompletedTask;
+        // messenger.Send(new OpenAuthorMessage(author));
+
+
+        var result = await mangaDetailDataService.AddComicToFolder(folder.Id, MangaInfo.Id);
+        if (result)
+        {
+        }
+    }
+
+    [RelayCommand]
+    private async Task RemoveFromFolder(Folder folder)
+    {
+        await Task.CompletedTask;
+        // messenger.Send(new OpenAuthorMessage(author));
+
+        var result = await mangaDetailDataService.RemoveComicToFolder(folder.Id, MangaInfo.Id);
+        if (result)
+        {
+        }
     }
 
     protected override async Task OnNavigatedTo()
@@ -101,7 +130,26 @@ public partial class MangeDetailPageViewModel(
         {
             recommendMangaInfosById.ForEach(RecommendMangaInfoList.Add);
         }
+
+        var myFolders = await mangaDetailDataService.GetMyFolders();
+        if (myFolders is { Count: > 0 })
+        {
+            var data = await mangaDetailDataService.ComicInAccountFolders(MangaInfo.Id);
+
+            myFolders.ForEach(it =>
+            {
+                var folderVm = new FolderVm(it) { InFolder = data.Contains(it.Id) };
+                MyFolders.Add(folderVm);
+            });
+        }
     }
 
     public override NavBarType NavBarType => NavBarType.MangeDetail;
+}
+
+public partial class FolderVm(Folder folder) : ObservableObject
+{
+    public Folder Folder { get; init; } = folder;
+
+    [ObservableProperty] private bool _inFolder;
 }

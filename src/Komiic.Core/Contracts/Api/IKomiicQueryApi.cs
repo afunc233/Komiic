@@ -127,6 +127,7 @@ internal interface IKomiicQueryApi
     /// <param name="queryData"></param>
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
     Task<ResponseData<FolderData>> GetMyFolder([Body] QueryData queryData);
 
     [Post(KomiicConst.QueryUrl)]
@@ -140,11 +141,17 @@ internal interface IKomiicQueryApi
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<RemoveFolderData>> RemoveFolder([Body] QueryData<FolderIdVariables> queryData);
+    
+    [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
+    Task<ResponseData<RemoveComicToFolderData>> RemoveComicToFolder([Body] QueryData<FolderIdAndComicIdVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
     Task<ResponseData<AddComicToFolderData>> AddComicToFolder([Body] QueryData<FolderIdAndComicIdVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
     Task<ResponseData<ComicInAccountFoldersData>> ComicInAccountFolders([Body] QueryData<ComicIdVariables> queryData);
 
     #endregion

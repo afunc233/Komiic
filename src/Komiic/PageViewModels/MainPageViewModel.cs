@@ -35,7 +35,7 @@ public partial class MainPageViewModel(
     public ObservableCollection<MangaInfo> HotComicsMangaInfos { get; } = [];
 
     [ObservableProperty] private ImageLimit? _imageLimit;
-
+    
 
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
@@ -44,7 +44,7 @@ public partial class MainPageViewModel(
         messenger.Send(new OpenMangaMessage(mangaInfo));
     }
 
-    private bool CanLoadMore() => !IsLoading && HasMore && IsDataError;
+    private bool CanLoadMore() => !IsLoading && HasMore && !IsDataError;
 
     [RelayCommand(CanExecute = nameof(CanLoadMore))]
     private async Task LoadMoreRecentUpdate()

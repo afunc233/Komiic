@@ -297,8 +297,23 @@ public class LastReadByComicIdData
 public class LastReadByComicId
 {
     [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
-    [JsonPropertyName("book")] public object Book { get; set; } = null!;
-    [JsonPropertyName("chapter")] public object Chapter { get; set; } = null!;
+    [JsonPropertyName("book")] public BookOrChapter Book { get; set; } = null!;
+    [JsonPropertyName("chapter")] public BookOrChapter Chapter { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
+}
+
+public class BookOrChapter
+{
+// "page": 3,
+    [JsonPropertyName("page")] public int Page { get; set; }
+
+// "chapterId": "35162",
+    [JsonPropertyName("chapterId")] public string ChapterId { get; set; } = null!;
+
+// "serial": "02",
+    [JsonPropertyName("serial")] public string Serial { get; set; } = null!;
+
+// "__typename": "ComicLastRead"
     [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 
@@ -378,6 +393,13 @@ public class RemoveFolderData
     [JsonPropertyName("removeFolder")]
     // "updateFolderName": true
     public bool RemoveFolder { get; set; }
+}
+
+public class RemoveComicToFolderData
+{
+    [JsonPropertyName("removeComicToFolder")]
+    // "updateFolderName": true
+    public bool RemoveComicToFolder { get; set; }
 }
 
 public class AddComicToFolderData

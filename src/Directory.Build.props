@@ -1,10 +1,11 @@
 <Project>
     <PropertyGroup>
-        <MainTargetFramework>net8.0</MainTargetFramework>
+        <MainTargetFramework>net9.0</MainTargetFramework>
         <Nullable>enable</Nullable>
 
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>$(NoWarn);SYSLIB1030;IL2026</NoWarn>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>

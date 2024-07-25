@@ -6,12 +6,6 @@ namespace Komiic.Core.Services;
 
 internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaViewerDataService
 {
-    public Task<ResponseData<AddReadComicHistoryData>> AddReadComicHistory(
-        QueryData<AddReadComicHistoryVariables> queryData)
-    {
-        return komiicQueryApi.AddReadComicHistory(queryData);
-    }
-
     public async Task<List<ImagesByChapterId>> GetImagesByChapterId(string chapterId)
     {
         var variables = QueryDataEnum.ImagesByChapterId.GetQueryDataWithVariables(

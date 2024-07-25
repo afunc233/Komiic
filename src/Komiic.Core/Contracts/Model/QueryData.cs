@@ -3,19 +3,19 @@ using System.Text.Json.Serialization;
 
 namespace Komiic.Core.Contracts.Model;
 
-public class QueryData(string operationName, string query)
+internal class QueryData(string operationName, string query)
 {
     [JsonPropertyName("operationName")] public string OperationName { get; } = operationName;
 
     [JsonPropertyName("query")] public string Query { get; set; } = query;
 }
 
-public class QueryData<T>(string operationName, string query) : QueryData(operationName, query)
+internal class QueryData<T>(string operationName, string query) : QueryData(operationName, query)
 {
     [JsonPropertyName("variables")] public T? Variables { get; set; }
 }
 
-public enum QueryDataEnum
+internal enum QueryDataEnum
 {
     RecentUpdate,
     HotComics,
@@ -52,6 +52,7 @@ public enum QueryDataEnum
     FolderComicIds,
     UpdateFolderName,
     RemoveFolder,
+    RemoveComicToFolder,
     AddComicToFolder,
     ComicInAccountFolders,
 
@@ -64,7 +65,7 @@ public enum QueryDataEnum
     DeleteMessage,
 }
 
-public static class QueryDataExt
+internal static class QueryDataExt
 {
     #region Methods
 
@@ -205,12 +206,16 @@ public static class QueryDataExt
                 "mutation removeFolder($folderId: ID!) {\n  removeFolder(folderId: $folderId)\n}"
             },
             {
+                QueryDataEnum.RemoveComicToFolder,
+                "mutation removeComicToFolder($comicId: ID!, $folderId: ID!) {\n  removeComicToFolder(comicId: $comicId, folderId: $folderId)\n}"
+            },
+            {
                 QueryDataEnum.AddComicToFolder,
                 "mutation addComicToFolder($comicId: ID!, $folderId: ID!) {\n  addComicToFolder(comicId: $comicId, folderId: $folderId)\n}"
             },
             {
                 QueryDataEnum.ComicInAccountFolders,
-                "query chapterByComicId($comicId: ID!) {\n  chaptersByComicId(comicId: $comicId) {\n    id\n    serial\n    type\n    dateCreated\n    dateUpdated\n    size\n    __typename\n  }\n}"
+                "query comicInAccountFolders($comicId: ID!) {\n  comicInAccountFolders(comicId: $comicId)\n}"
             },
             {
                 QueryDataEnum.AddMessageToComic,
