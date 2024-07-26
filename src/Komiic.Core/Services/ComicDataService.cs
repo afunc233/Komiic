@@ -8,7 +8,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
 {
     private const int PerPageCount = 20;
 
-    public async Task<List<MangaInfo>> GetRecentUpdateComic(int pageIndex, string? orderBy, bool asc)
+    public async Task<ApiResponseData<List<MangaInfo>>> GetRecentUpdateComic(int pageIndex, string? orderBy, bool asc)
     {
         var pagination = new Pagination
         {
@@ -24,10 +24,16 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
                     Pagination = pagination
                 }));
 
-        return recentUpdateData is { Data.RecentUpdate.Count: > 0 } ? recentUpdateData.Data.RecentUpdate : [];
+        if (recentUpdateData is { Data.RecentUpdate.Count: > 0 })
+        {
+            return new() { Data = recentUpdateData.Data.RecentUpdate };
+        }
+
+        return new() { Data = [] };
     }
-    
-    public async Task<List<MangaInfo>> GetHotComic(int pageIndex, string? orderBy = null, string? status = null,
+
+    public async Task<ApiResponseData<List<MangaInfo>>> GetHotComic(int pageIndex, string? orderBy = null,
+        string? status = null,
         bool aes = true)
     {
         var pagination = new Pagination
@@ -44,6 +50,12 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
             {
                 Pagination = pagination
             }));
-        return hotComicsData is { Data.HotComics.Count: > 0 } ? hotComicsData.Data.HotComics : [];
+
+        if (hotComicsData is { Data.HotComics.Count: > 0 })
+        {
+            return new() { Data = hotComicsData.Data.HotComics };
+        }
+
+        return new() { Data = [] };
     }
 }

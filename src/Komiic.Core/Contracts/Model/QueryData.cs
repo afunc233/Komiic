@@ -255,26 +255,32 @@ internal static class QueryDataExt
     {
         if (OperationQueryDic.TryGetValue(operationName, out string? query))
         {
-            return new QueryData(operationName.FirstCharToLowerStringBuilder(), query);
+            return new(operationName.FirstCharToLowerStringBuilder(), query);
         }
 
-        throw new Exception($"Operation :{operationName} not found");
+        throw new($"Operation :{operationName} not found");
     }
 
     public static QueryData<T> GetQueryDataWithVariables<T>(this QueryDataEnum operationName, T variables)
     {
         if (OperationQueryDic.TryGetValue(operationName, out string? query))
         {
-            return new QueryData<T>(operationName.FirstCharToLowerStringBuilder(), query)
+            return new(operationName.FirstCharToLowerStringBuilder(), query)
             {
                 Variables = variables
             };
         }
 
-        throw new Exception($"Operation :{operationName} not found");
+        throw new($"Operation :{operationName} not found");
     }
 
     #endregion
+}
+
+public record LoginData
+{
+    [JsonPropertyName("email")] public required string Email { get; set; }
+    [JsonPropertyName("password")] public required string Password { get; set; }
 }
 
 public class Pagination
@@ -345,7 +351,7 @@ public class FavoritePagination : Pagination
 public class FavoritePaginationVariables
 {
     [JsonPropertyName("pagination")]
-    public FavoritePagination Pagination { get; set; } = new FavoritePagination
+    public FavoritePagination Pagination { get; set; } = new()
     {
         OrderBy = "COMIC_DATE_UPDATED",
     };

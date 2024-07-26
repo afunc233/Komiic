@@ -15,7 +15,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
 {
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
-        new NavBar
+        new()
         {
             NavType = NavBarType.Main,
             BarName = "首页",
@@ -27,7 +27,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedForeground = "#ff0000",
         },
 
-        new NavBar
+        new()
         {
             NavType = NavBarType.RecentUpdate,
             BarName = "最近更新",
@@ -39,7 +39,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedForeground = "#ff0000",
         },
 
-        new NavBar
+        new()
         {
             NavType = NavBarType.Hot,
             BarName = "夯",
@@ -51,7 +51,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedForeground = "#ff0000",
         },
 
-        new NavBar
+        new()
         {
             NavType = NavBarType.AllManga,
             BarName = "所有漫畫",
@@ -62,7 +62,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000",
         },
-        new NavBar
+        new()
         {
             NavType = NavBarType.Authors,
             BarName = "作者列表",
@@ -77,7 +77,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
 
     public ObservableCollection<NavBar> FooterMenuItemsSource { get; } =
     [
-        new NavBar
+        new()
         {
             NavType = NavBarType.About,
             BarName = "关于",

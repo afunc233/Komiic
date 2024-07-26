@@ -50,6 +50,7 @@ namespace Komiic.Core;
 [JsonSerializable(typeof(FolderComicIdsData))]
 [JsonSerializable(typeof(UpdateFolderNameData))]
 [JsonSerializable(typeof(RemoveFolderData))]
+[JsonSerializable(typeof(RemoveComicToFolderData))]
 [JsonSerializable(typeof(AddComicToFolderData))]
 [JsonSerializable(typeof(ComicInAccountFoldersData))]
 [JsonSerializable(typeof(AddMessageToComicData))]

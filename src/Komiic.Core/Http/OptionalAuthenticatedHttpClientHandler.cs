@@ -19,7 +19,7 @@ public class OptionalAuthenticatedHttpClientHandler(
             string? token = await _getToken(request, cancellationToken).ConfigureAwait(false);
             if (!string.IsNullOrWhiteSpace(token))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue(auth.Scheme, token);
+                request.Headers.Authorization = new(auth.Scheme, token);
             }
             else
             {

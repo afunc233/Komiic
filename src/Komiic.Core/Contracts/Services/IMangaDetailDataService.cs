@@ -4,27 +4,27 @@ namespace Komiic.Core.Contracts.Services;
 
 public interface IMangaDetailDataService
 {
-    Task<MangaInfo?> GetMangaInfoById(string comicId);
-    
-    Task<int> GetMessageCountByComicId(string comicId);
-    
-    Task<LastMessageByComicId?> GetLastMessageByComicId(string comicId);
-    
-    Task<List<ChaptersByComicId>> GetChapterByComicId(string comicId);
-    
-    Task<List<string>> GetRecommendComicById(string comicId);
-    
-    Task<List<MangaInfo>> GetRecommendMangaInfosById(string comicId);
-    
-    Task<List<MangaInfo>> GetMangaInfoByIds(params string[] comicIds);
+    Task<ApiResponseData<MangaInfo?>> GetMangaInfoById(string comicId);
 
-    Task<List<Folder>> GetMyFolders();
+    Task<ApiResponseData<int?>> GetMessageCountByComicId(string comicId);
 
-    Task<bool> RemoveComicToFolder(string folderId,string comicId);
-    
-    Task<bool> AddComicToFolder(string folderId,string comicId);
-    
-    Task<List<string>> ComicInAccountFolders(string comicId);
-    
-    Task<List<LastReadByComicId>> GetComicsLastRead(params string[] comicIds);
+    Task<ApiResponseData<LastMessageByComicId?>> GetLastMessageByComicId(string comicId);
+
+    Task<ApiResponseData<List<ChaptersByComicId>>> GetChapterByComicId(string comicId);
+
+    Task<ApiResponseData<List<string>>> GetRecommendComicById(string comicId);
+
+    Task<ApiResponseData<List<MangaInfo>>> GetRecommendMangaInfosById(string comicId);
+
+    Task<ApiResponseData<List<MangaInfo>>> GetMangaInfoByIds(params string[] comicIds);
+
+    Task<ApiResponseData<List<Folder>>> GetMyFolders();
+
+    Task<ApiResponseData<bool?>> RemoveComicToFolder(string folderId, string comicId);
+
+    Task<ApiResponseData<bool?>> AddComicToFolder(string folderId, string comicId);
+
+    Task<ApiResponseData<List<string>>> ComicInAccountFolders(string comicId);
+
+    Task<ApiResponseData<List<LastReadByComicId>>> GetComicsLastRead(params string[] comicIds);
 }

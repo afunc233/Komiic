@@ -20,7 +20,7 @@ public partial class RecentUpdatePageViewModel(
 
     public override NavBarType NavBarType => NavBarType.RecentUpdate;
     public override string Title => "最近更新";
-    
+
     [ObservableProperty] private bool _hasMore = true;
 
     public ObservableCollection<MangaInfo> RecentUpdateMangaInfos { get; } = [];
@@ -38,13 +38,13 @@ public partial class RecentUpdatePageViewModel(
         await SafeLoadData(async () =>
         {
             var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
-            if (dataList.Count == 0)
+            if (dataList is { Data.Count: > 0 })
             {
-                HasMore = false;
+                dataList.Data.ForEach(RecentUpdateMangaInfos.Add);
             }
             else
             {
-                dataList.ForEach(RecentUpdateMangaInfos.Add);
+                HasMore = false;
             }
         });
     }

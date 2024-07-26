@@ -4,14 +4,9 @@ namespace Komiic.Core.Contracts.Services;
 
 public interface IMangaViewerDataService
 {
-    // Task<ResponseData<AddReadComicHistoryData>> AddReadComicHistory(
-    //     QueryData<AddReadComicHistoryVariables> queryData);
+    Task<ApiResponseData<List<ImagesByChapterId>>> GetImagesByChapterId(string chapterId);
 
+    Task<ApiResponseData<ComicHistory?>> ReadComicHistoryById(string comicId);
 
-    Task<List<ImagesByChapterId>> GetImagesByChapterId(string chapterId);
-
-    Task<ComicHistory?> ReadComicHistoryById(string comicId);
-
-
-    Task<ComicHistory?> AddReadComicHistory(string comicId, string chapterId, int page);
+    Task<ApiResponseData<ComicHistory?>> AddReadComicHistory(string comicId, string chapterId, int page);
 }

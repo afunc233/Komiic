@@ -4,8 +4,8 @@ namespace Komiic.Core.Contracts.Services;
 
 public interface IAuthorDataService
 {
-    Task<List<MangaInfo>> GetComicsByAuthor(string authorId);
+    Task<ApiResponseData<List<MangaInfo>>> GetComicsByAuthor(string authorId);
 
 
-    Task<List<Author>> GetAllAuthors(int pageIndex, string orderBy = "DATE_UPDATED");
+    Task<ApiResponseData<List<Author>>> GetAllAuthors(int pageIndex, string orderBy = "DATE_UPDATED");
 }

@@ -2,27 +2,27 @@
 
 namespace Komiic.Core.Contracts.Model;
 
-public class ErrorInfo
+internal class ErrorInfo
 {
     [JsonPropertyName("message")] public string? Message { get; set; }
     [JsonPropertyName("path")] public List<string>? PathList { get; set; }
 }
 
-public class ResponseData
+internal class ResponseData
 {
     [JsonPropertyName("message")] public string? Message { get; set; }
 
     [JsonPropertyName("errors")] public List<ErrorInfo>? Errors { get; set; }
 }
 
-public class ResponseData<T> : ResponseData
+internal class ResponseData<T> : ResponseData
 {
     [JsonPropertyName("data")] public T? Data { get; set; }
 }
 
 #region 账户信息
 
-public class TokenResponseData : ResponseData
+internal class TokenResponseData : ResponseData
 {
     [JsonPropertyName("token")] public string? Token { get; set; }
 
@@ -31,7 +31,7 @@ public class TokenResponseData : ResponseData
     [JsonPropertyName("expire")] public DateTime? Expire { get; set; }
 }
 
-public class LogoutResponseData : ResponseData
+internal class LogoutResponseData : ResponseData
 {
     [JsonPropertyName("code")] public long? Code { get; set; }
 }

@@ -6,7 +6,7 @@ namespace Komiic.Core.Services;
 
 internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaViewerDataService
 {
-    public async Task<List<ImagesByChapterId>> GetImagesByChapterId(string chapterId)
+    public async Task<ApiResponseData<List<ImagesByChapterId>>> GetImagesByChapterId(string chapterId)
     {
         var variables = QueryDataEnum.ImagesByChapterId.GetQueryDataWithVariables(
             new ChapterIdVariables
@@ -16,13 +16,14 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
         var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(variables);
         if (imagesByChapterIdData is { Data.ImagesByChapterIdList.Count: > 0 })
         {
-            return imagesByChapterIdData.Data.ImagesByChapterIdList;
+            return new()
+                { Data = imagesByChapterIdData.Data.ImagesByChapterIdList };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<ComicHistory?> ReadComicHistoryById(string comicId)
+    public async Task<ApiResponseData<ComicHistory?>> ReadComicHistoryById(string comicId)
     {
         var variables = QueryDataEnum.ReadComicHistoryById.GetQueryDataWithVariables(new ComicIdVariables
         {
@@ -33,13 +34,13 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
 
         if (readComicHistoryByIdData is { Data.ReadComicHistoryById: not null })
         {
-            return readComicHistoryByIdData.Data.ReadComicHistoryById;
+            return new() { Data = readComicHistoryByIdData.Data.ReadComicHistoryById };
         }
 
-        return default;
+        return new() { Data = default };
     }
 
-    public async Task<ComicHistory?> AddReadComicHistory(string comicId, string chapterId, int page)
+    public async Task<ApiResponseData<ComicHistory?>> AddReadComicHistory(string comicId, string chapterId, int page)
     {
         var variables = QueryDataEnum.AddReadComicHistory.GetQueryDataWithVariables(
             new AddReadComicHistoryVariables
@@ -51,9 +52,9 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
         var addReadComicHistoryData = await komiicQueryApi.AddReadComicHistory(variables);
         if (addReadComicHistoryData is { Data.AddReadComicHistory: not null })
         {
-            return addReadComicHistoryData.Data.AddReadComicHistory;
+            return new() { Data = addReadComicHistoryData.Data.AddReadComicHistory };
         }
 
-        return default;
+        return new() { Data = default };
     }
 }

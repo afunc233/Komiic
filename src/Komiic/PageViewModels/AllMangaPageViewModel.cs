@@ -87,13 +87,13 @@ public partial class AllMangaPageViewModel(
         await SafeLoadData(async () =>
         {
             var allCategories = await categoryDataService.GetAllCategory();
-            if (allCategories is { Count: > 0 })
+            if (allCategories.Data is { Count: > 0 })
             {
-                allCategories.ForEach(AllCategories.Add);
+                allCategories.Data.ForEach(AllCategories.Add);
 
                 SelectedCategory =
-                    allCategories.FirstOrDefault(it => string.Equals(it?.Id, WantSelectedCategory?.Id ?? ""),
-                        allCategories.FirstOrDefault());
+                    allCategories.Data.FirstOrDefault(it => string.Equals(it?.Id, WantSelectedCategory?.Id ?? ""),
+                        allCategories.Data.FirstOrDefault());
             }
         });
     }
@@ -135,10 +135,10 @@ public partial class AllMangaPageViewModel(
                 await categoryDataService.GetComicByCategory(SelectedCategory?.Id ?? "0", _pageIndex++, OrderBy,
                     State ?? "");
 
-            if (comicByCategoryData is { Count: > 0 })
+            if (comicByCategoryData.Data is { Count: > 0 })
             {
                 HasMore = true;
-                comicByCategoryData.ForEach(AllMangaInfos.Add);
+                comicByCategoryData.Data.ForEach(AllMangaInfos.Add);
             }
             else
             {

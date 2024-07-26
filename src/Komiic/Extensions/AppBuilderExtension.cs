@@ -18,7 +18,7 @@ public static class AppBuilderExtension
             {
                 new  FontFallback
                 {
-                    FontFamily = new FontFamily(fontUri)
+                    FontFamily = new(fontUri)
                 }
             }
         });
@@ -26,6 +26,6 @@ public static class AppBuilderExtension
             fontManager.AddFontCollection(new HarmonyOSSansSCCollection()));
     }
     
-    private class HarmonyOSSansSCCollection() : EmbeddedFontCollection(new Uri("fonts:HarmonyOS_Sans_SC", UriKind.Absolute),
-        new Uri($"avares://{nameof(Komiic)}/Assets/Fonts/HarmonyOS_Sans_SC", UriKind.Absolute));
+    private class HarmonyOSSansSCCollection() : EmbeddedFontCollection(new("fonts:HarmonyOS_Sans_SC", UriKind.Absolute),
+        new($"avares://{nameof(Komiic)}/Assets/Fonts/HarmonyOS_Sans_SC", UriKind.Absolute));
 }

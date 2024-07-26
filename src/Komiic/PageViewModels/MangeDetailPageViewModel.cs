@@ -77,7 +77,7 @@ public partial class MangeDetailPageViewModel(
 
 
         var result = await mangaDetailDataService.AddComicToFolder(folder.Id, MangaInfo.Id);
-        if (result)
+        if (result.Data is { })
         {
         }
     }
@@ -89,7 +89,7 @@ public partial class MangeDetailPageViewModel(
         // messenger.Send(new OpenAuthorMessage(author));
 
         var result = await mangaDetailDataService.RemoveComicToFolder(folder.Id, MangaInfo.Id);
-        if (result)
+        if (result.Data is { })
         {
         }
     }
@@ -101,23 +101,28 @@ public partial class MangeDetailPageViewModel(
         // 传过来有值了，所以应该不需要获取数据了
         // await komiicQueryApi.GetMangaInfoById(MangaInfo.id);
 
-        MessageCount = await mangaDetailDataService.GetMessageCountByComicId(MangaInfo.Id);
+        var messageCountData = await mangaDetailDataService.GetMessageCountByComicId(MangaInfo.Id);
+
+        if (messageCountData is { Data: not null })
+        {
+            MessageCount = messageCountData.Data ?? 0;
+        }
 
         if (MessageCount > 0)
         {
             var lastMessageByComicIdData = await mangaDetailDataService.GetLastMessageByComicId(MangaInfo.Id);
 
-            if (lastMessageByComicIdData is not null)
+            if (lastMessageByComicIdData.Data is not null)
             {
-                LastMessageByComicId = lastMessageByComicIdData;
+                LastMessageByComicId = lastMessageByComicIdData.Data;
             }
         }
 
         var chapterByComicIdData = await mangaDetailDataService.GetChapterByComicId(MangaInfo.Id);
 
-        if (chapterByComicIdData is { Count: > 0 })
+        if (chapterByComicIdData is { Data.Count: > 0 })
         {
-            foreach (var groupingChaptersByComicId in chapterByComicIdData.GroupBy(it =>
+            foreach (var groupingChaptersByComicId in chapterByComicIdData.Data.GroupBy(it =>
                          it.Type))
             {
                 GroupingChaptersByComicIdList.Add(new()
@@ -129,19 +134,19 @@ public partial class MangeDetailPageViewModel(
         }
 
         var recommendMangaInfosById = await mangaDetailDataService.GetRecommendMangaInfosById(MangaInfo.Id);
-        if (recommendMangaInfosById is { Count: > 0 })
+        if (recommendMangaInfosById is { Data.Count: > 0 })
         {
-            recommendMangaInfosById.ForEach(RecommendMangaInfoList.Add);
+            recommendMangaInfosById.Data.ForEach(RecommendMangaInfoList.Add);
         }
 
         var myFolders = await mangaDetailDataService.GetMyFolders();
-        if (myFolders is { Count: > 0 })
+        if (myFolders is { Data.Count: > 0 })
         {
             var data = await mangaDetailDataService.ComicInAccountFolders(MangaInfo.Id);
 
-            myFolders.ForEach(it =>
+            myFolders.Data.ForEach(it =>
             {
-                var folderVm = new FolderVm(it) { InFolder = data.Contains(it.Id) };
+                var folderVm = new FolderVm(it) { InFolder = data.Data?.Contains(it.Id) ?? false };
                 MyFolders.Add(folderVm);
             });
         }

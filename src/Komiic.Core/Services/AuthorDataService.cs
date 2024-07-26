@@ -6,7 +6,7 @@ namespace Komiic.Core.Services;
 
 internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataService
 {
-    public async Task<List<MangaInfo>> GetComicsByAuthor(string authorId)
+    public async Task<ApiResponseData<List<MangaInfo>>> GetComicsByAuthor(string authorId)
     {
         if (string.IsNullOrWhiteSpace(authorId))
         {
@@ -22,13 +22,13 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
 
         if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
         {
-            return comicsByAuthorData.Data.ComicsByAuthorList;
+            return new() { Data = comicsByAuthorData.Data.ComicsByAuthorList };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<List<Author>> GetAllAuthors(int pageIndex, string orderBy = "DATE_UPDATED")
+    public async Task<ApiResponseData<List<Author>>> GetAllAuthors(int pageIndex, string orderBy = "DATE_UPDATED")
     {
         var variables = QueryDataEnum.Authors.GetQueryDataWithVariables(
             new PaginationVariables
@@ -41,11 +41,11 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
                 }
             });
         var allAuthorsData = await komiicQueryApi.GetAllAuthors(variables);
-        if (allAuthorsData is {Data.AuthorList.Count:>0})
+        if (allAuthorsData is { Data.AuthorList.Count: > 0 })
         {
-            return allAuthorsData.Data.AuthorList;
+            return new() { Data = allAuthorsData.Data.AuthorList };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 }

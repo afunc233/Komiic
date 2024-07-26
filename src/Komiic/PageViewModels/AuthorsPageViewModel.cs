@@ -30,9 +30,9 @@ public partial class AuthorsPageViewModel(
         await SafeLoadData(async () =>
         {
             var authorsData = await authorDataService.GetAllAuthors(_pageIndex++);
-            if (authorsData is { Count: > 0 })
+            if (authorsData.Data is { Count: > 0 })
             {
-                authorsData.ForEach(AllAuthors.Add);
+                authorsData.Data.ForEach(AllAuthors.Add);
                 HasMore = true;
             }
             else

@@ -6,7 +6,7 @@ namespace Komiic.Core.Services;
 
 internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDetailDataService
 {
-    public async Task<MangaInfo?> GetMangaInfoById(string comicId)
+    public async Task<ApiResponseData<MangaInfo?>> GetMangaInfoById(string comicId)
     {
         var variables =
             QueryDataEnum.ComicById.GetQueryDataWithVariables(new ComicIdVariables { ComicId = comicId });
@@ -14,13 +14,13 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (mangaInfoByIdData is { Data.ComicById: not null })
         {
-            return mangaInfoByIdData.Data.ComicById;
+            return new() { Data = mangaInfoByIdData.Data.ComicById };
         }
 
-        return default;
+        return new() { Data = default };
     }
 
-    public async Task<int> GetMessageCountByComicId(string comicId)
+    public async Task<ApiResponseData<int?>> GetMessageCountByComicId(string comicId)
     {
         var variables =
             QueryDataEnum.MessageCountByComicId.GetQueryDataWithVariables(new ComicIdVariables { ComicId = comicId });
@@ -29,13 +29,13 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (messageCountByComicIdData is { Data.MessageCountByComicIdCount: not null })
         {
-            return messageCountByComicIdData.Data.MessageCountByComicIdCount ?? 0;
+            return new() { Data = messageCountByComicIdData.Data.MessageCountByComicIdCount };
         }
 
-        return 0;
+        return new() { Data = default };
     }
 
-    public async Task<LastMessageByComicId?> GetLastMessageByComicId(string comicId)
+    public async Task<ApiResponseData<LastMessageByComicId?>> GetLastMessageByComicId(string comicId)
     {
         var variables =
             QueryDataEnum.LastMessageByComicId.GetQueryDataWithVariables(new ComicIdVariables { ComicId = comicId });
@@ -44,13 +44,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var lastMessageByComicIdData = await komiicQueryApi.GetLastMessageByComicId(variables);
         if (lastMessageByComicIdData is { Data.LastMessageByComicId: not null })
         {
-            return lastMessageByComicIdData.Data.LastMessageByComicId;
+            return new()
+                { Data = lastMessageByComicIdData.Data.LastMessageByComicId };
         }
 
-        return default;
+        return new() { Data = default };
     }
 
-    public async Task<List<ChaptersByComicId>> GetChapterByComicId(string comicId)
+    public async Task<ApiResponseData<List<ChaptersByComicId>>> GetChapterByComicId(string comicId)
     {
         var variables =
             QueryDataEnum.ChapterByComicId.GetQueryDataWithVariables(new ComicIdVariables { ComicId = comicId });
@@ -58,13 +59,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var chapterByComicIdData = await komiicQueryApi.GetChapterByComicId(variables);
         if (chapterByComicIdData is { Data.ChaptersByComicIdList.Count: > 0 })
         {
-            return chapterByComicIdData.Data.ChaptersByComicIdList;
+            return new()
+                { Data = chapterByComicIdData.Data.ChaptersByComicIdList };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<List<string>> GetRecommendComicById(string comicId)
+    public async Task<ApiResponseData<List<string>>> GetRecommendComicById(string comicId)
     {
         var variables =
             QueryDataEnum.RecommendComicById.GetQueryDataWithVariables(new ComicIdVariables { ComicId = comicId });
@@ -72,56 +74,56 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var recommendComicByIdData = await komiicQueryApi.GetRecommendComicById(variables);
         if (recommendComicByIdData is { Data.RecommendComicList.Count: > 0 })
         {
-            return recommendComicByIdData.Data.RecommendComicList;
+            return new() { Data = recommendComicByIdData.Data.RecommendComicList };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<List<MangaInfo>> GetRecommendMangaInfosById(string comicId)
+    public async Task<ApiResponseData<List<MangaInfo>>> GetRecommendMangaInfosById(string comicId)
     {
         var recommendComicData =
             await GetRecommendComicById(comicId);
-        if (recommendComicData is { Count: > 0 })
+        if (recommendComicData.Data is { Count: > 0 })
         {
-            var mangaInfoByIdsData = await GetMangaInfoByIds(recommendComicData.ToArray());
+            var mangaInfoByIdsData = await GetMangaInfoByIds(recommendComicData.Data.ToArray());
 
-            if (mangaInfoByIdsData is { Count: > 0 })
+            if (mangaInfoByIdsData.Data is { Count: > 0 })
             {
                 return mangaInfoByIdsData;
             }
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<List<MangaInfo>> GetMangaInfoByIds(params string[] comicIds)
+    public async Task<ApiResponseData<List<MangaInfo>>> GetMangaInfoByIds(params string[] comicIds)
     {
         var variables = QueryDataEnum.ComicByIds.GetQueryDataWithVariables(new ComicIdsVariables
             { ComicIdList = comicIds.ToList() });
         var mangaInfoByIdsData = await komiicQueryApi.GetMangaInfoByIds(variables);
         if (mangaInfoByIdsData is { Data.ComicByIds.Count: > 0 })
         {
-            return mangaInfoByIdsData.Data.ComicByIds;
+            return new() { Data = mangaInfoByIdsData.Data.ComicByIds };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<List<Folder>> GetMyFolders()
+    public async Task<ApiResponseData<List<Folder>>> GetMyFolders()
     {
         var queryData = QueryDataEnum.MyFolder.GetQueryData();
 
         var folderData = await komiicQueryApi.GetMyFolder(queryData);
         if (folderData is { Data.Folders.Count: > 0 })
         {
-            return folderData.Data.Folders;
+            return new() { Data = folderData.Data.Folders };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<bool> RemoveComicToFolder(string folderId, string comicId)
+    public async Task<ApiResponseData<bool?>> RemoveComicToFolder(string folderId, string comicId)
     {
         var queryData = QueryDataEnum.RemoveComicToFolder.GetQueryDataWithVariables(new FolderIdAndComicIdVariables()
         {
@@ -133,13 +135,13 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (removeComicToFolderData is { Data: not null })
         {
-            return removeComicToFolderData.Data.RemoveComicToFolder;
+            return new() { Data = removeComicToFolderData.Data.RemoveComicToFolder };
         }
 
-        return false;
+        return new() { Data = default };
     }
 
-    public async Task<bool> AddComicToFolder(string folderId, string comicId)
+    public async Task<ApiResponseData<bool?>> AddComicToFolder(string folderId, string comicId)
     {
         var queryData = QueryDataEnum.AddComicToFolder.GetQueryDataWithVariables(new FolderIdAndComicIdVariables()
         {
@@ -151,13 +153,13 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (removeComicToFolderData is { Data: not null })
         {
-            return removeComicToFolderData.Data.AddComicToFolder;
+            return new() { Data = removeComicToFolderData.Data.AddComicToFolder };
         }
 
-        return false;
+        return new() { Data = default };
     }
 
-    public async Task<List<string>> ComicInAccountFolders(string comicId)
+    public async Task<ApiResponseData<List<string>>> ComicInAccountFolders(string comicId)
     {
         var queryData = QueryDataEnum.ComicInAccountFolders.GetQueryDataWithVariables(new ComicIdVariables()
         {
@@ -168,13 +170,13 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (comicInAccountFoldersData is { Data.ComicInAccountFolders.Count: > 0 })
         {
-            return comicInAccountFoldersData.Data.ComicInAccountFolders;
+            return new() { Data = comicInAccountFoldersData.Data.ComicInAccountFolders };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 
-    public async Task<List<LastReadByComicId>> GetComicsLastRead(params string[] comicIds)
+    public async Task<ApiResponseData<List<LastReadByComicId>>> GetComicsLastRead(params string[] comicIds)
     {
         var queryData =
             QueryDataEnum.ComicsLastRead.GetQueryDataWithVariables(
@@ -183,9 +185,9 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var comicsLastReadData = await komiicQueryApi.GetComicsLastRead(queryData);
         if (comicsLastReadData is { Data.LastReadByComicIds.Count: > 0 })
         {
-            return comicsLastReadData.Data.LastReadByComicIds;
+            return new() { Data = comicsLastReadData.Data.LastReadByComicIds };
         }
 
-        return [];
+        return new() { Data = [] };
     }
 }

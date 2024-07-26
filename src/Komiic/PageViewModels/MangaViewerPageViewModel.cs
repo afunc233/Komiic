@@ -41,18 +41,18 @@ public partial class MangaViewerPageViewModel(
             if (MangaInfo != null && Chapter != null)
             {
                 var imagesByChapterIdData = await mangaViewerDataService.GetImagesByChapterId(Chapter.Id);
-                if (imagesByChapterIdData is { Count: > 0 })
+                if (imagesByChapterIdData is { Data.Count: > 0 })
                 {
-                    foreach (var imagesByChapterId in imagesByChapterIdData)
+                    foreach (var imagesByChapterId in imagesByChapterIdData.Data)
                     {
-                        ImagesByChapterList.Add(new MangeImageData(MangaInfo, Chapter, imagesByChapterId));
+                        ImagesByChapterList.Add(new(MangaInfo, Chapter, imagesByChapterId));
                     }
                 }
 
                 var readComicHistoryData = await mangaViewerDataService.ReadComicHistoryById(MangaInfo.Id);
-                if (readComicHistoryData is { Chapters: not null })
+                if (readComicHistoryData is { Data.Chapters.Count: > 0 })
                 {
-                    HistoryPage = readComicHistoryData.Chapters
+                    HistoryPage = readComicHistoryData.Data.Chapters
                         .FirstOrDefault(it => it.ChapterId == Chapter.Id)?.Page ?? 0;
                 }
             }
@@ -77,9 +77,10 @@ public partial class MangaViewerPageViewModel(
             return;
         }
 
-        var data = await mangaViewerDataService.AddReadComicHistory(mangeImage.Item1.MangaInfo.Id, mangeImage.Item1.Chapter.Id,
+        var data = await mangaViewerDataService.AddReadComicHistory(mangeImage.Item1.MangaInfo.Id,
+            mangeImage.Item1.Chapter.Id,
             historyPage);
-        if (data is not null)
+        if (data.Data is not null)
         {
         }
 

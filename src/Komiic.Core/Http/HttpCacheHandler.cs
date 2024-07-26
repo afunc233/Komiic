@@ -36,7 +36,7 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
 
                     if (!string.IsNullOrWhiteSpace(localJson))
                     {
-                        return new HttpResponseMessage
+                        return new()
                         {
                             RequestMessage = request,
                             Content = new StringContent(localJson)

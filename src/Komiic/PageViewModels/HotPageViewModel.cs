@@ -54,13 +54,13 @@ public partial class HotPageViewModel(
         await SafeLoadData(async () =>
         {
             var dataList = await comicDataService.GetHotComic(_monthHotComicsPageIndex++, "MONTH_VIEWS", State);
-            if (dataList.Count == 0)
+            if (dataList is { Data.Count: > 0 })
             {
-                HasMore = false;
+                dataList.Data.ForEach(MonthHotComicsMangaInfos.Add);
             }
             else
             {
-                dataList.ForEach(MonthHotComicsMangaInfos.Add);
+                HasMore = false;
             }
         });
     }
@@ -71,24 +71,24 @@ public partial class HotPageViewModel(
         await SafeLoadData(async () =>
         {
             var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, "VIEWS", State);
-            if (dataList.Count == 0)
+            if (dataList is { Data.Count: > 0 })
             {
-                HasMore = false;
+                dataList.Data.ForEach(HotComicsMangaInfos.Add);
             }
             else
             {
-                dataList.ForEach(HotComicsMangaInfos.Add);
+                HasMore = false;
             }
         });
 
         var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, "VIEWS", State);
-        if (dataList.Count == 0)
+        if (dataList is { Data.Count: > 0 })
         {
-            HasMore = false;
+            dataList.Data.ForEach(HotComicsMangaInfos.Add);
         }
         else
         {
-            dataList.ForEach(HotComicsMangaInfos.Add);
+            HasMore = false;
         }
     }
 

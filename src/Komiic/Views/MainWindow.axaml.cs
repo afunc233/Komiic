@@ -41,7 +41,7 @@ public partial class MainWindow : Window
 
         PseudoClasses.Set(":splashOpen", true);
         var time = DateTime.Now;
-        _splashCts = new CancellationTokenSource();
+        _splashCts = new();
         await SplashScreen.RunTasks(_splashCts.Token);
         _splashCts?.Dispose();
         _splashCts = null;
@@ -72,22 +72,22 @@ public partial class MainWindow : Window
             FillMode = FillMode.Forward,
             Children =
             {
-                new KeyFrame
+                new()
                 {
-                    Cue = new Cue(0d),
+                    Cue = new(0d),
                     Setters =
                     {
                         new Setter(OpacityProperty, 1d)
                     }
                 },
-                new KeyFrame
+                new()
                 {
-                    Cue = new Cue(1d),
+                    Cue = new(1d),
                     Setters =
                     {
                         new Setter(OpacityProperty, 0d),
                     },
-                    KeySpline = new KeySpline(0, 0, 0, 1)
+                    KeySpline = new(0, 0, 0, 1)
                 }
             }
         };
@@ -97,22 +97,22 @@ public partial class MainWindow : Window
             Duration = TimeSpan.FromMilliseconds(167),
             Children =
             {
-                new KeyFrame
+                new()
                 {
-                    Cue = new Cue(0d),
+                    Cue = new(0d),
                     Setters =
                     {
                         new Setter(OpacityProperty, 0d)
                     }
                 },
-                new KeyFrame
+                new()
                 {
-                    Cue = new Cue(1d),
+                    Cue = new(1d),
                     Setters =
                     {
                         new Setter(OpacityProperty, 1d),
                     },
-                    KeySpline = new KeySpline(0, 0, 0, 1)
+                    KeySpline = new(0, 0, 0, 1)
                 }
             }
         };

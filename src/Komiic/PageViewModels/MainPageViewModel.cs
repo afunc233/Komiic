@@ -35,7 +35,7 @@ public partial class MainPageViewModel(
     public ObservableCollection<MangaInfo> HotComicsMangaInfos { get; } = [];
 
     [ObservableProperty] private ImageLimit? _imageLimit;
-    
+
 
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
@@ -52,13 +52,13 @@ public partial class MainPageViewModel(
         await SafeLoadData(async () =>
         {
             var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
-            if (dataList.Count == 0)
+            if (dataList is { Data.Count: > 0 })
             {
-                HasMore = false;
+                dataList.Data.ForEach(RecentUpdateMangaInfos.Add);
             }
             else
             {
-                dataList.ForEach(RecentUpdateMangaInfos.Add);
+                HasMore = false;
             }
         });
     }
@@ -70,13 +70,13 @@ public partial class MainPageViewModel(
         await SafeLoadData(async () =>
         {
             var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++);
-            if (dataList.Count == 0)
+            if (dataList is { Data.Count: > 0 })
             {
-                HasMore = false;
+                dataList.Data.ForEach(HotComicsMangaInfos.Add);
             }
             else
             {
-                dataList.ForEach(HotComicsMangaInfos.Add);
+                HasMore = false;
             }
         });
     }

@@ -38,9 +38,9 @@ public partial class AuthorDetailPageViewModel(
         await SafeLoadData(async () =>
         {
             var comicsByAuthors = await authorDataService.GetComicsByAuthor(Author.Id);
-            if (comicsByAuthors is { Count: > 0 })
+            if (comicsByAuthors.Data is { Count: > 0 })
             {
-                comicsByAuthors.ForEach(MangaInfos.Add);
+                comicsByAuthors.Data.ForEach(MangaInfos.Add);
             }
         });
     }

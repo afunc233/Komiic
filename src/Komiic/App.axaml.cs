@@ -21,7 +21,7 @@ public class App : Application
     private readonly IHost _host = Host.CreateDefaultBuilder()
         .ConfigureServices(KomiicCoreExtensions.ConfigureServices)
         .ConfigureServices(KomiicExtensions.ConfigureServices)
-        .UseNLog(new NLogProviderOptions())
+        .UseNLog(new())
         .Build();
 
     private readonly ILogger? _logger = LogManager.GetCurrentClassLogger();
@@ -55,7 +55,7 @@ public class App : Application
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = _host.Services.GetRequiredService<MainViewModel>(),
-                    SplashScreen = new MainAppSplashContent(_host.StartAsync()),
+                    SplashScreen = new(_host.StartAsync()),
                 };
                 desktop.ShutdownRequested += async (_, _) => { await _host.StopAsync(); };
                 break;
