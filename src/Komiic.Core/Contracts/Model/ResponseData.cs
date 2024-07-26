@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Komiic.Core.Contracts.Model;
 
@@ -18,6 +19,33 @@ internal class ResponseData
 internal class ResponseData<T> : ResponseData
 {
     [JsonPropertyName("data")] public T? Data { get; set; }
+}
+
+internal static class ResponseDataExt
+{
+    public static string? GetMessage(this ResponseData responseData)
+    {
+        if (string.IsNullOrWhiteSpace(responseData.Message) && responseData is { Errors.Count : > 0 })
+        {
+            return default;
+        }
+
+        var sb = new StringBuilder();
+
+        if (responseData is { Message: not null })
+        {
+            sb.Append(responseData.Message);
+            sb.Append('\n');
+        }
+
+        if (responseData is { Errors.Count : > 0 })
+        {
+            sb.Append(responseData.Message);
+            sb.Append('\n');
+        }
+
+        return sb.ToString();
+    }
 }
 
 #region 账户信息

@@ -12,10 +12,18 @@ internal class CategoryDataService(IKomiicQueryApi komiicQueryApi) : ICategoryDa
         var allCategoryData = await komiicQueryApi.GetAllCategory(QueryDataEnum.AllCategory.GetQueryData());
         if (allCategoryData is { Data.AllCategories.Count: > 0 })
         {
-            return new() { Data = [..defaultCategoryArr, .. allCategoryData.Data.AllCategories] };
+            return new()
+            {
+                Data = [..defaultCategoryArr, .. allCategoryData.Data.AllCategories],
+                ErrorMessage = allCategoryData.GetMessage()
+            };
         }
 
-        return new() { Data = defaultCategoryArr };
+        return new()
+        {
+            Data = defaultCategoryArr,
+            ErrorMessage = allCategoryData.GetMessage()
+        };
     }
 
     public async Task<ApiResponseData<List<MangaInfo>>> GetComicByCategory(string categoryId, int pageIndex,
@@ -36,9 +44,17 @@ internal class CategoryDataService(IKomiicQueryApi komiicQueryApi) : ICategoryDa
         var comicByCategoryData = await komiicQueryApi.GetComicByCategory(variables);
         if (comicByCategoryData is { Data.ComicByCategories.Count: > 0 })
         {
-            return new() { Data = comicByCategoryData.Data.ComicByCategories };
+            return new()
+            {
+                Data = comicByCategoryData.Data.ComicByCategories,
+                ErrorMessage = comicByCategoryData.GetMessage()
+            };
         }
 
-        return new() { Data = [] };
+        return new()
+        {
+            Data = [],
+            ErrorMessage = comicByCategoryData.GetMessage()
+        };
     }
 }

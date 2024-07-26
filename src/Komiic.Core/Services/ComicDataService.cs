@@ -26,10 +26,18 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
 
         if (recentUpdateData is { Data.RecentUpdate.Count: > 0 })
         {
-            return new() { Data = recentUpdateData.Data.RecentUpdate };
+            return new()
+            {
+                Data = recentUpdateData.Data.RecentUpdate,
+                ErrorMessage = recentUpdateData.GetMessage()
+            };
         }
 
-        return new() { Data = [] };
+        return new()
+        {
+            Data = [],
+            ErrorMessage = recentUpdateData.GetMessage()
+        };
     }
 
     public async Task<ApiResponseData<List<MangaInfo>>> GetHotComic(int pageIndex, string? orderBy = null,
@@ -53,9 +61,17 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
 
         if (hotComicsData is { Data.HotComics.Count: > 0 })
         {
-            return new() { Data = hotComicsData.Data.HotComics };
+            return new()
+            {
+                Data = hotComicsData.Data.HotComics,
+                ErrorMessage = hotComicsData.GetMessage()
+            };
         }
 
-        return new() { Data = [] };
+        return new()
+        {
+            Data = [],
+            ErrorMessage = hotComicsData.GetMessage()
+        };
     }
 }

@@ -17,10 +17,17 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
         if (imagesByChapterIdData is { Data.ImagesByChapterIdList.Count: > 0 })
         {
             return new()
-                { Data = imagesByChapterIdData.Data.ImagesByChapterIdList };
+            {
+                Data = imagesByChapterIdData.Data.ImagesByChapterIdList,
+                ErrorMessage = imagesByChapterIdData.GetMessage()
+            };
         }
 
-        return new() { Data = [] };
+        return new()
+        {
+            Data = [],
+            ErrorMessage = imagesByChapterIdData.GetMessage()
+        };
     }
 
     public async Task<ApiResponseData<ComicHistory?>> ReadComicHistoryById(string comicId)
@@ -34,10 +41,18 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
 
         if (readComicHistoryByIdData is { Data.ReadComicHistoryById: not null })
         {
-            return new() { Data = readComicHistoryByIdData.Data.ReadComicHistoryById };
+            return new()
+            {
+                Data = readComicHistoryByIdData.Data.ReadComicHistoryById,
+                ErrorMessage = readComicHistoryByIdData.GetMessage()
+            };
         }
 
-        return new() { Data = default };
+        return new()
+        {
+            Data = default,
+            ErrorMessage = readComicHistoryByIdData.GetMessage()
+        };
     }
 
     public async Task<ApiResponseData<ComicHistory?>> AddReadComicHistory(string comicId, string chapterId, int page)
@@ -52,9 +67,17 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
         var addReadComicHistoryData = await komiicQueryApi.AddReadComicHistory(variables);
         if (addReadComicHistoryData is { Data.AddReadComicHistory: not null })
         {
-            return new() { Data = addReadComicHistoryData.Data.AddReadComicHistory };
+            return new()
+            {
+                Data = addReadComicHistoryData.Data.AddReadComicHistory,
+                ErrorMessage = addReadComicHistoryData.GetMessage()
+            };
         }
 
-        return new() { Data = default };
+        return new()
+        {
+            Data = default,
+            ErrorMessage = addReadComicHistoryData.GetMessage()
+        };
     }
 }
