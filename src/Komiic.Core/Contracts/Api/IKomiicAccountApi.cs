@@ -9,7 +9,7 @@ internal interface IKomiicAccountApi
     #region Login/Logout
 
     [Post(KomiicConst.LoginUrl)]
-    Task<TokenResponseData> Login([Body] LoginData loginData);
+    Task<IApiResponse<TokenResponseData>> Login([Body] LoginData loginData);
 
     [Post(KomiicConst.LogoutUrl)]
     Task<LogoutResponseData> Logout();

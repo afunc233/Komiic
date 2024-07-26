@@ -43,6 +43,7 @@ public partial class LoginViewModel(
         }
         catch (Exception e)
         {
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n Login Error !"));
             logger.LogError(e, "Login Fail");
         }
     }

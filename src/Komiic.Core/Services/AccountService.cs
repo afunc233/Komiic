@@ -56,22 +56,22 @@ internal class AccountService(
         await tokenService.ClearToken();
         await cookieService.ClearAllCookies();
         var tokenResponseData = await komiicAccountApi.Login(loginData);
-        if (tokenResponseData is { Token: not null })
+        if (tokenResponseData is { Content.Token: not null })
         {
-            await tokenService.SetToken(tokenResponseData.Token);
+            await tokenService.SetToken(tokenResponseData.Content.Token);
             await LoadAccount();
             await cookieService.SaveCookies();
             return new()
             {
                 Data = true,
-                ErrorMessage = tokenResponseData.GetMessage()
+                ErrorMessage = tokenResponseData.Content.GetMessage()
             };
         }
 
         return new()
         {
             Data = default,
-            ErrorMessage = tokenResponseData.GetMessage()
+            ErrorMessage = tokenResponseData.Content?.GetMessage()
         };
     }
 
