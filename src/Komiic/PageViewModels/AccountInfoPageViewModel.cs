@@ -30,8 +30,8 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
             return;
         }
 
-        bool result = await accountService.SetNextChapterMode(nextChapterMode);
-        if (result)
+        var resultData = await accountService.SetNextChapterMode(nextChapterMode);
+        if (resultData is { Data: true })
         {
             NextChapterMode = nextChapterMode;
         }
@@ -58,10 +58,10 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
     {
         accountService.AccountChanged -= AccountServiceOnAccountChanged;
         accountService.AccountChanged += AccountServiceOnAccountChanged;
-        
+
         accountService.ImageLimitChanged -= AccountServiceOnImageLimitChanged;
         accountService.ImageLimitChanged += AccountServiceOnImageLimitChanged;
-        
+
         NextChapterMode = AccountData?.NextChapterMode;
         return base.OnNavigatedTo();
     }

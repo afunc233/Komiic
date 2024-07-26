@@ -48,30 +48,31 @@ internal class AccountService(
     public ImageLimit? ImageLimit { get; private set; }
     public event EventHandler? ImageLimitChanged;
 
-    public async Task<bool> Login(string username, string password)
+    public async Task<ApiResponseData<bool?>> Login(string username, string password)
     {
-        try
+        var loginData = new LoginData { Email = username, Password = password };
+        await cacheService.SetLocalCache(KomiicConst.KomiicUsername, CacheUserName = username);
+        await cacheService.SetLocalCache(KomiicConst.KomiicPassword, CachePassword = password);
+        await tokenService.ClearToken();
+        await cookieService.ClearAllCookies();
+        var tokenResponseData = await komiicAccountApi.Login(loginData);
+        if (tokenResponseData is { Token: not null })
         {
-            var loginData = new LoginData { Email = username, Password = password };
-            await cacheService.SetLocalCache(KomiicConst.KomiicUsername, CacheUserName = username);
-            await cacheService.SetLocalCache(KomiicConst.KomiicPassword, CachePassword = password);
-            await tokenService.ClearToken();
-            await cookieService.ClearAllCookies();
-            var tokenResponseData = await komiicAccountApi.Login(loginData);
-            if (tokenResponseData is { Token: not null })
+            await tokenService.SetToken(tokenResponseData.Token);
+            await LoadAccount();
+            await cookieService.SaveCookies();
+            return new()
             {
-                await tokenService.SetToken(tokenResponseData.Token);
-                await LoadAccount();
-                await cookieService.SaveCookies();
-                return true;
-            }
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Login error !");
+                Data = true,
+                ErrorMessage = tokenResponseData.GetMessage()
+            };
         }
 
-        return false;
+        return new()
+        {
+            Data = default,
+            ErrorMessage = tokenResponseData.GetMessage()
+        };
     }
 
 
@@ -114,27 +115,29 @@ internal class AccountService(
         }
     }
 
-    public async Task<bool> SetNextChapterMode(string mode)
+    public async Task<ApiResponseData<bool?>> SetNextChapterMode(string mode)
     {
         await Task.CompletedTask;
-        try
+
+        var setNextChapterModeData =
+            await komiicAccountApi.SetNextChapterMode(
+                QueryDataEnum.SetNextChapterMode.GetQueryDataWithVariables(new NextChapterModeVariables
+                {
+                    NextChapterMode = mode
+                }));
+        if (setNextChapterModeData is { Data: not null })
         {
-            var setNextChapterModeData =
-                await komiicAccountApi.SetNextChapterMode(
-                    QueryDataEnum.SetNextChapterMode.GetQueryDataWithVariables(new NextChapterModeVariables
-                    {
-                        NextChapterMode = mode
-                    }));
-            if (setNextChapterModeData is { Data: not null })
+            return new()
             {
-                return setNextChapterModeData.Data.SetNextChapterMode;
-            }
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "SetNextChapterMode error !");
+                Data = setNextChapterModeData.Data.SetNextChapterMode,
+                ErrorMessage = setNextChapterModeData.GetMessage()
+            };
         }
 
-        return false;
+        return new()
+        {
+            Data = default,
+            ErrorMessage = setNextChapterModeData.GetMessage()
+        };
     }
 }

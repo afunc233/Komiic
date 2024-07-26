@@ -30,8 +30,8 @@ public partial class LoginViewModel(
     {
         try
         {
-            bool isSuccess = await accountService.Login(Username!, Password!);
-            if (isSuccess)
+            var loginData = await accountService.Login(Username!, Password!);
+            if (loginData is { Data: true })
             {
                 messenger.Send(new CloseDialogMessage<bool>(this, true));
                 messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n Login Success !"));
