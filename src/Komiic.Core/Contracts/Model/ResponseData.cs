@@ -325,8 +325,11 @@ public class LastReadByComicIdData
 public class LastReadByComicId
 {
     [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
-    [JsonPropertyName("book")] public BookOrChapter Book { get; set; } = null!;
-    [JsonPropertyName("chapter")] public BookOrChapter Chapter { get; set; } = null!;
+    [JsonPropertyName("book")] public BookOrChapter? Book { get; set; }
+    [JsonPropertyName("chapter")] public BookOrChapter? Chapter { get; set; }
+
+    public BookOrChapter BookOrChapter => Book ?? Chapter ?? new ();
+
     [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 

@@ -106,6 +106,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<FavoriteData>> GetFavorites([Body] QueryData<FavoritePaginationVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
+    [Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
     Task<ResponseData<LastReadByComicIdData>> GetComicsLastRead([Body] QueryData<ComicIdsVariables> queryData);
 
     #endregion

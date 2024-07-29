@@ -1,11 +1,17 @@
 <Project>
     <PropertyGroup>
-        <MainTargetFramework>net9.0</MainTargetFramework>
+        <MainTargetFramework>net8.0</MainTargetFramework>
+
+
         <Nullable>enable</Nullable>
 
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>$(NoWarn);SYSLIB1030;IL2026</NoWarn>
         <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MainTargetFramework)' == '$(TargetFramework)'">
+<!--        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>-->
     </PropertyGroup>
 
     <PropertyGroup>

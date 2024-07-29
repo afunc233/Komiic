@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ public record GroupChaptersByComicId
 public partial class MangeDetailPageViewModel(
     IMessenger messenger,
     IMangaDetailDataService mangaDetailDataService,
+    IAccountService accountService,
     ILogger<MangeDetailPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
@@ -32,8 +34,9 @@ public partial class MangeDetailPageViewModel(
 
     [ObservableProperty] private int _messageCount;
 
-    [ObservableProperty] private LastMessageByComicId _lastMessageByComicId = null!;
+    [ObservableProperty] private LastMessageByComicId? _lastMessageByComicId;
 
+    [ObservableProperty] private LastReadByComicId? _lastReadByComicId;
 
     public ObservableCollection<FolderVm> MyFolders { get; } = [];
 
@@ -46,6 +49,31 @@ public partial class MangeDetailPageViewModel(
     {
         await Task.CompletedTask;
         messenger.Send(new OpenMangaMessage(mangaInfo));
+    }
+
+    [RelayCommand]
+    private async Task OpenMangaViewerWithHistory()
+    {
+        await Task.CompletedTask;
+        ChaptersByComicId? chaptersByComicId = null;
+        if (LastReadByComicId is not null)
+        {
+            chaptersByComicId = GroupingChaptersByComicIdList.SelectMany(it => it.Chapters).FirstOrDefault(it =>
+                string.Equals(it.Id,
+                    LastReadByComicId.Book?.ChapterId ?? LastReadByComicId.Chapter?.ChapterId,
+                    StringComparison.OrdinalIgnoreCase));
+        }
+
+        chaptersByComicId ??= GroupingChaptersByComicIdList.FirstOrDefault()?.Chapters.FirstOrDefault();
+
+        if (chaptersByComicId != null)
+        {
+            messenger.Send(new OpenMangaViewerMessage(MangaInfo, chaptersByComicId));
+        }
+        else
+        {
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n打开失败！"));
+        }
     }
 
     [RelayCommand]
@@ -139,16 +167,58 @@ public partial class MangeDetailPageViewModel(
             recommendMangaInfosById.Data.ForEach(RecommendMangaInfoList.Add);
         }
 
-        var myFolders = await mangaDetailDataService.GetMyFolders();
-        if (myFolders is { Data.Count: > 0 })
-        {
-            var data = await mangaDetailDataService.ComicInAccountFolders(MangaInfo.Id);
+        accountService.AccountChanged -= AccountServiceOnAccountChanged;
+        accountService.AccountChanged += AccountServiceOnAccountChanged;
 
-            myFolders.Data.ForEach(it =>
+        await CheckIsLogin();
+    }
+
+    protected override Task OnNavigatedFrom()
+    {
+        accountService.AccountChanged -= AccountServiceOnAccountChanged;
+
+        return base.OnNavigatedFrom();
+    }
+
+    private async void AccountServiceOnAccountChanged(object? sender, EventArgs e)
+    {
+        try
+        {
+            await CheckIsLogin();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "CheckIsLogin error!");
+        }
+    }
+
+    private async Task CheckIsLogin()
+    {
+        if (accountService.AccountData != null)
+        {
+            // IsLogin
+            var myFolders = await mangaDetailDataService.GetMyFolders();
+            if (myFolders is { Data.Count: > 0 })
             {
-                var folderVm = new FolderVm(it) { InFolder = data.Data?.Contains(it.Id) ?? false };
-                MyFolders.Add(folderVm);
-            });
+                var data = await mangaDetailDataService.ComicInAccountFolders(MangaInfo.Id);
+
+                myFolders.Data.ForEach(it =>
+                {
+                    var folderVm = new FolderVm(it) { InFolder = data.Data?.Contains(it.Id) ?? false };
+                    MyFolders.Add(folderVm);
+                });
+            }
+
+            var comicsLastReadData = await mangaDetailDataService.GetComicsLastRead(MangaInfo.Id);
+            if (comicsLastReadData is { Data.Count: > 0 })
+            {
+                LastReadByComicId = comicsLastReadData.Data.FirstOrDefault();
+            }
+        }
+        else
+        {
+            LastReadByComicId = null;
+            MyFolders.Clear();
         }
     }
 

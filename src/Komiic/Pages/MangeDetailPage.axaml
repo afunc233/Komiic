@@ -41,7 +41,6 @@
                                 Text="{Binding MangaInfo.Year, StringFormat={}年份:{0}}" />
                             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                                 <TextBlock FontSize="22" Text="作者:" />
-
                                 <ItemsControl ItemsSource="{Binding MangaInfo.Authors}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -83,12 +82,15 @@
                             </StackPanel>
 
                             <StackPanel Margin="0,20,0,0">
-                                <TextBlock FontSize="22" Text="{Binding MangaInfo.LastBookUpdate, StringFormat={}更新:{0}}" />
+                                <TextBlock FontSize="22"
+                                           Text="{Binding MangaInfo.LastBookUpdate, StringFormat={}更新:{0}}" />
                             </StackPanel>
                             <Button
                                 Background="#5057a3"
-                                Content=" 開始閱讀 "
-                                CornerRadius="4" />
+                                Content="{Binding LastReadByComicId.BookOrChapter.Serial,StringFormat={}继续阅读:卷[{0}],FallbackValue={} 開始閱讀 }"
+                                Command="{Binding OpenMangaViewerWithHistoryCommand}"
+                                CornerRadius="4">
+                            </Button>
 
                         </StackPanel>
                     </WrapPanel>
@@ -114,11 +116,19 @@
                                                         IsChecked="{Binding InFolder}"
                                                         x:Name="folderCheckBox">
                                                         <Interaction.Behaviors>
-                                                            <DataTriggerBehavior Binding="{Binding #folderCheckBox.IsChecked}" Value="True">
-                                                                <InvokeCommandAction Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).AddToFolderCommand, FallbackValue={x:Null}}" CommandParameter="{Binding Folder}" />
+                                                            <DataTriggerBehavior
+                                                                Binding="{Binding #folderCheckBox.IsChecked}"
+                                                                Value="True">
+                                                                <InvokeCommandAction
+                                                                    Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).AddToFolderCommand, FallbackValue={x:Null}}"
+                                                                    CommandParameter="{Binding Folder}" />
                                                             </DataTriggerBehavior>
-                                                            <DataTriggerBehavior Binding="{Binding #folderCheckBox.IsChecked}" Value="False">
-                                                                <InvokeCommandAction Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).RemoveFromFolderCommand, FallbackValue={x:Null}}" CommandParameter="{Binding Folder}" />
+                                                            <DataTriggerBehavior
+                                                                Binding="{Binding #folderCheckBox.IsChecked}"
+                                                                Value="False">
+                                                                <InvokeCommandAction
+                                                                    Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).RemoveFromFolderCommand, FallbackValue={x:Null}}"
+                                                                    CommandParameter="{Binding Folder}" />
                                                             </DataTriggerBehavior>
                                                         </Interaction.Behaviors>
                                                     </CheckBox>
@@ -169,7 +179,8 @@
                             </Button>
                         </DataTemplate>
                     </StackPanel.DataTemplates>
-                    <TabControl DisplayMemberBinding="{Binding Type, x:DataType=vm:GroupChaptersByComicId}" ItemsSource="{Binding GroupingChaptersByComicIdList}">
+                    <TabControl DisplayMemberBinding="{Binding Type, x:DataType=vm:GroupChaptersByComicId}"
+                                ItemsSource="{Binding GroupingChaptersByComicIdList}">
                         <!-- <TabControl.Styles> -->
                         <!--     <Style Selector="TabItem" x:DataType="{x:Type vm:GroupChaptersByComicId}"> -->
                         <!--         <Setter Property="Header" Value="{Binding}" /> -->
@@ -195,7 +206,8 @@
                 Classes="BoxShadow"
                 HorizontalAlignment="Stretch"
                 Margin="20">
-                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding RecommendMangaInfoList}">
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}"
+                               ItemsSource="{Binding RecommendMangaInfoList}">
                     <ItemsRepeater.Layout>
                         <UniformGridLayout
                             ItemsJustification="Center"
