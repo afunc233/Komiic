@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Extensions.Hosting;
-using NLog.Extensions.Logging;
 
 namespace Komiic;
 

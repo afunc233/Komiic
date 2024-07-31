@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Headers;
-
-namespace Komiic.Core.Http;
+﻿namespace Komiic.Core.Http;
 
 public class OptionalAuthenticatedHttpClientHandler(
     Func<HttpRequestMessage, CancellationToken, Task<string?>> getToken)

@@ -8,6 +8,9 @@ public interface IMangaDetailDataService
 
     Task<ApiResponseData<int?>> GetMessageCountByComicId(string comicId);
 
+    Task<ApiResponseData<List<MessagesByComicId>>> GetMessagesByComicId(string comicId, int pageIndex,
+        string orderBy = "DATE_UPDATED");
+
     Task<ApiResponseData<LastMessageByComicId?>> GetLastMessageByComicId(string comicId);
 
     Task<ApiResponseData<List<ChaptersByComicId>>> GetChapterByComicId(string comicId);
@@ -27,4 +30,8 @@ public interface IMangaDetailDataService
     Task<ApiResponseData<List<string>>> ComicInAccountFolders(string comicId);
 
     Task<ApiResponseData<List<LastReadByComicId>>> GetComicsLastRead(params string[] comicIds);
+
+    Task<ApiResponseData<bool?>> RemoveFavorite(string comicId);
+
+    Task<ApiResponseData<Favorite>> AddFavorite(string comicId);
 }

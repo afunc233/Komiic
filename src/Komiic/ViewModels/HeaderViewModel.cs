@@ -1,19 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Komiic.ViewModels;
 
 public partial class HeaderViewModel
     : RecipientViewModelBase, IRecipient<LoadMangeImageDataMessage>
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly IAccountService _accountService;
 
     private readonly IMessenger _messenger;
@@ -26,10 +23,8 @@ public partial class HeaderViewModel
 
     [ObservableProperty] private Account? _accountData;
 
-    public HeaderViewModel(IServiceProvider serviceProvider, ICacheService cacheService, IMessenger messenger,
-        IAccountService accountService) : base(messenger)
+    public HeaderViewModel(IMessenger messenger, IAccountService accountService) : base(messenger)
     {
-        _serviceProvider = serviceProvider;
         _messenger = messenger;
         _accountService = accountService;
         AccountData = _accountService.AccountData;
@@ -46,11 +41,12 @@ public partial class HeaderViewModel
     [RelayCommand]
     private async Task OpenLogin()
     {
+        var result = await Messenger.Send(new OpenLoginDialogMessage());
         await Task.CompletedTask;
-        var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
-        dialogContent.Username = _accountService.CacheUserName;
-        dialogContent.Password = _accountService.CachePassword;
-        bool result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
+        // var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
+        // dialogContent.Username = _accountService.CacheUserName;
+        // dialogContent.Password = _accountService.CachePassword;
+        // bool result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
         if (result)
         {
             await LoadData();

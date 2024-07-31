@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.PageViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +14,7 @@ namespace Komiic.ViewModels;
 
 public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMangaMessage>,
     IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>, IRecipient<OpenAccountInfoMessage>,
-    IRecipient<OpenCategoryMessage>
+    IRecipient<OpenCategoryMessage>, IRecipient<OpenLoginDialogMessage>
 {
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
@@ -62,6 +65,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000",
         },
+
         new()
         {
             NavType = NavBarType.Authors,
@@ -123,6 +127,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
     [ObservableProperty] private bool _isTransitionReversed;
 
     private readonly IServiceProvider _serviceProvider;
+    private readonly IAccountService _accountService;
 
     public IViewModelBase? Header { get; }
 
@@ -160,11 +165,12 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
     }
 
 
-    public MainViewModel(IServiceProvider serviceProvider, HeaderViewModel headerViewModel, IMessenger messenger) :
+    public MainViewModel(IServiceProvider serviceProvider, IAccountService accountService,
+        HeaderViewModel headerViewModel, IMessenger messenger) :
         base(messenger)
     {
         _serviceProvider = serviceProvider;
-
+        _accountService = accountService;
         Header = headerViewModel;
 
         SelectedNavBar = MenuItemsSource.FirstOrDefault();
@@ -216,5 +222,16 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         viewModel.WantSelectedCategory = message.Category;
 
         SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenLoginDialogMessage message)
+    {
+        var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
+        dialogContent.Username = _accountService.CacheUserName;
+        dialogContent.Password = _accountService.CachePassword;
+
+        var messageResponse = Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
+
+        message.Reply(messageResponse.Response);
     }
 }

@@ -10,6 +10,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
     xmlns:vm="clr-namespace:Komiic.PageViewModels"
+    HorizontalAlignment="Right"
+    VerticalAlignment="Stretch"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ItemsControl>
@@ -140,15 +142,31 @@
                             </Button.Flyout>
                         </Button>
                         <Button
-                            Content=" 留言 "
                             CornerRadius="4"
                             Grid.Column="1"
-                            HorizontalAlignment="Center" />
-                        <Button
-                            Content=" 喜愛 "
+                            Command="{Binding OpenComicMessageCommand}"
+                            HorizontalAlignment="Center">
+                            <Panel>
+                                <TextBlock Margin="50,-5,-5,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                           Text="{Binding MessageCount}" />
+                                <TextBlock Text="留言" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Panel>
+                        </Button>
+                        <ToggleButton
+
                             CornerRadius="4"
                             Grid.Column="2"
-                            HorizontalAlignment="Center" />
+                            Command="{Binding ToggleFavoriteCommand}"
+                            IsChecked="{Binding IsFavorite,Mode=OneWay}"
+                            HorizontalAlignment="Center">
+                            <Panel>
+                                <TextBlock Margin="50,-5,-5,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                           Text="{Binding FavoriteCount}" />
+                                <TextBlock Text="喜爱" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Panel>
+                        </ToggleButton>
                     </Grid>
                 </StackPanel>
             </Border>

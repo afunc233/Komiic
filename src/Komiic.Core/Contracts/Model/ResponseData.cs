@@ -75,8 +75,22 @@ public class Account
     [JsonPropertyName("email")] public string Email { get; set; } = null!;
     [JsonPropertyName("nickname")] public string Nickname { get; set; } = null!;
     [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
-    [JsonPropertyName("favoriteComicIds")] public object[] FavoriteComicIds { get; set; } = [];
+    [JsonPropertyName("favoriteComicIds")] public List<string> FavoriteComicIds { get; set; } = [];
     [JsonPropertyName("profileText")] public string ProfileText { get; set; } = null!;
+
+    public string ProfileTextCalc
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(ProfileText))
+            {
+                return Nickname.Length > 2 ? Nickname[..2] : Nickname;
+            }
+
+            return ProfileText;
+        }
+    }
+
     [JsonPropertyName("profileTextColor")] public string ProfileTextColor { get; set; } = null!;
 
     [JsonPropertyName("profileBackgroundColor")]
@@ -328,7 +342,7 @@ public class LastReadByComicId
     [JsonPropertyName("book")] public BookOrChapter? Book { get; set; }
     [JsonPropertyName("chapter")] public BookOrChapter? Chapter { get; set; }
 
-    public BookOrChapter BookOrChapter => Book ?? Chapter ?? new ();
+    public BookOrChapter BookOrChapter => Book ?? Chapter ?? new();
 
     [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }

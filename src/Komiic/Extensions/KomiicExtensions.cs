@@ -51,6 +51,7 @@ public static class KomiicExtensions
         services.AddTransient<AllMangaPageViewModel>();
         services.AddTransient<AuthorsPageViewModel>();
         services.AddTransient<AuthorDetailPageViewModel>();
+        services.AddTransient<ComicMessagePageViewModel>();
 
         services.AddSingleton<HeaderViewModel>();
         services.AddSingleton<MainViewModel>();

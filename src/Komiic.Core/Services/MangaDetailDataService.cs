@@ -47,6 +47,39 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         return new() { Data = default, ErrorMessage = messageCountByComicIdData.GetMessage() };
     }
 
+    public async Task<ApiResponseData<List<MessagesByComicId>>> GetMessagesByComicId(string comicId, int pageIndex,
+        string orderBy = "DATE_UPDATED")
+    {
+        var variables =
+            QueryDataEnum.GetMessagesByComicId.GetQueryDataWithVariables(new ComicIdPaginationVariables()
+            {
+                ComicId = comicId,
+                Pagination = new Pagination()
+                {
+                    Offset = pageIndex * 100,
+                    Limit = 100,
+                    OrderBy = orderBy,
+                    Asc = true
+                }
+            });
+
+        var messagesByComicIdData = await komiicQueryApi.GetMessagesByComicId(variables);
+        if (messagesByComicIdData is { Data.GetMessagesByComicId.Count: > 0 })
+        {
+            return new ApiResponseData<List<MessagesByComicId>>()
+            {
+                Data = messagesByComicIdData.Data.GetMessagesByComicId,
+                ErrorMessage = messagesByComicIdData.GetMessage()
+            };
+        }
+
+        return new ApiResponseData<List<MessagesByComicId>>()
+        {
+            ErrorMessage = messagesByComicIdData.GetMessage(),
+            Data = []
+        };
+    }
+
     public async Task<ApiResponseData<LastMessageByComicId?>> GetLastMessageByComicId(string comicId)
     {
         var variables =
@@ -270,6 +303,47 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         {
             Data = [],
             ErrorMessage = comicsLastReadData.GetMessage()
+        };
+    }
+
+    public async Task<ApiResponseData<bool?>> RemoveFavorite(string comicId)
+    {
+        var queryData =
+            QueryDataEnum.RemoveFavorite.GetQueryDataWithVariables(
+                new ComicIdVariables() { ComicId = comicId });
+
+        var removeFavoriteData = await komiicQueryApi.RemoveFavorite(queryData);
+
+        if (removeFavoriteData is { Data: not null })
+        {
+            return new() { Data = removeFavoriteData.Data.RemoveFavorite };
+        }
+
+        return new()
+        {
+            Data = default,
+            ErrorMessage = removeFavoriteData.GetMessage()
+        };
+    }
+
+    public async Task<ApiResponseData<Favorite>> AddFavorite(string comicId)
+    {
+        var queryData =
+            QueryDataEnum.AddFavorite.GetQueryDataWithVariables(
+                new ComicIdVariables { ComicId = comicId });
+
+
+        var addFavoriteData = await komiicQueryApi.AddFavorite(queryData);
+
+        if (addFavoriteData is { Data: not null })
+        {
+            return new ApiResponseData<Favorite> { Data = addFavoriteData.Data.AddFavorite };
+        }
+
+        return new ApiResponseData<Favorite>
+        {
+            Data = default,
+            ErrorMessage = addFavoriteData.GetMessage()
         };
     }
 }

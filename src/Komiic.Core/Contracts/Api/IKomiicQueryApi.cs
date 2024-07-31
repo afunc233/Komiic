@@ -142,10 +142,11 @@ internal interface IKomiicQueryApi
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<RemoveFolderData>> RemoveFolder([Body] QueryData<FolderIdVariables> queryData);
-    
+
     [Post(KomiicConst.QueryUrl)]
     [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
-    Task<ResponseData<RemoveComicToFolderData>> RemoveComicToFolder([Body] QueryData<FolderIdAndComicIdVariables> queryData);
+    Task<ResponseData<RemoveComicToFolderData>> RemoveComicToFolder(
+        [Body] QueryData<FolderIdAndComicIdVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
     [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
@@ -182,6 +183,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<LastMessageByComicIdData>> GetLastMessageByComicId([Body] QueryData<ComicIdVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Second10)]
     Task<ResponseData<MessagesByComicIdData>> GetMessagesByComicId(
         [Body] QueryData<ComicIdPaginationVariables> queryData);
 

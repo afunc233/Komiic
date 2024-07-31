@@ -10,6 +10,7 @@ using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Komiic.PageViewModels;
@@ -22,6 +23,7 @@ public record GroupChaptersByComicId
 }
 
 public partial class MangeDetailPageViewModel(
+    IServiceProvider serviceProvider,
     IMessenger messenger,
     IMangaDetailDataService mangaDetailDataService,
     IAccountService accountService,
@@ -37,6 +39,10 @@ public partial class MangeDetailPageViewModel(
     [ObservableProperty] private LastMessageByComicId? _lastMessageByComicId;
 
     [ObservableProperty] private LastReadByComicId? _lastReadByComicId;
+
+    [ObservableProperty] private bool _isFavorite;
+
+    [ObservableProperty] private int _favoriteCount;
 
     public ObservableCollection<FolderVm> MyFolders { get; } = [];
 
@@ -122,6 +128,61 @@ public partial class MangeDetailPageViewModel(
         }
     }
 
+    [RelayCommand]
+    private async Task ToggleFavorite()
+    {
+        await Task.CompletedTask;
+
+        var account = accountService.AccountData;
+        if (account is null)
+        {
+            var result = await messenger.Send(new OpenLoginDialogMessage());
+            if (result)
+            {
+                account = accountService.AccountData;
+            }
+        }
+
+        if (account is not null)
+        {
+            if (IsFavorite)
+            {
+                var removeResult = await mangaDetailDataService.RemoveFavorite(MangaInfo.Id);
+                if (removeResult is { ErrorMessage: null } and { Data: not null })
+                {
+                    if (removeResult.Data ?? false)
+                    {
+                        FavoriteCount--;
+                        IsFavorite = false;
+                        account.FavoriteComicIds.Remove(MangaInfo.Id);
+                    }
+                }
+            }
+            else
+            {
+                var favoriteData = await mangaDetailDataService.AddFavorite(MangaInfo.Id);
+                if (favoriteData is { Data: not null })
+                {
+                    FavoriteCount++;
+                    IsFavorite = true;
+                    account.FavoriteComicIds.Add(favoriteData.Data.ComicId);
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenComicMessage()
+    {
+        await Task.CompletedTask;
+        var content = serviceProvider.GetRequiredService<ComicMessagePageViewModel>();
+
+        content.MangeDetailPageViewModel = this;
+
+        var result = await messenger.Send(new OpenDialogMessage<bool>(content));
+        
+    }
+
     protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
@@ -167,6 +228,8 @@ public partial class MangeDetailPageViewModel(
             recommendMangaInfosById.Data.ForEach(RecommendMangaInfoList.Add);
         }
 
+        FavoriteCount = MangaInfo.FavoriteCount;
+
         accountService.AccountChanged -= AccountServiceOnAccountChanged;
         accountService.AccountChanged += AccountServiceOnAccountChanged;
 
@@ -194,7 +257,8 @@ public partial class MangeDetailPageViewModel(
 
     private async Task CheckIsLogin()
     {
-        if (accountService.AccountData != null)
+        var accountData = accountService.AccountData;
+        if (accountData is not null)
         {
             // IsLogin
             var myFolders = await mangaDetailDataService.GetMyFolders();
@@ -214,6 +278,8 @@ public partial class MangeDetailPageViewModel(
             {
                 LastReadByComicId = comicsLastReadData.Data.FirstOrDefault();
             }
+
+            IsFavorite = accountData.FavoriteComicIds.Any(it => string.Equals(it, MangaInfo.Id));
         }
         else
         {

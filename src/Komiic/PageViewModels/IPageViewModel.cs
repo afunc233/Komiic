@@ -46,6 +46,8 @@ public enum NavBarType
     
     MangeDetail,
     
+    ComicMessage,
+    
     MangaViewer,
     
     About,
