@@ -50,14 +50,15 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
     public async Task<ApiResponseData<List<MessagesByComicId>>> GetMessagesByComicId(string comicId, int pageIndex,
         string orderBy = "DATE_UPDATED")
     {
+        const int pageSize = 100;
         var variables =
             QueryDataEnum.GetMessagesByComicId.GetQueryDataWithVariables(new ComicIdPaginationVariables()
             {
                 ComicId = comicId,
                 Pagination = new Pagination()
                 {
-                    Offset = pageIndex * 100,
-                    Limit = 100,
+                    Offset = pageIndex * pageSize,
+                    Limit = pageSize,
                     OrderBy = orderBy,
                     Asc = true
                 }
@@ -316,7 +317,11 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (removeFavoriteData is { Data: not null })
         {
-            return new() { Data = removeFavoriteData.Data.RemoveFavorite };
+            return new()
+            {
+                Data = removeFavoriteData.Data.RemoveFavorite,
+                ErrorMessage = removeFavoriteData.GetMessage()
+            };
         }
 
         return new()
@@ -337,13 +342,94 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (addFavoriteData is { Data: not null })
         {
-            return new ApiResponseData<Favorite> { Data = addFavoriteData.Data.AddFavorite };
+            return new ApiResponseData<Favorite>
+            {
+                Data = addFavoriteData.Data.AddFavorite,
+                ErrorMessage = addFavoriteData.GetMessage()
+            };
         }
 
         return new ApiResponseData<Favorite>
         {
             Data = default,
             ErrorMessage = addFavoriteData.GetMessage()
+        };
+    }
+
+    public async Task<ApiResponseData<bool?>> VoteMessage(string messageId, bool isUp)
+    {
+        var queryData = QueryDataEnum.VoteMessage.GetQueryDataWithVariables(new VoteMessageVariables()
+        {
+            MessageId = messageId,
+            Up = isUp
+        });
+
+        var voteMessageData = await komiicQueryApi.VoteMessage(queryData);
+        if (voteMessageData is { Data: not null })
+        {
+            return new ApiResponseData<bool?>
+            {
+                Data = voteMessageData.Data.VoteMessage,
+                ErrorMessage = voteMessageData.GetMessage()
+            };
+        }
+
+        return new ApiResponseData<bool?>
+        {
+            Data = default,
+            ErrorMessage = voteMessageData.GetMessage()
+        };
+    }
+
+    public async Task<ApiResponseData<List<MessageVotesByComicId>>> MessageVotesByComicId(string comicId)
+    {
+        var queryData =
+            QueryDataEnum.MessageVotesByComicId.GetQueryDataWithVariables(
+                new ComicIdVariables { ComicId = comicId });
+
+
+        var messageVotesByComicIdData = await komiicQueryApi.MessageVotesByComicId(queryData);
+        if (messageVotesByComicIdData is { Data: not null })
+        {
+            return new ApiResponseData<List<MessageVotesByComicId>>
+            {
+                Data = messageVotesByComicIdData.Data.MessageVotesByComicId,
+                ErrorMessage = messageVotesByComicIdData.GetMessage()
+            };
+        }
+
+        return new ApiResponseData<List<MessageVotesByComicId>>
+        {
+            Data = [],
+            ErrorMessage = messageVotesByComicIdData.GetMessage()
+        };
+    }
+
+    public async Task<ApiResponseData<MessagesByComicId>> AddMessageToComic(string comicId,
+        string sendMessageText, string? replyToId)
+    {
+        await Task.CompletedTask;
+
+        var queryData =
+            QueryDataEnum.AddMessageToComic.GetQueryDataWithVariables(
+                new AddMessageToComicVariables()
+                    { ComicId = comicId, Message = sendMessageText, ReplyToId = replyToId ?? "0" });
+        
+        var addMessageToComicData = await komiicQueryApi.AddMessageToComic(queryData);
+
+        if (addMessageToComicData is { Data: not null })
+        {
+            return new ()
+            {
+                Data = addMessageToComicData.Data.AddMessageToComic,
+                ErrorMessage = addMessageToComicData.GetMessage()
+            };
+        }
+
+        return new ()
+        {
+            Data = default,
+            ErrorMessage = addMessageToComicData.GetMessage()
         };
     }
 }

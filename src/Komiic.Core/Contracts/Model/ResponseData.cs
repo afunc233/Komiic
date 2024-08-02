@@ -464,28 +464,10 @@ public class ComicInAccountFoldersData
 public class AddMessageToComicData
 {
     [JsonPropertyName("addMessageToComic")]
-    public AddMessageToComic AddMessageToComic { get; set; } = null!;
+    public MessagesByComicId AddMessageToComic { get; set; } = null!;
 }
 
-public class AddMessageToComic
-{
-    [JsonPropertyName("id")] public string Id { get; set; } = null!;
-    [JsonPropertyName("message")] public string Message { get; set; } = null!;
-    [JsonPropertyName("comicId")] public string ComicId { get; set; } = null!;
-    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
-    [JsonPropertyName("replyTo")] public ReplyTo ReplyTo { get; set; } = null!;
-    [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
-    [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
-    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
-}
 
-public class ReplyTo
-{
-    [JsonPropertyName("id")] public string Id { get; set; } = null!;
-    [JsonPropertyName("message")] public string Message { get; set; } = null!;
-    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
-    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
-}
 
 public class MessageChanData
 {
@@ -542,6 +524,14 @@ public class MessagesByComicId
     [JsonPropertyName("downCount")] public int DownCount { get; set; }
     [JsonPropertyName("dateUpdated")] public string DateUpdated { get; set; } = null!;
     [JsonPropertyName("dateCreated")] public string DateCreated { get; set; } = null!;
+    [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
+}
+
+public class ReplyTo
+{
+    [JsonPropertyName("id")] public string Id { get; set; } = null!;
+    [JsonPropertyName("message")] public string Message { get; set; } = null!;
+    [JsonPropertyName("account")] public Account Account { get; set; } = null!;
     [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
 

@@ -3,7 +3,7 @@
     ExtendClientAreaTitleBarHeightHint="32"
     ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/avalonia-logo.ico"
-    SystemDecorations="BorderOnly"
+    SystemDecorations="Full"
     Title="Komiic"
     WindowStartupLocation="CenterScreen"
     d:DesignHeight="450"

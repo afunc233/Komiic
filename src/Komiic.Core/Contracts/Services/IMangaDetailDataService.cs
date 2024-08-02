@@ -34,4 +34,11 @@ public interface IMangaDetailDataService
     Task<ApiResponseData<bool?>> RemoveFavorite(string comicId);
 
     Task<ApiResponseData<Favorite>> AddFavorite(string comicId);
+
+    Task<ApiResponseData<bool?>> VoteMessage(string messageId, bool isUp);
+
+    Task<ApiResponseData<List<MessageVotesByComicId>>> MessageVotesByComicId(string comicId);
+
+    Task<ApiResponseData<MessagesByComicId>> AddMessageToComic(string comicId, string sendMessageText,
+        string? replyToId = "0");
 }

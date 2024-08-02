@@ -161,6 +161,7 @@ internal interface IKomiicQueryApi
     #region 評論/回復
 
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
     Task<ResponseData<AddMessageToComicData>> AddMessageToComic([Body] QueryData<AddMessageToComicVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
@@ -188,10 +189,12 @@ internal interface IKomiicQueryApi
         [Body] QueryData<ComicIdPaginationVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.DisableCache)]
     Task<ResponseData<VoteMessageData>> VoteMessage([Body] QueryData<VoteMessageVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<MessageVotesByComicIdData>> MessageVotesByComicId([Body] QueryData<ComicIdsVariables> queryData);
+    [Headers(KomiicConst.EnableCacheHeader + ":" + KomiicConst.Second10)]
+    Task<ResponseData<MessageVotesByComicIdData>> MessageVotesByComicId([Body] QueryData<ComicIdVariables> queryData);
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<DeleteMessageData>> DeleteMessage([Body] QueryData<MessageIdVariables> queryData);

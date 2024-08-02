@@ -1,15 +1,21 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:interactions="clr-namespace:Komiic.Interactions"
-             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
-
-             xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
-             xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
-             x:DataType="pageViewModels:ComicMessagePageViewModel"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Komiic.Pages.ComicMessagePage">
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Komiic.Pages.ComicMessagePage"
+    x:DataType="pageViewModels:ComicMessagePageViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="clr-namespace:Komiic.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
+    xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <sys:Int32 x:Key="Int0">0</sys:Int32>
+    </UserControl.Resources>
     <UserControl.DataTemplates>
         <DataTemplate x:DataType="model:ReplyTo">
             <Border
@@ -19,76 +25,149 @@
                 Margin="5"
                 d:DesignWidth="50">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Margin="3" Orientation="Horizontal">
                         <Border
-
-                            IsVisible="{Binding Account.ProfileImageUrl,Converter={x:Static StringConverters.IsNullOrEmpty}}"
-                            Background="{Binding Account.ProfileBackgroundColor,FallbackValue=Blue}"
+                            Background="{Binding Account.ProfileBackgroundColor, FallbackValue=Blue}"
                             CornerRadius="25"
                             Height="{Binding $self.Bounds.Width}"
-                            Width="50">
+                            IsVisible="{Binding Account.ProfileImageUrl, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+                            Width="24">
                             <Viewbox>
-                                <TextBlock Foreground="{Binding Account.ProfileTextColor}"
-                                           Text="{Binding Account.ProfileTextCalc}" />
+                                <TextBlock
+                                    Foreground="{Binding Account.ProfileTextColor}"
+                                    Margin="2"
+                                    Text="{Binding Account.ProfileTextCalc}" />
                             </Viewbox>
                         </Border>
 
-                        <Image Width="48" Height="48"
-                               IsVisible="{Binding Account.ProfileImageUrl,Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                               asyncImageLoader:ImageLoader.Source="{Binding Account.ProfileImageUrl}" />
+                        <Image
+                            Height="24"
+                            IsVisible="{Binding Account.ProfileImageUrl, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Width="24"
+                            asyncImageLoader:ImageLoader.Source="{Binding Account.ProfileImageUrl}" />
 
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding  Account.Nickname}" />
+                            <TextBlock Text="{Binding Account.Nickname}" />
                         </StackPanel>
                     </StackPanel>
-                    <TextBlock Text="{Binding Message}"></TextBlock>
+                    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
         </DataTemplate>
-        <DataTemplate x:DataType="model:MessagesByComicId">
+        <DataTemplate x:DataType="pageViewModels:MessagesByComicIdVm">
             <Border
                 Background="Transparent"
                 Classes="BoxShadow"
                 Cursor="Hand"
                 Margin="5"
                 d:DesignWidth="50">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Border
-                            IsVisible="{Binding Account.ProfileImageUrl,Converter={x:Static StringConverters.IsNullOrEmpty}}"
-                            Background="{Binding Account.ProfileBackgroundColor,FallbackValue=Blue}"
-                            CornerRadius="25"
-                            Height="{Binding $self.Bounds.Width}"
-                            Width="50">
-                            <Viewbox>
-                                <TextBlock Foreground="{Binding Account.ProfileTextColor}"
-                                           Text="{Binding Account.ProfileTextCalc}" />
-                            </Viewbox>
-                        </Border>
-                        <Image Width="48" Height="48"
-                               IsVisible="{Binding Account.ProfileImageUrl,Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                               asyncImageLoader:ImageLoader.Source="{Binding Account.ProfileImageUrl}" />
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding  Account.Nickname}" />
-                            <TextBlock Text="{Binding  DateUpdated}" />
+                <StackPanel Margin="5">
+                    <StackPanel DataContext="{Binding MessagesByComicId}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border
+                                Background="{Binding Account.ProfileBackgroundColor, FallbackValue=Blue}"
+                                CornerRadius="25"
+                                Height="{Binding $self.Bounds.Width}"
+                                IsVisible="{Binding Account.ProfileImageUrl, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+                                Width="32">
+                                <Viewbox>
+                                    <TextBlock
+                                        Foreground="{Binding Account.ProfileTextColor}"
+                                        Margin="2"
+                                        Text="{Binding Account.ProfileTextCalc}" />
+                                </Viewbox>
+                            </Border>
+                            <Image
+                                Height="{Binding $self.Bounds.Width}"
+                                IsVisible="{Binding Account.ProfileImageUrl, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Width="32"
+                                asyncImageLoader:ImageLoader.Source="{Binding Account.ProfileImageUrl}" />
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Account.Nickname}" />
+                                <TextBlock Text="{Binding DateUpdated}" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                    <ContentControl Content="{Binding ReplyTo}"
-                                    IsVisible="{Binding ReplyTo,Converter={x:Static ObjectConverters.IsNotNull }}">
-                    </ContentControl>
 
-                    <TextBlock Text="{Binding Message}"></TextBlock>
+                        <ContentControl Content="{Binding ReplyTo}" IsVisible="{Binding ReplyTo, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+                        <TextBlock
+                            Margin="5"
+                            Text="{Binding Message}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button Content="回复" />
+                        <ToggleButton
+                            Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).UpVoteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
+                            CommandParameter="{Binding}"
+                            IsChecked="{Binding HasUp, Mode=OneWay}">
+                            <Panel>
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    IsVisible="{Binding UpCount, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter={StaticResource Int0}, FallbackValue=False, FallbackValue=False}"
+                                    Margin="20,-5,-5,0"
+                                    Text="{Binding UpCount}"
+                                    VerticalAlignment="Top" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Text="👍"
+                                    VerticalAlignment="Center" />
+                            </Panel>
+                        </ToggleButton>
+                        <ToggleButton
+                            Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).DownVoteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
+                            CommandParameter="{Binding}"
+                            IsChecked="{Binding HasDown, Mode=OneWay}">
+                            <Panel>
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    IsVisible="{Binding DownCount, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter={StaticResource Int0}, FallbackValue=False, FallbackValue=False}"
+                                    Margin="20,-5,-5,0"
+                                    Text="{Binding DownCount}"
+                                    VerticalAlignment="Top" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Text="👎"
+                                    VerticalAlignment="Center" />
+                            </Panel>
+                        </ToggleButton>
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </DataTemplate>
-
     </UserControl.DataTemplates>
-    <ScrollViewer>
-        <ItemsControl
-            ItemsSource="{Binding MessagesByComicIds}" />
-        <Interaction.Behaviors>
-            <interactions:Scroll2EndTriggerBehavior Distance2End="300"
-                                                    LoadMoreDataCmd="{Binding LoadMoreDataCommand}" />
-        </Interaction.Behaviors>
-    </ScrollViewer>
+    <!--  TODO ScrollViewer Reversible  -->
+    <!-- <ListBox ItemsSource="{Binding MessagesByComicIds}" Width="400"> -->
+    <!--     <ListBox.ItemsPanel> -->
+    <!--         <ItemsPanelTemplate> -->
+    <!--             <ReversibleStackPanel ReverseOrder="True" /> -->
+    <!--         </ItemsPanelTemplate> -->
+    <!--     </ListBox.ItemsPanel> -->
+    <!--     <Interaction.Behaviors> -->
+    <!--         <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreDataCommand}" /> -->
+    <!--     </Interaction.Behaviors> -->
+    <!-- </ListBox> -->
+    <DockPanel>
+
+        <DockPanel DockPanel.Dock="Top">
+
+            <Button
+                Command="{Binding AddMessageToComicCommand}"
+                Content="发送"
+                DockPanel.Dock="Right"
+                HorizontalAlignment="Right"
+                Margin="0,0,0,5" />
+
+            <Border Classes="BoxShadow">
+                <TextBox Text="{Binding SendMessageText, UpdateSourceTrigger=PropertyChanged}" />
+            </Border>
+
+        </DockPanel>
+        <ItemsControl ItemsSource="{Binding MessagesByComicIds}" Width="400">
+            <Interaction.Behaviors>
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreDataCommand}" />
+            </Interaction.Behaviors>
+        </ItemsControl>
+    </DockPanel>
+
 </UserControl>
