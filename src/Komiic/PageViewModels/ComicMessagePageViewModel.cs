@@ -33,6 +33,8 @@ public partial class ComicMessagePageViewModel(
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AddMessageToComicCommand))]
     private string? _sendMessageText;
 
+    public bool HasLogin => accountService.AccountData is not null;
+
     public ObservableCollection<MessagesByComicIdVm> MessagesByComicIds { get; } = [];
 
     private readonly List<MessageVotesByComicId> _messageVotesByComicIdData = [];
@@ -42,10 +44,10 @@ public partial class ComicMessagePageViewModel(
     protected override async Task OnNavigatedTo()
     {
         await base.OnNavigatedTo();
-        
+
         _messageVotesByComicIdData.Clear();
 
-        if (accountService.AccountData is not null)
+        if (HasLogin)
         {
             var mangaInfoId = MangeDetailPageViewModel.MangaInfo.Id;
 
@@ -79,6 +81,7 @@ public partial class ComicMessagePageViewModel(
                     string.Equals(voteMessage.MessageId, it.Id) && voteMessage.Up),
                 HasDown = _messageVotesByComicIdData.Any(voteMessage =>
                     string.Equals(voteMessage.MessageId, it.Id) && !voteMessage.Up),
+                IsSelf = string.Equals(it.Account.Id, accountService.AccountData?.Id)
             });
 
             foreach (var messagesByComicIdVm in messagesByComicIdVms)
@@ -97,6 +100,13 @@ public partial class ComicMessagePageViewModel(
     [RelayCommand]
     private async Task UpVoteMessage(MessagesByComicIdVm messagesByComicIdVm)
     {
+        if (!HasLogin)
+        {
+            // TODO 登陆后才能使用
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 请先登录!"));
+            return;
+        }
+
         var result = await mangaDetailDataService.VoteMessage(messagesByComicIdVm.MessagesByComicId.Id, true);
         if (!(result.Data ?? false))
         {
@@ -109,6 +119,13 @@ public partial class ComicMessagePageViewModel(
     [RelayCommand]
     private async Task DownVoteMessage(MessagesByComicIdVm messagesByComicIdVm)
     {
+        if (!HasLogin)
+        {
+            // TODO 登陆后才能使用
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 请先登录!"));
+            return;
+        }
+
         var result = await mangaDetailDataService.VoteMessage(messagesByComicIdVm.MessagesByComicId.Id, false);
         if (!(result.Data ?? false))
         {
@@ -118,6 +135,27 @@ public partial class ComicMessagePageViewModel(
         messagesByComicIdVm.DoDown(!messagesByComicIdVm.HasDown);
     }
 
+    [RelayCommand]
+    private async Task DeleteMessage(MessagesByComicIdVm messagesByComicIdVm)
+    {
+        if (!HasLogin)
+        {
+            // TODO 登陆后才能使用
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 请先登录!"));
+            return;
+        }
+
+        var result = await mangaDetailDataService.DeleteMessage(messagesByComicIdVm.MessagesByComicId.Id);
+        if (!(result.Data ?? false))
+        {
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 删除失败!"));
+            return;
+        }
+
+        MessagesByComicIds.Remove(messagesByComicIdVm);
+
+        await Task.CompletedTask;
+    }
 
     private bool CanAddMessage => !string.IsNullOrWhiteSpace(SendMessageText);
 
@@ -153,8 +191,21 @@ public partial class ComicMessagePageViewModel(
             }
 
             SendMessageText = null;
-            MessagesByComicIds.Insert(0, new MessagesByComicIdVm(addMessageToComicData.Data));
+            MessagesByComicIds.Insert(0, new MessagesByComicIdVm(addMessageToComicData.Data)
+            {
+                IsSelf = true,
+            });
         }
+    }
+
+    [RelayCommand]
+    private async Task DoLogin()
+    {
+        await Task.CompletedTask;
+
+        messenger.Send(new CloseDialogMessage<bool>(this, false));
+
+        await messenger.Send(new OpenLoginDialogMessage());
     }
 }
 
@@ -169,6 +220,8 @@ public partial class MessagesByComicIdVm(MessagesByComicId messagesByComicId) : 
     [ObservableProperty] private bool _hasUp;
 
     [ObservableProperty] private bool _hasDown;
+
+    [ObservableProperty] private bool _isSelf;
 
     public void DoUp(bool isUp)
     {
