@@ -44,8 +44,6 @@
         <!-- HeroIcons -->
         <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2"/>
 
-        <!-- DialogHost -->
-        <PackageReference Include="DialogHost.Avalonia" Version="0.8.0-avalonia11dot1-3"/>
     </ItemGroup>
 
 

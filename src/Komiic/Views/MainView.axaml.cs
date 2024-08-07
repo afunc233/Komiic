@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
-using DialogHostAvalonia;
 using Komiic.Messages;
 
 namespace Komiic.Views;
@@ -12,6 +12,7 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
     IRecipient<OpenNotificationMessage>
 {
     private IManagedNotificationManager? _notificationManager;
+
     /// <summary>
     /// 绑定用
     /// </summary>
@@ -41,18 +42,14 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
     {
         message.Reply(Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            object? result = await DialogHost.Show(message.DialogContent, MainDialogHost);
+            bool? result = await MainDialogHost.Show<bool>(message.DialogContent);
             return result as bool? ?? false;
         }));
     }
 
     public void Receive(CloseDialogMessage<bool> message)
     {
-        if (MainDialogHost.IsOpen && !(MainDialogHost.CurrentSession?.IsEnded ?? false) &&
-            message.DialogContent == MainDialogHost.CurrentSession?.Content)
-        {
-            MainDialogHost.CurrentSession.Close(message.Result);
-        }
+        MainDialogHost.Close(message.DialogContent, message.Result);
     }
 
     public void Receive(OpenNotificationMessage message)

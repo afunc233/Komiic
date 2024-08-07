@@ -6,8 +6,8 @@
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:asyncLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:controls="clr-namespace:Komiic.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Komiic.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -28,7 +28,6 @@
         </DataTemplate>
     </UserControl.DataTemplates>
     <Panel>
-
         <SplitView
             CompactPaneLength="{OnFormFactor Default=48,
                                              Mobile=48}"
@@ -69,6 +68,6 @@
                     Width="200" />
             </Panel>
         </SplitView>
-        <dialogHostAvalonia:DialogHost CloseOnClickAway="True" x:Name="MainDialogHost" />
+        <controls:DialogHost CloseOnClickAway="True" x:Name="MainDialogHost" />
     </Panel>
 </UserControl>

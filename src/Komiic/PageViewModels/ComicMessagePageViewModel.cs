@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -126,10 +125,9 @@ public partial class ComicMessagePageViewModel(
     {
         if (accountService.AccountData == null)
         {
-            // TODO 唤起登录对话框，目前因为不支持多层 dialog 所以暂时仅提示
-            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 请先登录!"));
-            // var result= await messenger.Send(new OpenLoginDialogMessage());
-            // if (!result)
+            //messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 请先登录!"));
+            var result= await messenger.Send(new OpenLoginDialogMessage());
+            if (!result)
             {
                 return;
             }

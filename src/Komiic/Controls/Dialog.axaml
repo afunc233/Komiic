@@ -1,0 +1,25 @@
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="using:Komiic.Controls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <controls:Dialog />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|Dialog">
+        <!--  Set Defaults  -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="PART_Border">
+                    <ContentPresenter
+                        Content="{TemplateBinding Content}"
+                        HorizontalAlignment="{Binding $self.((Control)Child).HorizontalAlignment, FallbackValue=Center}"
+                        VerticalAlignment="{Binding $self.((Control)Child).VerticalAlignment, FallbackValue=Center}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:closeOnClickAway /template/ Border#PART_Border">
+            <Setter Property="Background" Value="#88808080" />
+        </Style>
+    </Style>
+</Styles>

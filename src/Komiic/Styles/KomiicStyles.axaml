@@ -70,6 +70,8 @@
     </Styles.Resources>
 
     <StyleInclude Source="../Controls/MangeImageView.axaml" />
+    <StyleInclude Source="../Controls/DialogHost.axaml" />
+    <StyleInclude Source="../Controls/Dialog.axaml" />
 
     <!--  加载中设置个默认图片  -->
     <Style Selector="Image[(asyncImageLoader|ImageLoader.IsLoading)=True]">
