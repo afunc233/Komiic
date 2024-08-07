@@ -414,22 +414,47 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
             QueryDataEnum.AddMessageToComic.GetQueryDataWithVariables(
                 new AddMessageToComicVariables()
                     { ComicId = comicId, Message = sendMessageText, ReplyToId = replyToId ?? "0" });
-        
+
         var addMessageToComicData = await komiicQueryApi.AddMessageToComic(queryData);
 
         if (addMessageToComicData is { Data: not null })
         {
-            return new ()
+            return new()
             {
                 Data = addMessageToComicData.Data.AddMessageToComic,
                 ErrorMessage = addMessageToComicData.GetMessage()
             };
         }
 
-        return new ()
+        return new()
         {
             Data = default,
             ErrorMessage = addMessageToComicData.GetMessage()
+        };
+    }
+
+    public async Task<ApiResponseData<bool?>> DeleteMessage(string messageId)
+    {
+        var queryData =
+            QueryDataEnum.DeleteMessage.GetQueryDataWithVariables(
+                new MessageIdVariables()
+                    { MessageId = messageId });
+
+        var deleteMessageData = await komiicQueryApi.DeleteMessage(queryData);
+
+        if (deleteMessageData is { Data: not null })
+        {
+            return new()
+            {
+                Data = deleteMessageData.Data.DeleteMessage,
+                ErrorMessage = deleteMessageData.GetMessage()
+            };
+        }
+
+        return new()
+        {
+            Data = default,
+            ErrorMessage = deleteMessageData.GetMessage()
         };
     }
 }

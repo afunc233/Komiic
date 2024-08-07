@@ -13,8 +13,8 @@
                 <Border x:Name="PART_Border">
                     <ContentPresenter
                         Content="{TemplateBinding Content}"
-                        HorizontalAlignment="{Binding $self.((Control)Child).HorizontalAlignment, FallbackValue=Center}"
-                        VerticalAlignment="{Binding $self.((Control)Child).VerticalAlignment, FallbackValue=Center}" />
+                        HorizontalAlignment="{Binding $self.((Control)Child).HorizontalAlignment, FallbackValue=Center, TargetNullValue=Center}"
+                        VerticalAlignment="{Binding $self.((Control)Child).VerticalAlignment, FallbackValue=Center, TargetNullValue=Center}" />
                 </Border>
             </ControlTemplate>
         </Setter>

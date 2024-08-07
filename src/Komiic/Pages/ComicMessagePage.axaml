@@ -92,50 +92,58 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <ContentControl Content="{Binding ReplyTo}" IsVisible="{Binding ReplyTo, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        <ContentControl Content="{Binding ReplyTo}"
+                                        IsVisible="{Binding ReplyTo, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
                         <TextBlock
                             Margin="5"
                             Text="{Binding Message}"
                             TextWrapping="Wrap" />
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Button Content="回复" />
-                        <ToggleButton
-                            Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).UpVoteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
-                            CommandParameter="{Binding}"
-                            IsChecked="{Binding HasUp, Mode=OneWay}">
-                            <Panel>
-                                <TextBlock
-                                    HorizontalAlignment="Right"
-                                    IsVisible="{Binding UpCount, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter={StaticResource Int0}, FallbackValue=False, FallbackValue=False}"
-                                    Margin="20,-5,-5,0"
-                                    Text="{Binding UpCount}"
-                                    VerticalAlignment="Top" />
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    Text="👍"
-                                    VerticalAlignment="Center" />
-                            </Panel>
-                        </ToggleButton>
-                        <ToggleButton
-                            Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).DownVoteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
-                            CommandParameter="{Binding}"
-                            IsChecked="{Binding HasDown, Mode=OneWay}">
-                            <Panel>
-                                <TextBlock
-                                    HorizontalAlignment="Right"
-                                    IsVisible="{Binding DownCount, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter={StaticResource Int0}, FallbackValue=False, FallbackValue=False}"
-                                    Margin="20,-5,-5,0"
-                                    Text="{Binding DownCount}"
-                                    VerticalAlignment="Top" />
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    Text="👎"
-                                    VerticalAlignment="Center" />
-                            </Panel>
-                        </ToggleButton>
-                    </StackPanel>
+                    <DockPanel HorizontalAlignment="Stretch">
+                        <Button DockPanel.Dock="Left" Content="删"
+                                CommandParameter="{Binding}"
+                                Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).DeleteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
+                                IsVisible="{Binding IsSelf}" />
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <Button Content="回复" />
+                            <ToggleButton
+                                Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).UpVoteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
+                                CommandParameter="{Binding}"
+                                IsChecked="{Binding HasUp, Mode=OneWay}">
+                                <Panel>
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        IsVisible="{Binding UpCount, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter={StaticResource Int0}, FallbackValue=False, FallbackValue=False}"
+                                        Margin="20,-5,-5,0"
+                                        Text="{Binding UpCount}"
+                                        VerticalAlignment="Top" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        Text="👍"
+                                        VerticalAlignment="Center" />
+                                </Panel>
+                            </ToggleButton>
+                            <ToggleButton
+                                Command="{Binding $parent[UserControl].((pageViewModels:ComicMessagePageViewModel)DataContext).DownVoteMessageCommand, TargetNullValue={x:Null}, FallbackValue={x:Null}}"
+                                CommandParameter="{Binding}"
+                                IsChecked="{Binding HasDown, Mode=OneWay}">
+                                <Panel>
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        IsVisible="{Binding DownCount, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter={StaticResource Int0}, FallbackValue=False, FallbackValue=False}"
+                                        Margin="20,-5,-5,0"
+                                        Text="{Binding DownCount}"
+                                        VerticalAlignment="Top" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        Text="👎"
+                                        VerticalAlignment="Center" />
+                                </Panel>
+                            </ToggleButton>
+                        </StackPanel>
+                        <Border />
+                    </DockPanel>
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -153,8 +161,7 @@
     <!-- </ListBox> -->
     <DockPanel>
 
-        <DockPanel DockPanel.Dock="Top">
-
+        <DockPanel DockPanel.Dock="Top" IsVisible="{Binding HasLogin}">
             <Button
                 Command="{Binding AddMessageToComicCommand}"
                 Content="发送"
@@ -165,11 +172,23 @@
             <Border Classes="BoxShadow">
                 <TextBox Text="{Binding SendMessageText, UpdateSourceTrigger=PropertyChanged}" />
             </Border>
-
         </DockPanel>
+
+        <TextBlock VerticalAlignment="Center" DockPanel.Dock="Top" IsVisible="{Binding !HasLogin}">
+            <Run Text="需要登入才能留言 " BaselineAlignment="Center" />
+            <Button Command="{Binding DoLoginCommand}" Content="登入" />
+            <Run Text="/" BaselineAlignment="Center" />
+            <HyperlinkButton
+                Foreground="Blue"
+                NavigateUri="https://komiic.com/register/"
+                Content="註冊" />
+        </TextBlock>
+
+
         <ItemsControl ItemsSource="{Binding MessagesByComicIds}" Width="400">
             <Interaction.Behaviors>
-                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreDataCommand}" />
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                        LoadMoreDataCmd="{Binding LoadMoreDataCommand}" />
             </Interaction.Behaviors>
         </ItemsControl>
     </DockPanel>
