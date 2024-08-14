@@ -11,7 +11,7 @@ namespace Komiic.PageViewModels;
 public partial class AccountInfoPageViewModel(IAccountService accountService, ILogger<AccountInfoPageViewModel> logger)
     : AbsPageViewModel(logger)
 {
-    public override NavBarType NavBarType => NavBarType.About;
+    public override NavBarType NavBarType => NavBarType.AccountInfo;
 
     public override string Title => "賬戶信息";
 

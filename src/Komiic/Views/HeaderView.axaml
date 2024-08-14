@@ -13,6 +13,8 @@
     <DockPanel Margin="0,0,10,0">
         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
             <Image
+                IsVisible="{OnFormFactor Default=True,
+                                         Mobile=False}"
                 Margin="10,0"
                 PointerReleased="InputElement_OnPointerReleased"
                 Source="{StaticResource IconImage}"
@@ -39,8 +41,11 @@
                             <Border
                                 Background="{Binding AccountData.ProfileBackgroundColor, FallbackValue=#000000}"
                                 CornerRadius="13"
-                                Margin="0,0,10,0"
+                                MinHeight="24"
                                 Width="{Binding $self.Bounds.Height}">
+                                <Border.Margin>
+                                    <OnFormFactor Default="0,0,10,0" Mobile="0" />
+                                </Border.Margin>
                                 <Viewbox>
                                     <TextBlock
                                         FontSize="24"
@@ -51,7 +56,7 @@
                                         VerticalAlignment="Center" />
                                 </Viewbox>
                             </Border>
-                            <Viewbox>
+                            <Viewbox IsVisible="{OnFormFactor Default=True, Mobile=False}">
                                 <TextBlock
                                     FontSize="22"
                                     Text="{Binding AccountData.Nickname, FallbackValue='未登入'}"

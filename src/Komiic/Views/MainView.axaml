@@ -28,29 +28,71 @@
         </DataTemplate>
     </UserControl.DataTemplates>
     <Panel>
-        <SplitView
-            CompactPaneLength="{OnFormFactor Default=48,
-                                             Mobile=48}"
-            DisplayMode="CompactInline"
-            IsPaneOpen="{OnFormFactor Default=True,
-                                      Mobile=False}"
-            OpenPaneLength="160"
-            x:Name="SplitView">
-            <SplitView.Pane>
-                <DockPanel>
-                    <ListBox
-                        DockPanel.Dock="Bottom"
-                        ItemsSource="{Binding FooterMenuItemsSource}"
-                        SelectedItem="{Binding SelectedNavBar}" />
-                    <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
+        <DockPanel>
+            <!--  标题部分  -->
+            <Panel
+                DockPanel.Dock="Top"
+                Height="38"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                x:Name="TitleBarPanel">
+                <Border
+                    Background="Transparent"
+                    BoxShadow="{DynamicResource BorderBoxShadow}"
+                    DoubleTapped="InputElement_OnDoubleTapped"
+                    HorizontalAlignment="Stretch"
+                    PointerPressed="InputElement_OnPointerPressed" />
+                <DockPanel Margin="3">
+                    <ToggleButton DockPanel.Dock="Left" IsChecked="{Binding #MainSplitView.IsPaneOpen}">
+                        <PathIcon Data="M3 17h18a1 1 0 0 1 .117 1.993L21 19H3a1 1 0 0 1-.117-1.993L3 17h18H3Zm0-6 18-.002a1 1 0 0 1 .117 1.993l-.117.007L3 13a1 1 0 0 1-.117-1.993L3 11l18-.002L3 11Zm0-6h18a1 1 0 0 1 .117 1.993L21 7H3a1 1 0 0 1-.117-1.993L3 5h18H3Z" />
+                    </ToggleButton>
+                    <CaptionButtons
+                        DockPanel.Dock="Right"
+                        IsVisible="{OnFormFactor Default=True,
+                                                 Mobile=False}"
+                        x:Name="CaptionButtons">
+                        <CaptionButtons.Styles>
+                            <Style Selector="CaptionButtons">
+                                <Style Selector="^:normal /template/ Button#PART_FullScreenButton">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </Style>
+                                <Style Selector="^:maximized /template/ Button#PART_FullScreenButton">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </Style>
+                                <Style Selector="^:fullscreen /template/ Button#PART_FullScreenButton">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </Style>
+                            </Style>
+                        </CaptionButtons.Styles>
+                    </CaptionButtons>
+                    <ContentControl Content="{Binding Header}" />
                 </DockPanel>
-            </SplitView.Pane>
-            <Panel>
+            </Panel>
+            <!--  标题部分 结束  -->
+
+            <SplitView
+                CompactPaneLength="{OnFormFactor Default=48,
+                                                 Mobile=48}"
+                DisplayMode="{OnFormFactor Mobile=Overlay,
+                                           Default=CompactInline}"
+                IsPaneOpen="{OnFormFactor Default=True,
+                                          Mobile=False}"
+                OpenPaneLength="160"
+                x:Name="MainSplitView">
+                <SplitView.Pane>
+                    <DockPanel>
+                        <ListBox
+                            DockPanel.Dock="Bottom"
+                            ItemsSource="{Binding FooterMenuItemsSource}"
+                            SelectedItem="{Binding SelectedNavBar}" />
+                        <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
+                    </DockPanel>
+                </SplitView.Pane>
                 <TransitioningContentControl
                     Content="{Binding SelectedContent}"
                     HorizontalAlignment="Stretch"
-                    IsTransitionReversed="{Binding IsTransitionReversed}"
-                    VerticalAlignment="Stretch">
+                    HorizontalContentAlignment="Stretch"
+                    IsTransitionReversed="{Binding IsTransitionReversed}">
                     <TransitioningContentControl.PageTransition>
                         <CompositePageTransition>
                             <CompositePageTransition.PageTransitions>
@@ -59,15 +101,22 @@
                         </CompositePageTransition>
                     </TransitioningContentControl.PageTransition>
                 </TransitioningContentControl>
-                <ProgressBar
-                    HorizontalAlignment="Center"
-                    IsHitTestVisible="False"
-                    IsIndeterminate="{Binding SelectedContent.IsLoading, FallbackValue=False}"
-                    IsVisible="{Binding SelectedContent.IsLoading, FallbackValue=False}"
-                    VerticalAlignment="Center"
-                    Width="200" />
-            </Panel>
-        </SplitView>
-        <controls:DialogHost CloseOnClickAway="True" x:Name="MainDialogHost" />
+            </SplitView>
+
+        </DockPanel>
+
+        <ProgressBar
+            HorizontalAlignment="Center"
+            IsHitTestVisible="False"
+            IsIndeterminate="{Binding SelectedContent.IsLoading, FallbackValue=False}"
+            IsVisible="{Binding SelectedContent.IsLoading, FallbackValue=False}"
+            VerticalAlignment="Center"
+            Width="200" />
+
+        <controls:DialogHost
+            CloseOnClickAway="True"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:Name="MainDialogHost" />
     </Panel>
 </UserControl>

@@ -12,10 +12,10 @@
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
-        <!-- Abis 列表 -->
-        <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
+        <!-- Abis 列表 XA0036 -->
+        <RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
         <!-- 每个 abi 生成一个 apk -->
-        <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
+        <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     </PropertyGroup>
 
     <ItemGroup>

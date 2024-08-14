@@ -11,24 +11,22 @@
     xmlns:vm="clr-namespace:Komiic.PageViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <DockPanel>
-        <TabControl>
-            <TabItem Header="最新更新">
-                <ScrollViewer>
-                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding RecentUpdateMangaInfos}" />
-                    <Interaction.Behaviors>
-                        <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreRecentUpdateCommand}" />
-                    </Interaction.Behaviors>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="本月最夯">
-                <ScrollViewer>
-                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding HotComicsMangaInfos}" />
-                    <Interaction.Behaviors>
-                        <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
-                    </Interaction.Behaviors>
-                </ScrollViewer>
-            </TabItem>
-        </TabControl>
-    </DockPanel>
+    <TabControl>
+        <TabItem Header="最新更新">
+            <ScrollViewer>
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding RecentUpdateMangaInfos}" />
+                <Interaction.Behaviors>
+                    <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreRecentUpdateCommand}" />
+                </Interaction.Behaviors>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="本月最夯">
+            <ScrollViewer>
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding HotComicsMangaInfos}" />
+                <Interaction.Behaviors>
+                    <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
+                </Interaction.Behaviors>
+            </ScrollViewer>
+        </TabItem>
+    </TabControl>
 </UserControl>

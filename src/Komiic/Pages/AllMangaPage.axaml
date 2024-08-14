@@ -40,9 +40,18 @@
             SelectedValue="{Binding SelectedCategory}"
             SelectionMode="AlwaysSelected">
             <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
+                <OnFormFactor>
+                    <OnFormFactor.Default>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </OnFormFactor.Default>
+                    <OnFormFactor.Mobile>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </OnFormFactor.Mobile>
+                </OnFormFactor>
             </ListBox.ItemsPanel>
         </ListBox>
 

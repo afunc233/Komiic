@@ -11,7 +11,7 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
 
         using (Log.BeginRequestPipelineScope(logger, request))
         {
-            Log.RequestPipelineStart(logger, request);
+            await Log.RequestPipelineStart(logger, request);
             var response = await base.SendAsync(request, cancellationToken);
             await Log.RequestPipelineEnd(logger, response);
 
@@ -31,11 +31,11 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
             LoggerMessage.DefineScope<HttpMethod, Uri?, string>(
                 "HTTP {HttpMethod} {Uri} {CorrelationId}");
 
-        private static readonly Action<ILogger, string, HttpRequestMessage, Exception?> DoRequestPipelineStart =
-            LoggerMessage.Define<string, HttpRequestMessage>(
+        private static readonly Action<ILogger, string, HttpRequestMessage, string, Exception?> DoRequestPipelineStart =
+            LoggerMessage.Define<string, HttpRequestMessage, string>(
                 LogLevel.Debug,
                 EventIds.PipelineStart,
-                "Start request [Correlation:{CorrelationId}],\n[HttpRequestMessage:\n{HttpRequestMessage}\n]");
+                "Start request [Correlation:{CorrelationId}],\n[HttpRequestMessage:\n{HttpRequestMessage}\n[RequestContent:\n{RequestContent}\n]");
 
         private static readonly Action<ILogger, string, HttpResponseMessage, string, Exception?> DoRequestPipelineEnd =
             LoggerMessage.Define<string, HttpResponseMessage, string>(LogLevel.Debug, EventIds.PipelineEnd,
@@ -47,10 +47,16 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
             return DoBeginRequestPipelineScope(logger, request.Method, request.RequestUri, correlationId);
         }
 
-        public static void RequestPipelineStart(ILogger logger, HttpRequestMessage request)
+        public static async Task RequestPipelineStart(ILogger logger, HttpRequestMessage request)
         {
             string correlationId = GetCorrelationIdFromRequest(request);
-            DoRequestPipelineStart(logger, correlationId, request, null);
+            var requestContent = string.Empty;
+            if (request is { Content: not null })
+            {
+                requestContent = await request.Content.ReadAsStringAsync();
+            }
+
+            DoRequestPipelineStart(logger, correlationId, request, requestContent, null);
         }
 
         private static readonly List<string> StrMediaTypeList =

@@ -50,5 +50,7 @@ public enum NavBarType
     
     MangaViewer,
     
+    AccountInfo,
+    
     About,
 }

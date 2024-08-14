@@ -11,18 +11,25 @@
             Background="Transparent"
             Classes="BoxShadow PointeroverBoxShadow"
             Cursor="Hand"
-            Margin="5"
+            Height="{OnFormFactor Default=330,
+                                  Mobile=260}"
+            Margin="{OnFormFactor Default=5,
+                                  Mobile=3}"
+            Width="{OnFormFactor Default=200,
+                                 Mobile=150}"
             d:DesignWidth="50">
             <Interaction.Behaviors>
                 <EventTriggerBehavior EventName="PointerReleased">
                     <InvokeCommandAction Command="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).OpenMangaCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
                 </EventTriggerBehavior>
             </Interaction.Behaviors>
-            <StackPanel Margin="8">
+            <StackPanel Margin="{OnFormFactor Default=8, Mobile=3}">
                 <Panel
                     Background="Transparent"
-                    Height="240"
-                    Width="180">
+                    Height="{OnFormFactor Default=240,
+                                          Mobile=180}"
+                    Width="{OnFormFactor Default=180,
+                                         Mobile=120}">
                     <Border ClipToBounds="True" CornerRadius="6">
                         <Image asyncImageLoader:ImageLoader.Source="{Binding ImageUrl}" />
                     </Border>
@@ -39,8 +46,7 @@
                     Margin="0,5"
                     Text="{Binding Title}"
                     TextAlignment="Center"
-                    TextTrimming="CharacterEllipsis"
-                    Width="180" />
+                    TextTrimming="CharacterEllipsis" />
                 <DockPanel>
                     <TextBlock
                         Background="MediumBlue"
@@ -56,6 +62,7 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             Text="{Binding LastChapterUpdate, StringFormat={}{0}話}"
+                            TextTrimming="CharacterEllipsis"
                             VerticalAlignment="Center" />
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -64,6 +71,7 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             Text="{Binding LastBookUpdate, StringFormat={}{0}卷}"
+                            TextTrimming="CharacterEllipsis"
                             VerticalAlignment="Center" />
                     </StackPanel>
                 </DockPanel>
@@ -72,7 +80,8 @@
                     Margin="0,2"
                     Padding="10,3"
                     Text="{Binding DateUpdated}"
-                    TextAlignment="Left" />
+                    TextAlignment="Left"
+                    TextTrimming="CharacterEllipsis" />
             </StackPanel>
         </Border>
     </DataTemplate>
