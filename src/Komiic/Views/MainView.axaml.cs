@@ -1,3 +1,5 @@
+using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Input;
@@ -13,38 +15,133 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
 {
     private IManagedNotificationManager? _notificationManager;
 
+    private readonly IMessenger _messenger;
+
     public MainView()
     {
         InitializeComponent();
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
+        _messenger = WeakReferenceMessenger.Default;
     }
 
-    private void OnUnloaded(object? sender, RoutedEventArgs e)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        Loaded -= OnLoaded;
-        Unloaded -= OnUnloaded;
-        WeakReferenceMessenger.Default.UnregisterAll(this);
+        base.OnAttachedToVisualTree(e);
+
+        _notificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this));
+        _messenger.RegisterAll(this);
+
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        if (topLevel is not null)
+        {
+            if (topLevel is Window window)
+            {
+                CaptionButtons.Attach(window);
+            }
+
+            topLevel.BackRequested -= TopLevelOnBackRequested;
+            topLevel.BackRequested += TopLevelOnBackRequested;
+        }
+
+        // 这里奇怪的操作是解决安卓上 SplitView 先相应 BackRequested 事件
+        MainSplitView.PaneOpened -= MainSplitViewOnPaneOpened;
+        MainSplitView.PaneOpened += MainSplitViewOnPaneOpened;
+
+        MainSplitView.PaneClosed -= MainSplitViewOnPaneClosed;
+        MainSplitView.PaneClosed += MainSplitViewOnPaneClosed;
+    }
+
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        _messenger.UnregisterAll(this);
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        if (topLevel is not null)
+        {
+            topLevel.BackRequested -= TopLevelOnBackRequested;
+        }
+
+        MainSplitView.PaneOpened -= MainSplitViewOnPaneOpened;
+        MainSplitView.PaneClosed -= MainSplitViewOnPaneClosed;
 
         CaptionButtons.Detach();
     }
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private bool IsInOverlayMode(SplitView splitView)
     {
-        _notificationManager = new WindowNotificationManager(TopLevel.GetTopLevel(this));
-        WeakReferenceMessenger.Default.RegisterAll(this);
-        if (TopLevel.GetTopLevel(this) is Window window)
+        return splitView.DisplayMode == SplitViewDisplayMode.CompactOverlay ||
+               splitView.DisplayMode == SplitViewDisplayMode.Overlay;
+    }
+
+    private void MainSplitViewOnPaneOpened(object? sender, RoutedEventArgs e)
+    {
+        if (!IsInOverlayMode(MainSplitView))
         {
-            CaptionButtons.Attach(window);
+            return;
+        }
+
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        if (topLevel is not null)
+        {
+            topLevel.BackRequested -= TopLevelOnBackRequested;
         }
     }
+
+    private void MainSplitViewOnPaneClosed(object? sender, RoutedEventArgs e)
+    {
+        if (!IsInOverlayMode(MainSplitView))
+        {
+            return;
+        }
+
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        if (topLevel is not null)
+        {
+            topLevel.BackRequested -= TopLevelOnBackRequested;
+            topLevel.BackRequested += TopLevelOnBackRequested;
+        }
+    }
+
+    private void TopLevelOnBackRequested(object? sender, RoutedEventArgs e)
+    {
+        var handled = false;
+        try
+        {
+            handled = CloseDialog();
+
+            if (!handled)
+            {
+                handled = _messenger.Send(new BackRequestedMessage());
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            throw;
+        }
+        finally
+        {
+            e.Handled = handled;
+        }
+    }
+
+    private bool CloseDialog()
+    {
+        return MainDialogHost.TryCloseLastDialog();
+    }
+
 
     public void Receive(OpenDialogMessage<bool> message)
     {
         message.Reply(Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            bool? result = await MainDialogHost.Show<bool>(message.DialogContent);
-            return result as bool? ?? false;
+            var result = await MainDialogHost.Show<bool?>(message.DialogContent);
+            return result ?? false;
         }));
     }
 
@@ -91,5 +188,10 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
                     break;
             }
         }
+    }
+
+    private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        e.Handled = true;
     }
 }

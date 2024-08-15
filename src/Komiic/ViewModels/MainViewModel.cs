@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +13,7 @@ namespace Komiic.ViewModels;
 
 public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMangaMessage>,
     IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>, IRecipient<OpenAccountInfoMessage>,
-    IRecipient<OpenCategoryMessage>, IRecipient<OpenLoginDialogMessage>
+    IRecipient<OpenCategoryMessage>, IRecipient<OpenLoginDialogMessage>, IRecipient<BackRequestedMessage>
 {
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
@@ -99,6 +100,14 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             return;
         }
 
+        if (SelectedContent is not null)
+        {
+            if (value.NavType == SelectedContent.NavBarType)
+            {
+                return;
+            }
+        }
+
         switch (value.NavType)
         {
             case NavBarType.Main:
@@ -124,26 +133,18 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
     [ObservableProperty] private IPageViewModel? _selectedContent;
     [ObservableProperty] private bool _isTransitionReversed;
 
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IAccountService _accountService;
-
     public IViewModelBase? Header { get; }
 
-    partial void OnSelectedContentChanging(IPageViewModel? value)
+    partial void OnSelectedContentChanged(IPageViewModel? value)
     {
         if (value == null)
         {
             return;
         }
 
-        var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select(it => it.NavType)
-            .ToList();
-        if (allNavBars.Any(it => it == value.NavBarType)) return;
+        var navBar = MenuItemsSource.Concat(FooterMenuItemsSource).FirstOrDefault(it => it.NavType == value.NavBarType);
 
-#pragma warning disable MVVMTK0034
-        _selectedNavBar = null;
-        OnPropertyChanged(nameof(SelectedNavBar));
-#pragma warning restore MVVMTK0034
+        SelectedNavBar = navBar;
     }
 
     partial void OnSelectedContentChanging(IPageViewModel? oldValue, IPageViewModel? newValue)
@@ -151,6 +152,22 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         if (oldValue == null || newValue == null)
         {
             return;
+        }
+
+        bool existValue = _selectedContentHistory.Contains(oldValue) || _selectedContentHistory.Contains(newValue);
+        if (!existValue)
+        {
+            if (_selectedContentHistory.Any())
+            {
+                _selectedContentHistory.Add(oldValue);
+            }
+            else if (_selectedContentHistory.Count == 0)
+            {
+                if (newValue.NavBarType != NavBarType.Main)
+                {
+                    _selectedContentHistory.Add(oldValue);
+                }
+            }
         }
 
         var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select((value, index) => (value.NavType, index))
@@ -162,6 +179,11 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         IsTransitionReversed = indexOld.Index > indexNew.Index;
     }
 
+
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IAccountService _accountService;
+
+    private readonly List<IPageViewModel> _selectedContentHistory = [];
 
     public MainViewModel(IServiceProvider serviceProvider, IAccountService accountService,
         HeaderViewModel headerViewModel, IMessenger messenger) :
@@ -231,5 +253,22 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         var messageResponse = Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
 
         message.Reply(messageResponse.Response);
+    }
+
+    public void Receive(BackRequestedMessage message)
+    {
+        var hasBack = false;
+
+        var lastContent = _selectedContentHistory.LastOrDefault();
+        if (lastContent is not null)
+        {
+            SelectedContent = lastContent;
+
+            _selectedContentHistory.Remove(lastContent);
+
+            hasBack = true;
+        }
+
+        message.Reply(hasBack);
     }
 }

@@ -72,6 +72,7 @@ public class DialogHost : TemplatedControl
         return default;
     }
 
+
     public void Close<T>(object messageDialogContent, T messageResult)
     {
         CloseInner(messageDialogContent, messageResult);
@@ -79,27 +80,38 @@ public class DialogHost : TemplatedControl
 
     private void CloseInner<T>(object messageDialogContent, T messageResult, bool innerClose = false)
     {
-        if (_hostPanel != null)
+        var dialog = _hostPanel?.Children.OfType<Dialog>().FirstOrDefault(it => it.Content == messageDialogContent);
+
+        if (dialog != null)
         {
-            var dialog = _hostPanel.Children.OfType<Dialog>().FirstOrDefault(it => it.Content == messageDialogContent);
-
-            if (dialog != null)
-            {
-                _hostPanel.Children.Remove(dialog);
-                if (!innerClose)
-                {
-                    dialog.Close(messageResult);
-                }
-            }
-
-            var lastChildren = _hostPanel.Children.LastOrDefault();
-
-            if (lastChildren != null)
-            {
-                lastChildren.IsEnabled = true;
-            }
-
-            this.IsHitTestVisible = _hostPanel.Children.Any();
+            CloseDialog(dialog, !innerClose);
         }
+    }
+
+    private void CloseDialog(Dialog dialog, bool useDefaultResult)
+    {
+        if (_hostPanel == null) return;
+        
+        _hostPanel.Children.Remove(dialog);
+        if (useDefaultResult)
+            dialog.Close(default);
+
+        var lastChildren = _hostPanel.Children.LastOrDefault();
+
+        if (lastChildren != null)
+        {
+            lastChildren.IsEnabled = true;
+        }
+
+        this.IsHitTestVisible = _hostPanel.Children.Any();
+    }
+
+    public bool TryCloseLastDialog()
+    {
+        var dialog = _hostPanel?.Children.OfType<Dialog>().LastOrDefault();
+        if (dialog == null) return false;
+        
+        CloseDialog(dialog,true);
+        return true;
     }
 }
