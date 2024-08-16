@@ -189,9 +189,4 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
             }
         }
     }
-
-    private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
-    {
-        e.Handled = true;
-    }
 }

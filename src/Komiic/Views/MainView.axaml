@@ -80,7 +80,7 @@
                 OpenPaneLength="160"
                 x:Name="MainSplitView">
                 <SplitView.Pane>
-                    <DockPanel>
+                    <DockPanel controls:DirectionalKeyDownHandler.Handled="True">
                         <ListBox
                             DockPanel.Dock="Bottom"
                             ItemsSource="{Binding FooterMenuItemsSource}"
