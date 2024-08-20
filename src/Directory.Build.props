@@ -1,12 +1,9 @@
 <Project>
     <PropertyGroup>
-        <MainTargetFramework>net8.0</MainTargetFramework>
-
-
+        <MainTargetFramework>net9.0</MainTargetFramework>
         <Nullable>enable</Nullable>
-
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <NoWarn>$(NoWarn);SYSLIB1030;IL2026</NoWarn>
+        <NoWarn>$(NoWarn);SYSLIB1030;IL2026;XA0141</NoWarn>
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
@@ -15,7 +12,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <AvaloniaVersion>11.1.0</AvaloniaVersion>
+        <AvaloniaVersion>11.1.3</AvaloniaVersion>
         <CommunityToolkitVersion>8.2.2</CommunityToolkitVersion>
         <HostingVersion>9.0.0-preview.6.24327.7</HostingVersion>
         <PollyVersion>9.0.0-preview.6.24328.4</PollyVersion>
