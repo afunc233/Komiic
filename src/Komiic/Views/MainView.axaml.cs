@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
@@ -17,6 +19,15 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
 
     private readonly IMessenger _messenger;
 
+    
+    
+    private record CanBackAction(object Source, Func<bool> BackAction);
+
+    /// <summary>
+    /// for BackRequested
+    /// </summary>
+    private readonly List<CanBackAction> _canBackRequestedActions = [];
+    
     public MainView()
     {
         InitializeComponent();
@@ -43,7 +54,7 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
             topLevel.BackRequested += TopLevelOnBackRequested;
         }
 
-        // 这里奇怪的操作是解决安卓上 SplitView 先相应 BackRequested 事件
+        // 这里奇怪的操作是解决安卓上 BackRequested 的正確相應
         MainSplitView.PaneOpened -= MainSplitViewOnPaneOpened;
         MainSplitView.PaneOpened += MainSplitViewOnPaneOpened;
 
@@ -65,15 +76,14 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
         }
 
         MainSplitView.PaneOpened -= MainSplitViewOnPaneOpened;
-        MainSplitView.PaneClosed -= MainSplitViewOnPaneClosed;
-
+        MainSplitView.PaneOpened -= MainSplitViewOnPaneClosed;
         CaptionButtons.Detach();
     }
 
+
     private bool IsInOverlayMode(SplitView splitView)
     {
-        return splitView.DisplayMode == SplitViewDisplayMode.CompactOverlay ||
-               splitView.DisplayMode == SplitViewDisplayMode.Overlay;
+        return splitView.DisplayMode is SplitViewDisplayMode.CompactOverlay or SplitViewDisplayMode.Overlay;
     }
 
     private void MainSplitViewOnPaneOpened(object? sender, RoutedEventArgs e)
@@ -83,12 +93,13 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
             return;
         }
 
-        var topLevel = TopLevel.GetTopLevel(this);
-
-        if (topLevel is not null)
+        _canBackRequestedActions.Add(new(MainSplitView, () =>
         {
-            topLevel.BackRequested -= TopLevelOnBackRequested;
-        }
+            if (!MainSplitView.IsPaneOpen) return false;
+
+            MainSplitView.IsPaneOpen = false;
+            return true;
+        }));
     }
 
     private void MainSplitViewOnPaneClosed(object? sender, RoutedEventArgs e)
@@ -98,13 +109,7 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
             return;
         }
 
-        var topLevel = TopLevel.GetTopLevel(this);
-
-        if (topLevel is not null)
-        {
-            topLevel.BackRequested -= TopLevelOnBackRequested;
-            topLevel.BackRequested += TopLevelOnBackRequested;
-        }
+        _canBackRequestedActions.RemoveAll(x => Equals(x.Source, MainSplitView));
     }
 
     private void TopLevelOnBackRequested(object? sender, RoutedEventArgs e)
@@ -112,7 +117,13 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
         var handled = false;
         try
         {
-            handled = CloseDialog();
+            var canBackAction = _canBackRequestedActions.LastOrDefault();
+
+            if (canBackAction != null)
+            {
+                handled = canBackAction.BackAction();
+                _canBackRequestedActions.Remove(canBackAction);
+            }
 
             if (!handled)
             {
@@ -138,15 +149,19 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
 
     public void Receive(OpenDialogMessage<bool> message)
     {
+        _canBackRequestedActions.Add(new(message.DialogContent, CloseDialog));
         message.Reply(Dispatcher.UIThread.InvokeAsync(async () =>
         {
             var result = await MainDialogHost.Show<bool?>(message.DialogContent);
+
+            _canBackRequestedActions.RemoveAll(x => Equals(x.Source, message.DialogContent));
             return result ?? false;
         }));
     }
 
     public void Receive(CloseDialogMessage<bool> message)
     {
+        _canBackRequestedActions.RemoveAll(x => Equals(x.Source, message.DialogContent));
         MainDialogHost.Close(message.DialogContent, message.Result);
     }
 
