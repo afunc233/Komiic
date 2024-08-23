@@ -3,14 +3,18 @@
     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
+    xmlns:modelVO="clr-namespace:Komiic.Contracts.VO"
     xmlns:viewModels="clr-namespace:Komiic.ViewModels"
+    xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:materialEnums="clr-namespace:Material.Icons;assembly=Material.Icons"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--  Add Resources Here  -->
-    <DataTemplate DataType="{x:Type model:MangaInfo}" x:Key="MangaInfoTemplate">
+    <DataTemplate DataType="{x:Type modelVO:MangaInfoVO}" x:Key="MangaInfoVOTemplate">
         <Border
             Background="Transparent"
             Classes="BoxShadow PointeroverBoxShadow"
             Cursor="Hand"
+            x:Name="ItemRootBorder"
             Height="{OnFormFactor Default=330,
                                   Mobile=260}"
             Margin="{OnFormFactor Default=5,
@@ -20,8 +24,20 @@
             d:DesignWidth="50">
             <Interaction.Behaviors>
                 <EventTriggerBehavior EventName="PointerReleased">
-                    <InvokeCommandAction Command="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).OpenMangaCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
+                    <InvokeCommandAction
+                        Command="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).OpenMangaCommand, FallbackValue={x:Null}}"
+                        CommandParameter="{Binding MangaInfo}" />
                 </EventTriggerBehavior>
+
+                <DataTriggerBehavior Binding="{Binding  IsFavourite}" Value="True">
+                    <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
+                                          Value="{x:Static materialEnums:MaterialIconKind.Heart}" />
+                </DataTriggerBehavior>
+                <DataTriggerBehavior Binding="{Binding  IsFavourite}" ComparisonCondition="NotEqual"
+                                     Value="True">
+                    <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
+                                          Value="{x:Static materialEnums:MaterialIconKind.HeartOutline}" />
+                </DataTriggerBehavior>
             </Interaction.Behaviors>
             <StackPanel Margin="{OnFormFactor Default=8, Mobile=3}">
                 <Panel
@@ -31,19 +47,34 @@
                     Width="{OnFormFactor Default=180,
                                          Mobile=120}">
                     <Border ClipToBounds="True" CornerRadius="6">
-                        <Image asyncImageLoader:ImageLoader.Source="{Binding ImageUrl}" />
+                        <Image DataContext="{Binding MangaInfo}"
+                               asyncImageLoader:ImageLoader.Source="{Binding ImageUrl}" />
                     </Border>
 
-                    <Border HorizontalAlignment="Left" VerticalAlignment="Top">
-                        <TextBlock Text="{Binding Views}" />
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#9FFFFFFF" CornerRadius="6">
+                        <TextBlock DataContext="{Binding MangaInfo}" Text="{Binding Views}" Margin="3" />
                     </Border>
-                    <Border HorizontalAlignment="Right" VerticalAlignment="Top">
-                        <TextBlock Text="{Binding FavoriteCount}" />
-                    </Border>
+
+                    <Button
+                        Command="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).ToggleFavouriteCommand, FallbackValue={x:Null}}"
+                        CommandParameter="{Binding}"
+                        HorizontalAlignment="Right" Padding="3" VerticalAlignment="Top" Background="#9FFFFFFF"
+                        CornerRadius="6">
+                        <StackPanel Orientation="Horizontal">
+
+                            <material:MaterialIcon x:Name="Icon" Foreground="#F44337">
+                                
+                            </material:MaterialIcon>
+
+                            <TextBlock
+                                Text="{Binding FavoriteCount}" />
+                        </StackPanel>
+                    </Button>
                 </Panel>
                 <TextBlock
                     FontWeight="Bold"
                     Margin="0,5"
+                    DataContext="{Binding MangaInfo}"
                     Text="{Binding Title}"
                     TextAlignment="Center"
                     TextTrimming="CharacterEllipsis" />
@@ -61,6 +92,7 @@
                     <StackPanel Background="CornflowerBlue" Orientation="Horizontal">
                         <TextBlock
                             HorizontalAlignment="Center"
+                            DataContext="{Binding MangaInfo}"
                             Text="{Binding LastChapterUpdate, StringFormat={}{0}話}"
                             TextTrimming="CharacterEllipsis"
                             VerticalAlignment="Center" />
@@ -70,6 +102,7 @@
                             VerticalAlignment="Center" />
                         <TextBlock
                             HorizontalAlignment="Center"
+                            DataContext="{Binding MangaInfo}"
                             Text="{Binding LastBookUpdate, StringFormat={}{0}卷}"
                             TextTrimming="CharacterEllipsis"
                             VerticalAlignment="Center" />
@@ -79,11 +112,13 @@
                     Background="#80808080"
                     Margin="0,2"
                     Padding="10,3"
+                    DataContext="{Binding MangaInfo}"
                     Text="{Binding DateUpdated}"
                     TextAlignment="Left"
                     TextTrimming="CharacterEllipsis" />
             </StackPanel>
         </Border>
+
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type model:Author}" x:Key="AuthorInfoTemplate">
@@ -94,7 +129,9 @@
             Margin="5">
             <Interaction.Behaviors>
                 <EventTriggerBehavior EventName="PointerReleased">
-                    <InvokeCommandAction Command="{Binding $parent[UserControl].((viewModels:IOpenAuthorViewModel)DataContext).OpenAuthorCommand, FallbackValue={x:Null}}" CommandParameter="{Binding}" />
+                    <InvokeCommandAction
+                        Command="{Binding $parent[UserControl].((viewModels:IOpenAuthorViewModel)DataContext).OpenAuthorCommand, FallbackValue={x:Null}}"
+                        CommandParameter="{Binding}" />
                 </EventTriggerBehavior>
             </Interaction.Behaviors>
             <StackPanel Margin="8">

@@ -1,8 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts.Services;
+using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
@@ -14,6 +17,8 @@ namespace Komiic.PageViewModels;
 public partial class MainPageViewModel(
     IMessenger messenger,
     IComicDataService comicDataService,
+    IAccountService accountService,
+    IMangaInfoVOService mangaInfoVOService,
     ILogger<MainPageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     private int _recentUpdatePageIndex;
@@ -30,9 +35,9 @@ public partial class MainPageViewModel(
 
     public override string Title => "首页";
 
-    public ObservableCollection<MangaInfo> RecentUpdateMangaInfos { get; } = [];
+    public ObservableCollection<MangaInfoVO> RecentUpdateMangaInfos { get; } = [];
 
-    public ObservableCollection<MangaInfo> HotComicsMangaInfos { get; } = [];
+    public ObservableCollection<MangaInfoVO> HotComicsMangaInfos { get; } = [];
 
     [ObservableProperty] private ImageLimit? _imageLimit;
 
@@ -42,6 +47,16 @@ public partial class MainPageViewModel(
     {
         await Task.CompletedTask;
         messenger.Send(new OpenMangaMessage(mangaInfo));
+    }
+
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task ToggleFavourite(MangaInfoVO mangaInfoVO)
+    {
+        await Task.CompletedTask;
+
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        messenger.Send(
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
     }
 
     private bool CanLoadMore() => !IsLoading && HasMore && !IsDataError;
@@ -54,7 +69,10 @@ public partial class MainPageViewModel(
             var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
             if (dataList is { Data.Count: > 0 })
             {
-                dataList.Data.ForEach(RecentUpdateMangaInfos.Add);
+                foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data.ToArray()))
+                {
+                    RecentUpdateMangaInfos.Add(mangaInfoVO);
+                }
             }
             else
             {
@@ -72,7 +90,10 @@ public partial class MainPageViewModel(
             var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++);
             if (dataList is { Data.Count: > 0 })
             {
-                dataList.Data.ForEach(HotComicsMangaInfos.Add);
+                foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data.ToArray()))
+                {
+                    HotComicsMangaInfos.Add(mangaInfoVO);
+                }
             }
             else
             {
@@ -81,8 +102,23 @@ public partial class MainPageViewModel(
         });
     }
 
+    protected override Task OnNavigatedFrom()
+    {
+        accountService.AccountChanged -= AccountServiceOnAccountChanged;
+        return base.OnNavigatedFrom();
+    }
+
+    private void AccountServiceOnAccountChanged(object? sender, EventArgs e)
+    {
+        mangaInfoVOService.UpdateMangaInfoVO(RecentUpdateMangaInfos);
+        mangaInfoVOService.UpdateMangaInfoVO(HotComicsMangaInfos);
+    }
+
     protected override async Task OnNavigatedTo()
     {
+        accountService.AccountChanged -= AccountServiceOnAccountChanged;
+        accountService.AccountChanged += AccountServiceOnAccountChanged;
+
         await LoadMoreRecentUpdate();
         await LoadMoreHotComics();
     }

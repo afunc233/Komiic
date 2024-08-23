@@ -30,17 +30,21 @@
             <TabItem Header="月">
 
                 <ScrollViewer>
-                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding MonthHotComicsMangaInfos}" />
+                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                                   ItemsSource="{Binding MonthHotComicsMangaInfos}" />
                     <Interaction.Behaviors>
-                        <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreMonthHotComicsCommand}" />
+                        <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                                LoadMoreDataCmd="{Binding LoadMoreMonthHotComicsCommand}" />
                     </Interaction.Behaviors>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="綜合">
                 <ScrollViewer>
-                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding HotComicsMangaInfos}" />
+                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                                   ItemsSource="{Binding HotComicsMangaInfos}" />
                     <Interaction.Behaviors>
-                        <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
+                        <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                                LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
                     </Interaction.Behaviors>
                 </ScrollViewer>
             </TabItem>

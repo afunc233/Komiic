@@ -2,6 +2,7 @@
 using System.IO;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts;
+using Komiic.Contracts.Services;
 using Komiic.Controls;
 using Komiic.Core.Contracts.Services;
 using Komiic.Core.Services;
@@ -20,6 +21,7 @@ public static class KomiicExtensions
     {
         // 注入消息中心
         services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
+        services.AddSingleton<IMangaInfoVOService,MangaInfoVOService>();
 
         if (!OperatingSystem.IsBrowser())
         {

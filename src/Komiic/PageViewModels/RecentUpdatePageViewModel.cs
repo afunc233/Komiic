@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts.Services;
+using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
@@ -14,6 +16,7 @@ namespace Komiic.PageViewModels;
 public partial class RecentUpdatePageViewModel(
     IMessenger messenger,
     IComicDataService comicDataService,
+    IMangaInfoVOService mangaInfoVOService,
     ILogger<RecentUpdatePageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     private int _recentUpdatePageIndex;
@@ -23,13 +26,24 @@ public partial class RecentUpdatePageViewModel(
 
     [ObservableProperty] private bool _hasMore = true;
 
-    public ObservableCollection<MangaInfo> RecentUpdateMangaInfos { get; } = [];
+    public ObservableCollection<MangaInfoVO> RecentUpdateMangaInfos { get; } = [];
 
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
     {
         await Task.CompletedTask;
         messenger.Send(new OpenMangaMessage(mangaInfo));
+    }
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
+
+    private async Task ToggleFavourite(MangaInfoVO mangaInfoVO)
+    {
+        await Task.CompletedTask;
+
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        messenger.Send(
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
     }
 
     [RelayCommand]
@@ -40,7 +54,10 @@ public partial class RecentUpdatePageViewModel(
             var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
             if (dataList is { Data.Count: > 0 })
             {
-                dataList.Data.ForEach(RecentUpdateMangaInfos.Add);
+                foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data))
+                {
+                    RecentUpdateMangaInfos.Add(mangaInfoVO);
+                }
             }
             else
             {

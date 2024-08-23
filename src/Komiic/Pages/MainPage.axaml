@@ -14,17 +14,21 @@
     <TabControl>
         <TabItem Header="最新更新">
             <ScrollViewer>
-                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding RecentUpdateMangaInfos}" />
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                               ItemsSource="{Binding RecentUpdateMangaInfos}" />
                 <Interaction.Behaviors>
-                    <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreRecentUpdateCommand}" />
+                    <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                            LoadMoreDataCmd="{Binding LoadMoreRecentUpdateCommand}" />
                 </Interaction.Behaviors>
             </ScrollViewer>
         </TabItem>
         <TabItem Header="本月最夯">
             <ScrollViewer>
-                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding HotComicsMangaInfos}" />
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                               ItemsSource="{Binding HotComicsMangaInfos}" />
                 <Interaction.Behaviors>
-                    <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
+                    <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                            LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
                 </Interaction.Behaviors>
             </ScrollViewer>
         </TabItem>

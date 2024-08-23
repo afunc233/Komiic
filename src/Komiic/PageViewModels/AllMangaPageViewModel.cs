@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts.Services;
+using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Data;
@@ -18,6 +20,7 @@ namespace Komiic.PageViewModels;
 public partial class AllMangaPageViewModel(
     IMessenger messenger,
     ICategoryDataService categoryDataService,
+    IMangaInfoVOService mangaInfoVOService,
     ILogger<AllMangaPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
@@ -47,7 +50,7 @@ public partial class AllMangaPageViewModel(
     [ObservableProperty] private string _orderBy = "DATE_UPDATED";
     public ObservableCollection<Category> AllCategories { get; } = [];
 
-    public ObservableCollection<MangaInfo> AllMangaInfos { get; } = [];
+    public ObservableCollection<MangaInfoVO> AllMangaInfos { get; } = [];
 
     private int _pageIndex;
 
@@ -112,6 +115,16 @@ public partial class AllMangaPageViewModel(
         messenger.Send(new OpenMangaMessage(mangaInfo));
     }
 
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task ToggleFavourite(MangaInfoVO mangaInfoVO)
+    {
+        await Task.CompletedTask;
+
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        messenger.Send(
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
+    }
+
     private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 
@@ -138,7 +151,10 @@ public partial class AllMangaPageViewModel(
             if (comicByCategoryData.Data is { Count: > 0 })
             {
                 HasMore = true;
-                comicByCategoryData.Data.ForEach(AllMangaInfos.Add);
+                foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(comicByCategoryData.Data))
+                {
+                    AllMangaInfos.Add(mangaInfoVO);
+                }
             }
             else
             {

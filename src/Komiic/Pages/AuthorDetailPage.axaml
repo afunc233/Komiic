@@ -27,9 +27,10 @@
         </Panel>
 
         <ScrollViewer>
-            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding MangaInfos}" />
+            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}" ItemsSource="{Binding MangaInfos}" />
             <Interaction.Behaviors>
-                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMangaInfoByAuthorCommand}" />
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                        LoadMoreDataCmd="{Binding LoadMangaInfoByAuthorCommand}" />
             </Interaction.Behaviors>
         </ScrollViewer>
 

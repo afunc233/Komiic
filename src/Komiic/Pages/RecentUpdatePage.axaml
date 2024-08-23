@@ -19,9 +19,11 @@
             Text="最近更新" />
 
         <ScrollViewer>
-            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding RecentUpdateMangaInfos}" />
+            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                           ItemsSource="{Binding RecentUpdateMangaInfos}" />
             <Interaction.Behaviors>
-                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadMoreRecentUpdateCommand}" />
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                        LoadMoreDataCmd="{Binding LoadMoreRecentUpdateCommand}" />
             </Interaction.Behaviors>
         </ScrollViewer>
     </DockPanel>
