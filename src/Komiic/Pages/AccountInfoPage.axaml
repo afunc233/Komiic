@@ -6,11 +6,12 @@
     x:DataType="pageViewModels:AccountInfoPageViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:icon="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
     xmlns:interactions="clr-namespace:Komiic.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
+    xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
     <Border
         Classes="BoxShadow"
         HorizontalAlignment="Center"
@@ -39,16 +40,17 @@
                 </StackPanel.Styles>
                 <StackPanel Classes="AccountInfo">
                     <Border
-                        Background="{Binding AccountData.ProfileBackgroundColor}"
+                        Background="{Binding AccountData.ProfileBackgroundColor,FallbackValue=#0000E2}"
                         CornerRadius="25"
                         Height="{Binding $self.Bounds.Width}"
                         Width="50">
                         <Viewbox>
-                            <TextBlock Foreground="{Binding AccountData.ProfileTextColor}" Text="{Binding AccountData.ProfileText, FallbackValue='無'}" />
+                            <TextBlock Foreground="{Binding AccountData.ProfileTextColor,FallbackValue=#FFFFFF}"
+                                       Text="{Binding AccountData.ProfileText, FallbackValue='無'}" />
                         </Viewbox>
                     </Border>
                     <Button>
-                        <icon:HeroIcon Kind="Solid" Type="Pencil" />
+                        <material:MaterialIcon Kind="Pencil" />
                     </Button>
                 </StackPanel>
                 <StackPanel Classes="AccountInfo">
@@ -57,7 +59,7 @@
                         Text="{Binding AccountData.Nickname, FallbackValue='無', StringFormat='{}暱稱:{0}'}"
                         VerticalAlignment="Center" />
                     <Button>
-                        <icon:HeroIcon Kind="Solid" Type="Pencil" />
+                        <material:MaterialIcon Kind="Pencil" />
                     </Button>
                 </StackPanel>
                 <StackPanel Classes="AccountInfo">
@@ -66,7 +68,7 @@
                         Text="{Binding AccountData.Email, FallbackValue='無', StringFormat='{}Email:{0}'}"
                         VerticalAlignment="Center" />
                     <Button>
-                        <icon:HeroIcon Kind="Solid" Type="Pencil" />
+                        <material:MaterialIcon Kind="Pencil" />
                     </Button>
                 </StackPanel>
                 <TextBlock
@@ -81,7 +83,7 @@
                         Text="{Binding AccountData.TotalDonateAmount, FallbackValue='無', StringFormat='{}已贊助: ${0}'}"
                         VerticalAlignment="Center" />
                     <Button>
-                        <icon:HeroIcon Kind="Solid" Type="Trophy" />
+                        <material:MaterialIcon Kind="Pencil" />
                     </Button>
                 </StackPanel>
                 <TextBlock
@@ -104,7 +106,8 @@
                     </TextBlock.Inlines>
                 </TextBlock>
 
-                <TextBlock FontSize="18" Text="{Binding ImageLimit.ResetInSeconds, FallbackValue='無', StringFormat='{}下次重置於:{0:HH:mm:ss}'}" />
+                <TextBlock FontSize="18"
+                           Text="{Binding ImageLimit.ResetInSeconds, FallbackValue='無', StringFormat='{}下次重置於:{0:HH:mm:ss}'}" />
 
                 <Border
                     Background="Gray"
@@ -119,17 +122,21 @@
                         IsEnabled="{Binding !ToggleNextChapterModeCommand.IsRunning}"
                         Margin="15,0,0,0"
                         Orientation="Vertical">
-                        <ToggleButton Content="下拉到底下一話" IsChecked="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=NextChapterMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=SCROLL, FallbackValue=false}">
+                        <ToggleButton Content="下拉到底下一話"
+                                      IsChecked="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=NextChapterMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=SCROLL, FallbackValue=false}">
                             <Interaction.Behaviors>
                                 <interactions:RadioButtonCheckedBehavior Value="True">
-                                    <InvokeCommandAction Command="{Binding ToggleNextChapterModeCommand}" CommandParameter="SCROLL" />
+                                    <InvokeCommandAction Command="{Binding ToggleNextChapterModeCommand}"
+                                                         CommandParameter="SCROLL" />
                                 </interactions:RadioButtonCheckedBehavior>
                             </Interaction.Behaviors>
                         </ToggleButton>
-                        <ToggleButton Content="按紐到下一話" IsChecked="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=NextChapterMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=BUTTON, FallbackValue=false}">
+                        <ToggleButton Content="按紐到下一話"
+                                      IsChecked="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=NextChapterMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=BUTTON, FallbackValue=false}">
                             <Interaction.Behaviors>
                                 <interactions:RadioButtonCheckedBehavior Value="True">
-                                    <InvokeCommandAction Command="{Binding ToggleNextChapterModeCommand}" CommandParameter="BUTTON" />
+                                    <InvokeCommandAction Command="{Binding ToggleNextChapterModeCommand}"
+                                                         CommandParameter="BUTTON" />
                                 </interactions:RadioButtonCheckedBehavior>
                             </Interaction.Behaviors>
                         </ToggleButton>
