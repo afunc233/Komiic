@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Model;
 
 namespace Komiic.ViewModels;
@@ -10,4 +11,6 @@ public interface IOpenMangaViewModel
     /// 或许应该写一个 控件 来处理
     /// </summary>
     IAsyncRelayCommand<MangaInfo> OpenMangaCommand { get; }
+    
+    IAsyncRelayCommand<MangaInfoVO> ToggleFavouriteCommand { get; }
 }

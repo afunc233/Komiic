@@ -45,7 +45,7 @@
                         Height="{Binding $self.Bounds.Width}"
                         Width="50">
                         <Viewbox>
-                            <TextBlock Foreground="{Binding AccountData.ProfileTextColor,FallbackValue=#FFFFFF}"
+                            <TextBlock Foreground="{Binding AccountData.ProfileTextColor,FallbackValue=#FFFFFFFF}"
                                        Text="{Binding AccountData.ProfileText, FallbackValue='無'}" />
                         </Viewbox>
                     </Border>

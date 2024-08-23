@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts.Services;
+using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Data;
@@ -15,6 +17,7 @@ namespace Komiic.PageViewModels;
 public partial class HotPageViewModel(
     IMessenger messenger,
     IComicDataService comicDataService,
+    IMangaInfoVOService mangaInfoVOService,
     ILogger<HotPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
@@ -35,8 +38,8 @@ public partial class HotPageViewModel(
     ];
 
     [ObservableProperty] private string? _state = "";
-    public ObservableCollection<MangaInfo> MonthHotComicsMangaInfos { get; } = [];
-    public ObservableCollection<MangaInfo> HotComicsMangaInfos { get; } = [];
+    public ObservableCollection<MangaInfoVO> MonthHotComicsMangaInfos { get; } = [];
+    public ObservableCollection<MangaInfoVO> HotComicsMangaInfos { get; } = [];
 
     async partial void OnStateChanged(string? value)
     {
@@ -56,7 +59,10 @@ public partial class HotPageViewModel(
             var dataList = await comicDataService.GetHotComic(_monthHotComicsPageIndex++, "MONTH_VIEWS", State);
             if (dataList is { Data.Count: > 0 })
             {
-                dataList.Data.ForEach(MonthHotComicsMangaInfos.Add);
+                foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data))
+                {
+                    MonthHotComicsMangaInfos.Add(mangaInfoVO);
+                }
             }
             else
             {
@@ -73,23 +79,16 @@ public partial class HotPageViewModel(
             var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, "VIEWS", State);
             if (dataList is { Data.Count: > 0 })
             {
-                dataList.Data.ForEach(HotComicsMangaInfos.Add);
+                foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data))
+                {
+                    HotComicsMangaInfos.Add(mangaInfoVO);
+                }
             }
             else
             {
                 HasMore = false;
             }
         });
-
-        var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, "VIEWS", State);
-        if (dataList is { Data.Count: > 0 })
-        {
-            dataList.Data.ForEach(HotComicsMangaInfos.Add);
-        }
-        else
-        {
-            HasMore = false;
-        }
     }
 
 
@@ -98,6 +97,16 @@ public partial class HotPageViewModel(
     {
         await Task.CompletedTask;
         messenger.Send(new OpenMangaMessage(mangaInfo));
+    }
+
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task ToggleFavourite(MangaInfoVO mangaInfoVO)
+    {
+        await Task.CompletedTask;
+
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        messenger.Send(
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
     }
 
     protected override async Task OnNavigatedTo()

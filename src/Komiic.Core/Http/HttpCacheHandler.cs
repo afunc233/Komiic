@@ -11,6 +11,8 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
         var cacheKey = string.Empty;
         try
         {
+#if !DEBUG
+      
             if (request.Headers.TryGetValues(KomiicConst.EnableCacheHeader, out var cacheValues))
             {
                 // 移除無關 header
@@ -44,6 +46,7 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
                     }
                 }
             }
+#endif
         }
         catch (Exception e)
         {

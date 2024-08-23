@@ -13,7 +13,7 @@ internal class ResponseData
 {
     [JsonPropertyName("message")] public string? Message { get; set; }
 
-    [JsonPropertyName("errors")] public List<ErrorInfo>? Errors { get; set; }
+    [JsonPropertyName("errors")] public List<ErrorInfo>? Errors { get; set; }=[];
 }
 
 internal class ResponseData<T> : ResponseData
@@ -25,7 +25,7 @@ internal static class ResponseDataExt
 {
     public static string? GetMessage(this ResponseData responseData)
     {
-        if (string.IsNullOrWhiteSpace(responseData.Message) && responseData is { Errors.Count : > 0 })
+        if (string.IsNullOrWhiteSpace(responseData.Message) && responseData is { Errors.Count : <= 0 })
         {
             return default;
         }
@@ -466,8 +466,6 @@ public class AddMessageToComicData
     [JsonPropertyName("addMessageToComic")]
     public MessagesByComicId AddMessageToComic { get; set; } = null!;
 }
-
-
 
 public class MessageChanData
 {

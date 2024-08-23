@@ -157,12 +157,13 @@
 
                             CornerRadius="4"
                             Grid.Column="2"
-                            Command="{Binding ToggleFavoriteCommand}"
+                            Command="{Binding ToggleFavouriteCommand}"
+                            CommandParameter="{Binding MangaInfoVO}"
                             IsChecked="{Binding IsFavorite,Mode=OneWay}"
                             HorizontalAlignment="Center">
                             <Panel>
                                 <TextBlock Margin="50,-5,-5,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                           Text="{Binding FavoriteCount}" />
+                                           Text="{Binding MangaInfoVO.FavoriteCount}" />
                                 <TextBlock Text="喜爱" HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Panel>
@@ -224,7 +225,8 @@
                 Classes="BoxShadow"
                 HorizontalAlignment="Stretch"
                 Margin="20">
-                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}"
+                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                               
                                ItemsSource="{Binding RecommendMangaInfoList}">
                     <ItemsRepeater.Layout>
                         <UniformGridLayout

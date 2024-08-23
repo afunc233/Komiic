@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts.Services;
+using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Model;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
@@ -27,12 +29,14 @@ public partial class MangeDetailPageViewModel(
     IMessenger messenger,
     IMangaDetailDataService mangaDetailDataService,
     IAccountService accountService,
+    IMangaInfoVOService mangaInfoVOService,
     ILogger<MangeDetailPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     public override string Title => "漫画详情";
 
     [ObservableProperty] private MangaInfo _mangaInfo = null!;
+    [ObservableProperty] private MangaInfoVO _mangaInfoVO = null!;
 
     [ObservableProperty] private int _messageCount;
 
@@ -42,11 +46,10 @@ public partial class MangeDetailPageViewModel(
 
     [ObservableProperty] private bool _isFavorite;
 
-    [ObservableProperty] private int _favoriteCount;
 
     public ObservableCollection<FolderVm> MyFolders { get; } = [];
 
-    public ObservableCollection<MangaInfo> RecommendMangaInfoList { get; } = [];
+    public ObservableCollection<MangaInfoVO> RecommendMangaInfoList { get; } = [];
 
     public ObservableCollection<GroupChaptersByComicId> GroupingChaptersByComicIdList { get; } = [];
 
@@ -128,47 +131,14 @@ public partial class MangeDetailPageViewModel(
         }
     }
 
-    [RelayCommand]
-    private async Task ToggleFavorite()
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task ToggleFavourite(MangaInfoVO mangaInfoVO)
     {
         await Task.CompletedTask;
 
-        var account = accountService.AccountData;
-        if (account is null)
-        {
-            var result = await messenger.Send(new OpenLoginDialogMessage());
-            if (result)
-            {
-                account = accountService.AccountData;
-            }
-        }
-
-        if (account is not null)
-        {
-            if (IsFavorite)
-            {
-                var removeResult = await mangaDetailDataService.RemoveFavorite(MangaInfo.Id);
-                if (removeResult is { ErrorMessage: null } and { Data: not null })
-                {
-                    if (removeResult.Data ?? false)
-                    {
-                        FavoriteCount--;
-                        IsFavorite = false;
-                        account.FavoriteComicIds.Remove(MangaInfo.Id);
-                    }
-                }
-            }
-            else
-            {
-                var favoriteData = await mangaDetailDataService.AddFavorite(MangaInfo.Id);
-                if (favoriteData is { Data: not null })
-                {
-                    FavoriteCount++;
-                    IsFavorite = true;
-                    account.FavoriteComicIds.Add(favoriteData.Data.ComicId);
-                }
-            }
-        }
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        messenger.Send(
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
     }
 
     [RelayCommand]
@@ -179,14 +149,14 @@ public partial class MangeDetailPageViewModel(
 
         content.MangeDetailPageViewModel = this;
 
-        var result = await messenger.Send(new OpenDialogMessage<bool>(content));
-        
+        await messenger.Send(new OpenDialogMessage<bool>(content));
     }
 
     protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
 
+        MangaInfoVO = mangaInfoVOService.GetMangaInfoVO(MangaInfo);
         // 传过来有值了，所以应该不需要获取数据了
         // await komiicQueryApi.GetMangaInfoById(MangaInfo.id);
 
@@ -225,10 +195,11 @@ public partial class MangeDetailPageViewModel(
         var recommendMangaInfosById = await mangaDetailDataService.GetRecommendMangaInfosById(MangaInfo.Id);
         if (recommendMangaInfosById is { Data.Count: > 0 })
         {
-            recommendMangaInfosById.Data.ForEach(RecommendMangaInfoList.Add);
+            foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(recommendMangaInfosById.Data))
+            {
+                RecommendMangaInfoList.Add(mangaInfoVO);
+            }
         }
-
-        FavoriteCount = MangaInfo.FavoriteCount;
 
         accountService.AccountChanged -= AccountServiceOnAccountChanged;
         accountService.AccountChanged += AccountServiceOnAccountChanged;

@@ -56,7 +56,8 @@
         </ListBox>
 
         <ScrollViewer>
-            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoTemplate}" ItemsSource="{Binding AllMangaInfos}" />
+            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}" ItemsSource="{Binding AllMangaInfos}" />
+            
             <Interaction.Behaviors>
                 <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadCategoryMangeCommand}" />
             </Interaction.Behaviors>
