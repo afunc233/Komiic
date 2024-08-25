@@ -24,7 +24,7 @@ public partial class AllMangaPageViewModel(
     ILogger<AllMangaPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    [NotifyCanExecuteChangedFor(nameof(LoadCategoryMangeCommand))] [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoadCategoryMangaCommand))] [ObservableProperty]
     private bool _hasMore = true;
 
     [ObservableProperty] private Category? _wantSelectedCategory;
@@ -62,7 +62,7 @@ public partial class AllMangaPageViewModel(
             return;
         }
 
-        await LoadMange(true);
+        await LoadManga(true);
     }
 
     async partial void OnStateChanged(string? value)
@@ -72,7 +72,7 @@ public partial class AllMangaPageViewModel(
             return;
         }
 
-        await LoadMange(true);
+        await LoadManga(true);
     }
 
     async partial void OnOrderByChanged(string value)
@@ -82,7 +82,7 @@ public partial class AllMangaPageViewModel(
             return;
         }
 
-        await LoadMange(true);
+        await LoadManga(true);
     }
 
     protected override async Task OnNavigatedTo()
@@ -103,9 +103,9 @@ public partial class AllMangaPageViewModel(
 
 
     [RelayCommand(CanExecute = nameof(HasMore))]
-    private async Task LoadCategoryMange()
+    private async Task LoadCategoryManga()
     {
-        await SafeLoadData(async () => await LoadMange());
+        await SafeLoadData(async () => await LoadManga());
     }
 
     [RelayCommand]
@@ -128,7 +128,7 @@ public partial class AllMangaPageViewModel(
     private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 
-    private async Task LoadMange(bool clearBefore = false)
+    private async Task LoadManga(bool clearBefore = false)
     {
         bool success = await _semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(1));
         if (!success)

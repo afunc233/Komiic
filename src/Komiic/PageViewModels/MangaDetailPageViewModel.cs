@@ -24,13 +24,13 @@ public record GroupChaptersByComicId
     public List<ChaptersByComicId> Chapters { get; init; } = null!;
 }
 
-public partial class MangeDetailPageViewModel(
+public partial class MangaDetailPageViewModel(
     IServiceProvider serviceProvider,
     IMessenger messenger,
     IMangaDetailDataService mangaDetailDataService,
     IAccountService accountService,
     IMangaInfoVOService mangaInfoVOService,
-    ILogger<MangeDetailPageViewModel> logger)
+    ILogger<MangaDetailPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
     public override string Title => "漫画详情";
@@ -147,7 +147,7 @@ public partial class MangeDetailPageViewModel(
         await Task.CompletedTask;
         var content = serviceProvider.GetRequiredService<ComicMessagePageViewModel>();
 
-        content.MangeDetailPageViewModel = this;
+        content.MangaDetailPageViewModel = this;
 
         await messenger.Send(new OpenDialogMessage<bool>(content));
     }
@@ -259,7 +259,7 @@ public partial class MangeDetailPageViewModel(
         }
     }
 
-    public override NavBarType NavBarType => NavBarType.MangeDetail;
+    public override NavBarType NavBarType => NavBarType.MangaDetail;
 }
 
 public partial class FolderVm(Folder folder) : ObservableObject

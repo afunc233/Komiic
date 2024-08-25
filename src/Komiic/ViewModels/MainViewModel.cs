@@ -202,7 +202,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
 
     public void Receive(OpenMangaMessage message)
     {
-        var viewModel = _serviceProvider.GetRequiredService<MangeDetailPageViewModel>();
+        var viewModel = _serviceProvider.GetRequiredService<MangaDetailPageViewModel>();
 
         viewModel.MangaInfo = message.MangaInfo;
         SelectedContent = viewModel;

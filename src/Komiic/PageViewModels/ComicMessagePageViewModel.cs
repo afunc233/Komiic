@@ -25,7 +25,7 @@ public partial class ComicMessagePageViewModel(
 
     public override string Title => "漫画留言";
 
-    [ObservableProperty] private MangeDetailPageViewModel _mangeDetailPageViewModel = null!;
+    [ObservableProperty] private MangaDetailPageViewModel _mangaDetailPageViewModel = null!;
 
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(LoadMoreDataCommand))]
     private bool _hasMore;
@@ -49,7 +49,7 @@ public partial class ComicMessagePageViewModel(
 
         if (HasLogin)
         {
-            var mangaInfoId = MangeDetailPageViewModel.MangaInfo.Id;
+            var mangaInfoId = MangaDetailPageViewModel.MangaInfo.Id;
 
             var messageVotesByComicIdData = await mangaDetailDataService.MessageVotesByComicId(mangaInfoId);
             if (messageVotesByComicIdData is { Data.Count: > 0 })
@@ -65,7 +65,7 @@ public partial class ComicMessagePageViewModel(
     [RelayCommand(CanExecute = nameof(CanLoadMore))]
     private async Task LoadMoreData()
     {
-        var mangaInfoId = MangeDetailPageViewModel.MangaInfo.Id;
+        var mangaInfoId = MangaDetailPageViewModel.MangaInfo.Id;
         if (string.IsNullOrWhiteSpace(mangaInfoId))
         {
             HasMore = false;
@@ -178,7 +178,7 @@ public partial class ComicMessagePageViewModel(
         }
 
         await Task.CompletedTask;
-        var mangaInfoId = MangeDetailPageViewModel.MangaInfo.Id;
+        var mangaInfoId = MangaDetailPageViewModel.MangaInfo.Id;
 
         var sendMessageText = SendMessageText;
         if (string.IsNullOrEmpty(sendMessageText))

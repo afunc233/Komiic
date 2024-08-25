@@ -2,9 +2,9 @@
 
 namespace Komiic.Pages;
 
-public partial class MangeDetailPage : UserControl
+public partial class MangaDetailPage : UserControl
 {
-    public MangeDetailPage()
+    public MangaDetailPage()
     {
         InitializeComponent();
     }

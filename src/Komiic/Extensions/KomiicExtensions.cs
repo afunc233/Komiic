@@ -47,7 +47,7 @@ public static class KomiicExtensions
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<RecentUpdatePageViewModel>();
 
-        services.AddTransient<MangeDetailPageViewModel>();
+        services.AddTransient<MangaDetailPageViewModel>();
         services.AddTransient<MangaViewerPageViewModel>();
         services.AddTransient<HotPageViewModel>();
         services.AddTransient<AllMangaPageViewModel>();
@@ -73,7 +73,7 @@ public static class KomiicExtensions
             services.AddSingleton<IImageCacheService, DiskImageCacheService>();
         }
 
-        services.AddTransient<IMangeImageLoader, MangeImageLoader>();
+        services.AddTransient<IMangaImageLoader, MangaImageLoader>();
     }
 
 

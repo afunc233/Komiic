@@ -9,7 +9,7 @@ using Komiic.Messages;
 namespace Komiic.ViewModels;
 
 public partial class HeaderViewModel
-    : RecipientViewModelBase, IRecipient<LoadMangeImageDataMessage>
+    : RecipientViewModelBase, IRecipient<LoadMangaImageDataMessage>
 {
     private readonly IAccountService _accountService;
 
@@ -74,7 +74,7 @@ public partial class HeaderViewModel
 
     private Task? _loadDataTask;
 
-    public async void Receive(LoadMangeImageDataMessage message)
+    public async void Receive(LoadMangaImageDataMessage message)
     {
         _loadDataTask ??= LoadData().ContinueWith(_ => { _loadDataTask = null; });
         if (_loadDataTask != null)

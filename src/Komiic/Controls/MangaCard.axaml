@@ -1,0 +1,144 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+                    x:DataType="controls:MangaCard"
+                    xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                    xmlns:materialEnums="clr-namespace:Material.Icons;assembly=Material.Icons"
+                    xmlns:controls="using:Komiic.Controls">
+    <Design.PreviewWith>
+        <controls:MangaCard />
+    </Design.PreviewWith>
+
+    <Thickness x:Key="Margin3">3,3,3,3</Thickness>
+    <Thickness x:Key="Margin2">2,2,2,2</Thickness>
+    <x:Double x:Key="Double340">335</x:Double>
+    <x:Double x:Key="Double265">265</x:Double>
+    <x:Double x:Key="Double210">205</x:Double>
+    <x:Double x:Key="Double155">155</x:Double>
+
+    <ControlTheme x:Key="{x:Type controls:MangaCard}" TargetType="{x:Type controls:MangaCard}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    ClipToBounds="False"
+                    Background="Transparent"
+                    Classes="BoxShadow PointeroverBoxShadow"
+                    DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                    Cursor="Hand"
+                    x:Name="ItemRootBorder"
+                    Height="{OnFormFactor Default=330,
+                                  Mobile=260}"
+                    Margin="{OnFormFactor Default=5,
+                                  Mobile=3}"
+                    Width="{OnFormFactor Default=200,
+                                 Mobile=150}"
+                    d:DesignWidth="50">
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleX="1.01" ScaleY="1.01"></ScaleTransform>
+                    </Border.RenderTransform>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="PointerReleased">
+                            <InvokeCommandAction
+                                Command="{Binding OpenMangaCommand,RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{Binding MangaInfoVO.MangaInfo}" />
+                        </EventTriggerBehavior>
+
+                        <DataTriggerBehavior Binding="{Binding  MangaInfoVO.IsFavourite}" Value="True">
+                            <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
+                                                  Value="{x:Static materialEnums:MaterialIconKind.Heart}" />
+                        </DataTriggerBehavior>
+                        <DataTriggerBehavior
+                            Binding="{Binding RelativeSource={RelativeSource TemplatedParent} ,Path= MangaInfoVO.IsFavourite}"
+                            ComparisonCondition="NotEqual"
+                            Value="True">
+                            <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
+                                                  Value="{x:Static materialEnums:MaterialIconKind.HeartOutline}" />
+                        </DataTriggerBehavior>
+                    </Interaction.Behaviors>
+                    <StackPanel Margin="{OnFormFactor Default=8, Mobile=3}">
+                        <Panel
+                            Background="Transparent"
+                            Height="{OnFormFactor Default=240,
+                                          Mobile=180}"
+                            Width="{OnFormFactor Default=180,
+                                         Mobile=120}">
+                            <Border ClipToBounds="True" CornerRadius="6">
+                                <Image
+                                    asyncImageLoader:ImageLoader.Source="{Binding MangaInfoVO.MangaInfo.ImageUrl,RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Border>
+
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#9FFFFFFF"
+                                    CornerRadius="6">
+                                <TextBlock Text="{Binding MangaInfoVO.MangaInfo.Views}" Margin="3" />
+                            </Border>
+
+                            <Button
+                                Command="{TemplateBinding ToggleFavouriteCommand}"
+                                CommandParameter="{TemplateBinding MangaInfoVO}"
+                                HorizontalAlignment="Right" Padding="3" VerticalAlignment="Top"
+                                Background="#9FFFFFFF"
+                                CornerRadius="6">
+                                <StackPanel Orientation="Horizontal">
+                                    <material:MaterialIcon x:Name="Icon" Foreground="#F44337" />
+                                    <TextBlock Text="{Binding MangaInfoVO.FavoriteCount}" />
+                                </StackPanel>
+                            </Button>
+                        </Panel>
+                        <TextBlock
+                            FontWeight="Bold"
+                            Margin="0,5"
+                            Text="{Binding MangaInfoVO.MangaInfo.Title}"
+                            TextAlignment="Center"
+                            TextTrimming="CharacterEllipsis" />
+                        <DockPanel>
+                            <TextBlock
+                                Background="MediumBlue"
+                                Padding="5,2"
+                                Text="連載">
+                                <!-- <TextBlock.Styles> -->
+                                <!--     <Style Selector="TextBlock.ONGOING"> -->
+                                <!--         <Setter Property="Text" Value="連載" /> -->
+                                <!--     </Style> -->
+                                <!-- </TextBlock.Styles> -->
+                            </TextBlock>
+                            <StackPanel Background="CornflowerBlue" Orientation="Horizontal">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding MangaInfoVO.MangaInfo.LastChapterUpdate, StringFormat={}{0}話}"
+                                    TextTrimming="CharacterEllipsis"
+                                    VerticalAlignment="Center" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Text="|"
+                                    VerticalAlignment="Center" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding MangaInfoVO.MangaInfo.LastBookUpdate , StringFormat={}{0}卷}"
+                                    TextTrimming="CharacterEllipsis"
+                                    VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DockPanel>
+                        <TextBlock
+                            Background="#80808080"
+                            Margin="0,2"
+                            Padding="10,3"
+                            Text="{Binding MangaInfoVO.MangaInfo.DateUpdated}"
+                            TextAlignment="Left"
+                            TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#ItemRootBorder">
+            <Setter Property="Margin"
+                    Value="{OnFormFactor Default={StaticResource Margin3},Mobile={StaticResource Margin2}}" />
+            <Setter Property="Height"
+                    Value="{OnFormFactor Default={ StaticResource Double340},Mobile={StaticResource Double265}}" />
+            <Setter Property="Width"
+                    Value="{OnFormFactor Default={StaticResource Double210},Mobile={StaticResource Double155}}" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>
