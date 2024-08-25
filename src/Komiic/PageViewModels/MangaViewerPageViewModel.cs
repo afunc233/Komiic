@@ -14,7 +14,7 @@ namespace Komiic.PageViewModels;
 
 public partial class MangaViewerPageViewModel(
     IMangaViewerDataService mangaViewerDataService,
-    IMangeImageLoader imageLoader,
+    IMangaImageLoader imageLoader,
     IMessenger messenger,
     ILogger<MangaViewerPageViewModel> logger)
     : AbsPageViewModel(logger)
@@ -27,8 +27,8 @@ public partial class MangaViewerPageViewModel(
 
     [ObservableProperty] private int _historyPage = int.MinValue;
 
-    [ObservableProperty] private IMangeImageLoader _imageLoader = imageLoader;
-    public ObservableCollection<MangeImageData> ImagesByChapterList { get; } = [];
+    [ObservableProperty] private IMangaImageLoader _imageLoader = imageLoader;
+    public ObservableCollection<MangaImageData> ImagesByChapterList { get; } = [];
 
     public override NavBarType NavBarType => NavBarType.MangaViewer;
     public override string Title => "";
@@ -63,29 +63,29 @@ public partial class MangaViewerPageViewModel(
         ImageLoader.ImageLoaded += ImageLoaderOnImageLoaded;
     }
 
-    private async void ImageLoaderOnImageLoaded(object? sender, KvValue<MangeImageData, bool> mangeImage)
+    private async void ImageLoaderOnImageLoaded(object? sender, KvValue<MangaImageData, bool> mangaImage)
     {
-        if (!mangeImage.Item2 && HistoryPage == int.MinValue)
+        if (!mangaImage.Item2 && HistoryPage == int.MinValue)
         {
             HistoryPage = 0;
             return;
         }
 
-        var historyPage = ImagesByChapterList.IndexOf(mangeImage.Item1);
+        var historyPage = ImagesByChapterList.IndexOf(mangaImage.Item1);
         if (historyPage == HistoryPage)
         {
             return;
         }
 
-        var data = await mangaViewerDataService.AddReadComicHistory(mangeImage.Item1.MangaInfo.Id,
-            mangeImage.Item1.Chapter.Id,
+        var data = await mangaViewerDataService.AddReadComicHistory(mangaImage.Item1.MangaInfo.Id,
+            mangaImage.Item1.Chapter.Id,
             historyPage);
         if (data.Data is not null)
         {
         }
 
-        if (mangeImage.Item2)
-            messenger.Send(new LoadMangeImageDataMessage(mangeImage.Item1));
+        if (mangaImage.Item2)
+            messenger.Send(new LoadMangaImageDataMessage(mangaImage.Item1));
     }
 
     protected override async Task OnNavigatedFrom()

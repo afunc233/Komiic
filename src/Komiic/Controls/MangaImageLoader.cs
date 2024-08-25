@@ -9,20 +9,20 @@ using Komiic.Data;
 
 namespace Komiic.Controls;
 
-internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheService cacheService) : IMangeImageLoader
+internal class MangaImageLoader(IHttpClientFactory clientFactory, IImageCacheService cacheService) : IMangaImageLoader
 {
-    async Task<Bitmap?> IMangeImageLoader.ProvideImageAsync(MangeImageData imageData)
+    async Task<Bitmap?> IMangaImageLoader.ProvideImageAsync(MangaImageData imageData)
     {
         var bitmap = await LoadAsync(imageData).ConfigureAwait(false);
         return bitmap;
     }
 
-    public event EventHandler<KvValue<MangeImageData, bool>>? ImageLoaded;
+    public event EventHandler<KvValue<MangaImageData, bool>>? ImageLoaded;
 
-    private async Task<Bitmap?> LoadAsync(MangeImageData mangeImageData)
+    private async Task<Bitmap?> LoadAsync(MangaImageData mangaImageData)
     {
         await Task.CompletedTask;
-        string url = mangeImageData.GetImageUrl();
+        string url = mangaImageData.GetImageUrl();
         string? localUrl = cacheService.GetLocalImageUrl(url);
 
         if (string.IsNullOrWhiteSpace(localUrl))
@@ -30,7 +30,7 @@ internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
             using var httpClient = clientFactory.CreateClient(KomiicConst.Komiic);
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Referrer = mangeImageData.GetReferrer();
+            request.Headers.Referrer = mangaImageData.GetReferrer();
 
             var response = await httpClient.SendAsync(request).ConfigureAwait(false);
             byte[] dataArr = await response.Content.ReadAsByteArrayAsync();
@@ -40,11 +40,11 @@ internal class MangeImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
 
             await cacheService.SetLocalImage(url, dataArr);
 
-            ImageLoaded?.Invoke(this, new(mangeImageData, true));
+            ImageLoaded?.Invoke(this, new(mangaImageData, true));
             return bitmap;
         }
 
-        ImageLoaded?.Invoke(this, new(mangeImageData, false));
+        ImageLoaded?.Invoke(this, new(mangaImageData, false));
 
         return new(localUrl);
     }

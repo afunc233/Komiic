@@ -2,8 +2,8 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d"
-    x:Class="Komiic.Pages.MangeDetailPage"
-    x:DataType="vm:MangeDetailPageViewModel"
+    x:Class="Komiic.Pages.MangaDetailPage"
+    x:DataType="vm:MangaDetailPageViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -52,7 +52,7 @@
                                     <ItemsControl.DataTemplates>
                                         <DataTemplate DataType="model:Author">
                                             <Button
-                                                Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).OpenAuthorCommand, FallbackValue={x:Null}}"
+                                                Command="{Binding $parent[UserControl].((vm:MangaDetailPageViewModel)DataContext).OpenAuthorCommand, FallbackValue={x:Null}}"
                                                 CommandParameter="{Binding}"
                                                 Content="{Binding Name}" />
                                         </DataTemplate>
@@ -72,7 +72,7 @@
                                     <ItemsControl.DataTemplates>
                                         <DataTemplate DataType="model:Category">
                                             <Button
-                                                Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).OpenCategoryCommand, FallbackValue={x:Null}}"
+                                                Command="{Binding $parent[UserControl].((vm:MangaDetailPageViewModel)DataContext).OpenCategoryCommand, FallbackValue={x:Null}}"
                                                 CommandParameter="{Binding}"
                                                 Content="{Binding Name}" />
                                         </DataTemplate>
@@ -122,14 +122,14 @@
                                                                 Binding="{Binding #folderCheckBox.IsChecked}"
                                                                 Value="True">
                                                                 <InvokeCommandAction
-                                                                    Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).AddToFolderCommand, FallbackValue={x:Null}}"
+                                                                    Command="{Binding $parent[UserControl].((vm:MangaDetailPageViewModel)DataContext).AddToFolderCommand, FallbackValue={x:Null}}"
                                                                     CommandParameter="{Binding Folder}" />
                                                             </DataTriggerBehavior>
                                                             <DataTriggerBehavior
                                                                 Binding="{Binding #folderCheckBox.IsChecked}"
                                                                 Value="False">
                                                                 <InvokeCommandAction
-                                                                    Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).RemoveFromFolderCommand, FallbackValue={x:Null}}"
+                                                                    Command="{Binding $parent[UserControl].((vm:MangaDetailPageViewModel)DataContext).RemoveFromFolderCommand, FallbackValue={x:Null}}"
                                                                     CommandParameter="{Binding Folder}" />
                                                             </DataTriggerBehavior>
                                                         </Interaction.Behaviors>
@@ -188,7 +188,7 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type model:ChaptersByComicId}">
                             <Button
-                                Command="{Binding $parent[UserControl].((vm:MangeDetailPageViewModel)DataContext).OpenMangaViewerCommand, FallbackValue={x:Null}}"
+                                Command="{Binding $parent[UserControl].((vm:MangaDetailPageViewModel)DataContext).OpenMangaViewerCommand, FallbackValue={x:Null}}"
                                 CommandParameter="{Binding}"
                                 Margin="4">
                                 <StackPanel>

@@ -3,10 +3,10 @@
     xmlns:controls="using:Komiic.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <controls:MangeImageView />
+        <controls:MangaImageView />
     </Design.PreviewWith>
 
-    <Style Selector="controls|MangeImageView">
+    <Style Selector="controls|MangaImageView">
         <!--  Set Defaults  -->
         <Setter Property="Template">
             <ControlTemplate>

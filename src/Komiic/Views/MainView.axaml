@@ -91,8 +91,8 @@
                     </ToggleButton>
                     <CaptionButtons
                         DockPanel.Dock="Right"
-                        IsVisible="{OnFormFactor Default=True,
-                                                 Mobile=False}"
+                        IsVisible="{OnPlatform Default=True,
+                                                 Android=False,iOS=False,Browser=False}"
                         x:Name="CaptionButtons">
                         <CaptionButtons.Styles>
                             <Style Selector="CaptionButtons">

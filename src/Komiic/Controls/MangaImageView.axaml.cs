@@ -7,24 +7,24 @@ using Komiic.Data;
 
 namespace Komiic.Controls;
 
-public class MangeImageView : TemplatedControl
+public class MangaImageView : TemplatedControl
 {
     // ReSharper disable once InconsistentNaming
     private const string PART_Image = nameof(PART_Image);
 
-    public static readonly StyledProperty<MangeImageData?> MangeImageDataProperty =
-        AvaloniaProperty.Register<MangeImageView, MangeImageData?>(nameof(MangeImageData));
+    public static readonly StyledProperty<MangaImageData?> MangaImageDataProperty =
+        AvaloniaProperty.Register<MangaImageView, MangaImageData?>(nameof(MangaImageData));
 
-    public MangeImageData? MangeImageData
+    public MangaImageData? MangaImageData
     {
-        get => GetValue(MangeImageDataProperty);
-        set => SetValue(MangeImageDataProperty, value);
+        get => GetValue(MangaImageDataProperty);
+        set => SetValue(MangaImageDataProperty, value);
     }
 
-    public static readonly StyledProperty<IMangeImageLoader?> LoaderProperty =
-        AvaloniaProperty.Register<MangeImageView, IMangeImageLoader?>(nameof(Loader));
+    public static readonly StyledProperty<IMangaImageLoader?> LoaderProperty =
+        AvaloniaProperty.Register<MangaImageView, IMangaImageLoader?>(nameof(Loader));
 
-    public IMangeImageLoader? Loader
+    public IMangaImageLoader? Loader
     {
         get => GetValue(LoaderProperty);
         set => SetValue(LoaderProperty, value);
@@ -32,7 +32,7 @@ public class MangeImageView : TemplatedControl
 
 
     public static readonly StyledProperty<bool> IsLoadingProperty =
-        AvaloniaProperty.Register<MangeImageView, bool>(nameof(IsLoading));
+        AvaloniaProperty.Register<MangaImageView, bool>(nameof(IsLoading));
 
     public bool IsLoading
     {
@@ -41,18 +41,15 @@ public class MangeImageView : TemplatedControl
     }
 
 
-    static MangeImageView()
+    static MangaImageView()
     {
-        MangeImageDataProperty.Changed.AddClassHandler<MangeImageView>((x, _) =>
+        MangaImageDataProperty.Changed.AddClassHandler<MangaImageView>((x, _) =>
             x.SetSize());
-
-        // LoaderProperty.Changed.AddClassHandler<MangeImageView>((x, e) =>
-        //     x.LoadImage());
     }
 
     private void SetSize()
     {
-        if (MangeImageData == null)
+        if (MangaImageData == null)
         {
             return;
         }
@@ -62,8 +59,8 @@ public class MangeImageView : TemplatedControl
             return;
         }
 
-        _image.Width = MangeImageData.ImagesByChapterId.Width;
-        _image.Height = MangeImageData.ImagesByChapterId.Height;
+        _image.Width = MangaImageData.ImagesByChapterId.Width;
+        _image.Height = MangaImageData.ImagesByChapterId.Height;
     }
 
     private async void LoadImage()
@@ -73,7 +70,7 @@ public class MangeImageView : TemplatedControl
             return;
         }
 
-        if (MangeImageData == null)
+        if (MangaImageData == null)
         {
             return;
         }
@@ -86,7 +83,7 @@ public class MangeImageView : TemplatedControl
         IsLoading = true;
         try
         {
-            var bitmap = await Loader.ProvideImageAsync(MangeImageData);
+            var bitmap = await Loader.ProvideImageAsync(MangaImageData);
 
             if (bitmap is not null)
             {

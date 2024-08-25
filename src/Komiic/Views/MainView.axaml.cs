@@ -45,7 +45,7 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
 
         if (topLevel is not null)
         {
-            if (topLevel is Window window)
+            if (!OperatingSystem.IsBrowser() && topLevel is Window window)
             {
                 CaptionButtons.Attach(window);
             }

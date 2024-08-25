@@ -14,11 +14,11 @@
 
     <UserControl.DataTemplates>
         <!--    -->
-        <DataTemplate DataType="{x:Type data:MangeImageData}">
-            <controls:MangeImageView
+        <DataTemplate DataType="{x:Type data:MangaImageData}">
+            <controls:MangaImageView
                 HorizontalAlignment="Center"
                 Loader="{Binding $parent[UserControl].((pageViewModels:MangaViewerPageViewModel)DataContext).ImageLoader, FallbackValue={x:Null}}"
-                MangeImageData="{Binding}"
+                MangaImageData="{Binding}"
                 Margin="20" />
         </DataTemplate>
     </UserControl.DataTemplates>

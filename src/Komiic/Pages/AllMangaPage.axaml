@@ -59,7 +59,7 @@
             <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}" ItemsSource="{Binding AllMangaInfos}" />
             
             <Interaction.Behaviors>
-                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadCategoryMangeCommand}" />
+                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadCategoryMangaCommand}" />
             </Interaction.Behaviors>
         </ScrollViewer>
     </DockPanel>
