@@ -17,12 +17,16 @@ public partial class AuthorsPageViewModel(
     ILogger<AuthorsPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenAuthorViewModel
 {
-    private int _pageIndex;
-
     [NotifyCanExecuteChangedFor(nameof(LoadAllAuthorsCommand))] [ObservableProperty]
     private bool _hasMore = true;
 
+    private int _pageIndex;
+
     public ObservableCollection<Author> AllAuthors { get; } = [];
+
+    public override NavBarType NavBarType => NavBarType.Authors;
+
+    public override string Title => "作者列表";
 
     [RelayCommand(CanExecute = nameof(HasMore))]
     private async Task LoadAllAuthors()
@@ -54,8 +58,4 @@ public partial class AuthorsPageViewModel(
     {
         await Task.CompletedTask;
     }
-
-    public override NavBarType NavBarType => NavBarType.Authors;
-
-    public override string Title => "作者列表";
 }

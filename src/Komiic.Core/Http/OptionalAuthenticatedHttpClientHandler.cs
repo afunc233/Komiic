@@ -1,10 +1,12 @@
-﻿namespace Komiic.Core.Http;
+﻿using System.Net.Http.Headers;
+
+namespace Komiic.Core.Http;
 
 public class OptionalAuthenticatedHttpClientHandler(
     Func<HttpRequestMessage, CancellationToken, Task<string?>> getToken)
-    : HttpClientHandler 
+    : HttpClientHandler
 {
-    readonly Func<HttpRequestMessage, CancellationToken, Task<string?>> _getToken =
+    private readonly Func<HttpRequestMessage, CancellationToken, Task<string?>> _getToken =
         getToken ?? throw new ArgumentNullException(nameof(getToken));
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
@@ -14,14 +16,14 @@ public class OptionalAuthenticatedHttpClientHandler(
         var auth = request.Headers.Authorization;
         if (auth != null)
         {
-            string? token = await _getToken(request, cancellationToken).ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(token))
+            var token = await _getToken(request, cancellationToken).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(token))
             {
-                request.Headers.Authorization = new(auth.Scheme, token);
+                request.Headers.Authorization = null;
             }
             else
             {
-                request.Headers.Authorization = null;
+                request.Headers.Authorization = new AuthenticationHeaderValue(auth.Scheme, token);
             }
         }
         else

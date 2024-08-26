@@ -5,9 +5,8 @@ namespace Komiic.Contracts.VO;
 
 public partial class MangaInfoVO(MangaInfo mangaInfo) : ObservableObject
 {
-    [ObservableProperty] private bool _isFavourite;
-
     [ObservableProperty] private int _favoriteCount = mangaInfo.FavoriteCount;
+    [ObservableProperty] private bool _isFavourite;
 
     public MangaInfo MangaInfo { get; } = mangaInfo;
 }

@@ -10,7 +10,8 @@
         <!-- Set Defaults -->
         <Setter Property="Template">
             <ControlTemplate>
-                <ItemsControl ItemsSource="{TemplateBinding ItemsSource}" HorizontalAlignment="Center" ItemTemplate="{TemplateBinding ItemTemplate}">
+                <ItemsControl ItemsSource="{TemplateBinding ItemsSource}" HorizontalAlignment="Center"
+                              ItemTemplate="{TemplateBinding ItemTemplate}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />

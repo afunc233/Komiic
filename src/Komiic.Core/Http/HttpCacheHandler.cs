@@ -11,13 +11,11 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
         var cacheKey = string.Empty;
         try
         {
-#if !DEBUG
-      
             if (request.Headers.TryGetValues(KomiicConst.EnableCacheHeader, out var cacheValues))
             {
                 // 移除無關 header
                 request.Headers.Remove(KomiicConst.EnableCacheHeader);
-                string? cacheTimeSpanStr = cacheValues.FirstOrDefault();
+                var cacheTimeSpanStr = cacheValues.FirstOrDefault();
 
                 if (!string.IsNullOrWhiteSpace(cacheTimeSpanStr))
                 {
@@ -34,11 +32,11 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
                     cacheKey = await (request.Content?.ReadAsStringAsync(cancellationToken) ??
                                       Task.FromResult($"{request.Method}.{request.RequestUri}.{request.Headers}"));
 
-                    string? localJson = await cacheService.GetLocalCacheStr(cacheKey, cacheTimeSpan);
+                    var localJson = await cacheService.GetLocalCacheStr(cacheKey, cacheTimeSpan);
 
                     if (!string.IsNullOrWhiteSpace(localJson))
                     {
-                        return new()
+                        return new HttpResponseMessage
                         {
                             RequestMessage = request,
                             Content = new StringContent(localJson)
@@ -46,7 +44,6 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
                     }
                 }
             }
-#endif
         }
         catch (Exception e)
         {
@@ -59,9 +56,12 @@ public class HttpCacheHandler(ICacheService cacheService, ILogger<HttpCacheHandl
         }
 
         var response = await base.SendAsync(request, cancellationToken);
-        if (!response.IsSuccessStatusCode) return response;
+        if (!response.IsSuccessStatusCode)
+        {
+            return response;
+        }
 
-        string responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
+        var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(responseJson))
         {
             await cacheService.SetLocalCache(cacheKey, responseJson);

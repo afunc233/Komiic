@@ -41,7 +41,7 @@
         <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0-build20240722-01"/>
 
         <!-- Icons -->
-        <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10"/>
 
     </ItemGroup>
 

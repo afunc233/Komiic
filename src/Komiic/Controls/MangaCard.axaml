@@ -36,7 +36,7 @@
                                  Mobile=150}"
                     d:DesignWidth="50">
                     <Border.RenderTransform>
-                        <ScaleTransform ScaleX="1.01" ScaleY="1.01"></ScaleTransform>
+                        <ScaleTransform ScaleX="1.01" ScaleY="1.01" />
                     </Border.RenderTransform>
                     <Interaction.Behaviors>
                         <EventTriggerBehavior EventName="PointerReleased">

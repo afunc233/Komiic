@@ -19,15 +19,14 @@ public partial class MangaViewerPageViewModel(
     ILogger<MangaViewerPageViewModel> logger)
     : AbsPageViewModel(logger)
 {
-    [ObservableProperty] private MangaInfo? _mangaInfo;
-
     [ObservableProperty] private ChaptersByComicId? _chapter;
-
-    [ObservableProperty] private bool _isLoading;
 
     [ObservableProperty] private int _historyPage = int.MinValue;
 
     [ObservableProperty] private IMangaImageLoader _imageLoader = imageLoader;
+
+    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private MangaInfo? _mangaInfo;
     public ObservableCollection<MangaImageData> ImagesByChapterList { get; } = [];
 
     public override NavBarType NavBarType => NavBarType.MangaViewer;
@@ -45,7 +44,7 @@ public partial class MangaViewerPageViewModel(
                 {
                     foreach (var imagesByChapterId in imagesByChapterIdData.Data)
                     {
-                        ImagesByChapterList.Add(new(MangaInfo, Chapter, imagesByChapterId));
+                        ImagesByChapterList.Add(new MangaImageData(MangaInfo, Chapter, imagesByChapterId));
                     }
                 }
 
@@ -85,7 +84,9 @@ public partial class MangaViewerPageViewModel(
         }
 
         if (mangaImage.Item2)
+        {
             messenger.Send(new LoadMangaImageDataMessage(mangaImage.Item1));
+        }
     }
 
     protected override async Task OnNavigatedFrom()

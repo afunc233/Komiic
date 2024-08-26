@@ -28,9 +28,12 @@ internal class AccountService(
             CacheUserName = await cacheService.GetLocalCacheStr(KomiicConst.KomiicUsername);
             CachePassword = await cacheService.GetLocalCacheStr(KomiicConst.KomiicPassword);
 
-            string? token = await tokenService.GetToken();
+            var token = await tokenService.GetToken();
 
-            if (string.IsNullOrWhiteSpace(token)) return;
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return;
+            }
 
             var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
             if (accountData is { Data: not null })
@@ -61,14 +64,14 @@ internal class AccountService(
             await tokenService.SetToken(tokenResponseData.Content.Token);
             await LoadAccount();
             await cookieService.SaveCookies();
-            return new()
+            return new ApiResponseData<bool?>
             {
                 Data = true,
                 ErrorMessage = tokenResponseData.Content.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<bool?>
         {
             Data = default,
             ErrorMessage = tokenResponseData.Content?.GetMessage()
@@ -127,14 +130,14 @@ internal class AccountService(
                 }));
         if (setNextChapterModeData is { Data: not null })
         {
-            return new()
+            return new ApiResponseData<bool?>
             {
                 Data = setNextChapterModeData.Data.SetNextChapterMode,
                 ErrorMessage = setNextChapterModeData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<bool?>
         {
             Data = default,
             ErrorMessage = setNextChapterModeData.GetMessage()

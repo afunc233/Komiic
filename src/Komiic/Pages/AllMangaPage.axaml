@@ -55,6 +55,7 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
-        <controls:MangaList ItemsSource="{Binding AllMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadCategoryMangaCommand}" />
+        <controls:MangaList ItemsSource="{Binding AllMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                            LoadMoreCommand="{Binding LoadCategoryMangaCommand}" />
     </DockPanel>
 </UserControl>

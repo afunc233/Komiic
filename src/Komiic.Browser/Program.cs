@@ -10,10 +10,15 @@ namespace Komiic.Browser;
 
 internal static class Program
 {
-    private static Task Main(string[] args) => BuildAvaloniaApp()
-        .WithHarmonyOSSansSCFont()
-        .StartBrowserAppAsync("out");
+    private static Task Main(string[] args)
+    {
+        return BuildAvaloniaApp()
+            .WithHarmonyOSSansSCFont()
+            .StartBrowserAppAsync("out");
+    }
 
     private static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>();
+    {
+        return AppBuilder.Configure<App>();
+    }
 }

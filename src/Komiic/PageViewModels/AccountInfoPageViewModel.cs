@@ -11,15 +11,14 @@ namespace Komiic.PageViewModels;
 public partial class AccountInfoPageViewModel(IAccountService accountService, ILogger<AccountInfoPageViewModel> logger)
     : AbsPageViewModel(logger)
 {
-    public override NavBarType NavBarType => NavBarType.AccountInfo;
-
-    public override string Title => "賬戶信息";
-
     [ObservableProperty] private Account? _accountData;
 
     [ObservableProperty] private ImageLimit? _imageLimit;
 
     [ObservableProperty] private string? _nextChapterMode;
+    public override NavBarType NavBarType => NavBarType.AccountInfo;
+
+    public override string Title => "賬戶信息";
 
     [RelayCommand]
     private async Task ToggleNextChapterMode(string nextChapterMode)
@@ -37,7 +36,7 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
         }
         else
         {
-            string? lastNextChapterMode = NextChapterMode;
+            var lastNextChapterMode = NextChapterMode;
             NextChapterMode = null;
             NextChapterMode = lastNextChapterMode;
         }

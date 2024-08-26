@@ -15,10 +15,10 @@ public partial class LoginViewModel(
     ILogger<LoginViewModel> logger) : ViewModelBase
 {
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DoLoginCommand))]
-    private string? _username;
+    private string? _password;
 
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(DoLoginCommand))]
-    private string? _password;
+    private string? _username;
 
     private bool CanLogin()
     {

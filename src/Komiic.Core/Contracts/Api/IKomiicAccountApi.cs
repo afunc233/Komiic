@@ -6,6 +6,28 @@ namespace Komiic.Core.Contracts.Api;
 [Headers("Authorization: Bearer")]
 internal interface IKomiicAccountApi
 {
+    #region RourceLimit
+
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<GetImageLimitData>?> GetImageLimit([Body] QueryData queryData);
+
+    #endregion
+
+    #region UpdateProfileImage
+
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<UpdateProfileImageData>> UpdateProfileImage(
+        [Body] QueryData<UpdateProfileImageVariables> queryData);
+
+    #endregion
+
+    #region setNextChapterMode
+
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<SetNextChapterModeData>> SetNextChapterMode([Body] QueryData<NextChapterModeVariables> queryData);
+
+    #endregion
+
     #region Login/Logout
 
     [Post(KomiicConst.LoginUrl)]
@@ -27,28 +49,6 @@ internal interface IKomiicAccountApi
 
     [Post(KomiicConst.QueryUrl)]
     Task<ResponseData<FavoriteNewUpdatedData>> GetFavoriteNewUpdated([Body] QueryData queryData);
-
-    #endregion
-
-    #region RourceLimit
-
-    [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<GetImageLimitData>?> GetImageLimit([Body] QueryData queryData);
-
-    #endregion
-
-    #region UpdateProfileImage
-
-    [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<UpdateProfileImageData>> UpdateProfileImage(
-        [Body] QueryData<UpdateProfileImageVariables> queryData);
-
-    #endregion
-
-    #region setNextChapterMode
-
-    [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<SetNextChapterModeData>> SetNextChapterMode([Body] QueryData<NextChapterModeVariables> queryData);
 
     #endregion
 }

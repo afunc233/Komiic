@@ -9,24 +9,28 @@ namespace Komiic.PageViewModels;
 
 public abstract partial class AbsPageViewModel(ILogger logger) : ViewModelBase, IPageViewModel
 {
+    [ObservableProperty] private bool _isDataError;
+
+    [ObservableProperty] private bool _isLoading;
     private ILogger Logger => logger;
 
     public abstract NavBarType NavBarType { get; }
     public abstract string Title { get; }
-
-    [ObservableProperty] private bool _isLoading;
-
-    [ObservableProperty] private bool _isDataError;
 
     [RelayCommand]
     public virtual Task LoadData()
     {
         return NavigatedTo();
     }
-    
+
     public async Task NavigatedTo()
     {
-        await SafeLoadData(async ()=>await OnNavigatedTo());
+        await SafeLoadData(async () => await OnNavigatedTo());
+    }
+
+    public async Task NavigatedFrom()
+    {
+        await OnNavigatedFrom();
     }
 
     protected async Task SafeLoadData(Func<Task> execute)
@@ -47,20 +51,14 @@ public abstract partial class AbsPageViewModel(ILogger logger) : ViewModelBase, 
             IsLoading = false;
         }
     }
-    
+
     protected virtual Task OnNavigatedTo()
     {
         return Task.CompletedTask;
-    }
-
-    public async Task NavigatedFrom()
-    {
-        await OnNavigatedFrom();
     }
 
     protected virtual Task OnNavigatedFrom()
     {
         return Task.CompletedTask;
     }
-
 }

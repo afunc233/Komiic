@@ -11,18 +11,26 @@ public class NavigationAwareLocator : IDataTemplate
     public Control? Build(object? data)
     {
         if (data is null)
+        {
             return null;
+        }
 
-        string name = data.GetType().FullName!.Replace("PageViewModel", "Page", StringComparison.Ordinal);
+        var name = data.GetType().FullName!.Replace("PageViewModel", "Page", StringComparison.Ordinal);
 #pragma warning disable IL2057
         var type = Type.GetType(name);
 #pragma warning restore IL2057
 
-        if (type == null) return new TextBlock { Text = "Not Found: " + name };
+        if (type == null)
+        {
+            return new TextBlock { Text = "Not Found: " + name };
+        }
 
         var control = (Control)Activator.CreateInstance(type)!;
 
-        if (data is not INavigationAware) return control;
+        if (data is not INavigationAware)
+        {
+            return control;
+        }
 
         control.Loaded += ControlOnLoaded;
         control.Unloaded += ControlOnUnloaded;
@@ -30,10 +38,18 @@ public class NavigationAwareLocator : IDataTemplate
         return control;
     }
 
+    public bool Match(object? data)
+    {
+        return data is INavigationAware;
+    }
+
     private async void ControlOnUnloaded(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Control { DataContext: INavigationAware navigationAware } control) return;
-        
+        if (sender is not Control { DataContext: INavigationAware navigationAware } control)
+        {
+            return;
+        }
+
         control.Loaded -= ControlOnLoaded;
         control.Unloaded -= ControlOnUnloaded;
         await navigationAware.NavigatedFrom();
@@ -45,10 +61,5 @@ public class NavigationAwareLocator : IDataTemplate
         {
             await navigationAware.NavigatedTo();
         }
-    }
-
-    public bool Match(object? data)
-    {
-        return data is INavigationAware;
     }
 }

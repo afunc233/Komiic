@@ -21,12 +21,6 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
 
     private static class Log
     {
-        private static class EventIds
-        {
-            public static readonly EventId PipelineStart = new(100, "RequestPipelineStart");
-            public static readonly EventId PipelineEnd = new(101, "RequestPipelineEnd");
-        }
-
         private static readonly Func<ILogger, HttpMethod, Uri?, string, IDisposable?> DoBeginRequestPipelineScope =
             LoggerMessage.DefineScope<HttpMethod, Uri?, string>(
                 "HTTP {HttpMethod} {Uri} {CorrelationId}");
@@ -41,15 +35,20 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
             LoggerMessage.Define<string, HttpResponseMessage, string>(LogLevel.Debug, EventIds.PipelineEnd,
                 "End request [Correlation:{CorrelationId}]\n{HttpResponseMessage},\n[Data:\n{AcceptedData}\n]");
 
+        private static readonly List<string> StrMediaTypeList =
+            ["application/json", "application/xml", "text/html", "application/grpc", "text/plain"];
+
+        private static readonly HttpRequestOptionsKey<string> CorrelationIdKey = new("X-Correlation-ID");
+
         public static IDisposable? BeginRequestPipelineScope(ILogger logger, HttpRequestMessage request)
         {
-            string correlationId = GetCorrelationIdFromRequest(request);
+            var correlationId = GetCorrelationIdFromRequest(request);
             return DoBeginRequestPipelineScope(logger, request.Method, request.RequestUri, correlationId);
         }
 
         public static async Task RequestPipelineStart(ILogger logger, HttpRequestMessage request)
         {
-            string correlationId = GetCorrelationIdFromRequest(request);
+            var correlationId = GetCorrelationIdFromRequest(request);
             var requestContent = string.Empty;
             if (request is { Content: not null })
             {
@@ -58,9 +57,6 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
 
             DoRequestPipelineStart(logger, correlationId, request, requestContent, null);
         }
-
-        private static readonly List<string> StrMediaTypeList =
-            ["application/json", "application/xml", "text/html", "application/grpc", "text/plain"];
 
         public static async Task RequestPipelineEnd(ILogger logger, HttpResponseMessage response)
         {
@@ -78,21 +74,24 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
                 }
             }
 
-            string correlationId = GetCorrelationIdFromRequest(response.RequestMessage);
+            var correlationId = GetCorrelationIdFromRequest(response.RequestMessage);
             DoRequestPipelineEnd(logger, correlationId, response, acceptedData, null);
         }
 
-        private static readonly HttpRequestOptionsKey<string> CorrelationIdKey = new("X-Correlation-ID");
-
         private static string GetCorrelationIdFromRequest(HttpRequestMessage? request)
         {
-            if (request == null) return Guid.NewGuid().ToString();
+            if (request == null)
+            {
+                return Guid.NewGuid().ToString();
+            }
 
             string? correlationId = null;
 
-            if (request.Options.TryGetValue(CorrelationIdKey, out string? optionCorrelationId) &&
+            if (request.Options.TryGetValue(CorrelationIdKey, out var optionCorrelationId) &&
                 !string.IsNullOrWhiteSpace(optionCorrelationId))
+            {
                 correlationId = optionCorrelationId;
+            }
             else
             {
                 correlationId ??= Guid.NewGuid().ToString();
@@ -100,6 +99,12 @@ internal class HttpLogHandler(ILogger logger) : DelegatingHandler
             }
 
             return correlationId;
+        }
+
+        private static class EventIds
+        {
+            public static readonly EventId PipelineStart = new(100, "RequestPipelineStart");
+            public static readonly EventId PipelineEnd = new(101, "RequestPipelineEnd");
         }
     }
 }

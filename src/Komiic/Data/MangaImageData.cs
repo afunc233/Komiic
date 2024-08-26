@@ -15,7 +15,7 @@ public static class MangaImageDataExt
 
     public static Uri GetReferrer(this MangaImageData mangaImageData)
     {
-        return new(
+        return new Uri(
             $"{KomiicConst.KomiicApiUrl}/comic/{mangaImageData.MangaInfo.Id}/chapter/{mangaImageData.Chapter.Id}");
     }
 }

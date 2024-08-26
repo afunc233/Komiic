@@ -92,8 +92,7 @@
                                 Background="#5057a3"
                                 Content="{Binding LastReadByComicId.BookOrChapter.Serial,StringFormat={}继续阅读:卷[{0}],FallbackValue={} 開始閱讀 }"
                                 Command="{Binding OpenMangaViewerWithHistoryCommand}"
-                                CornerRadius="4">
-                            </Button>
+                                CornerRadius="4" />
 
                         </StackPanel>
                     </WrapPanel>
@@ -222,8 +221,9 @@
                     Padding="10,0"
                     Text="推薦漫畫" />
             </Panel>
-            
-            <controls:MangaList Margin="20" ItemsSource="{Binding RecommendMangaInfoList}" ItemTemplate="{StaticResource MangaInfoVOTemplate}"  />
+
+            <controls:MangaList Margin="20" ItemsSource="{Binding RecommendMangaInfoList}"
+                                ItemTemplate="{StaticResource MangaInfoVOTemplate}" />
 
         </StackPanel>
     </ItemsControl>

@@ -7,20 +7,20 @@
         please contribute back.
     -->
     <Application>
-<!--        <Assembly Name="Avalonia" Dynamic="Required All" />-->
-<!--        <Assembly Name="Avalonia.Base" Dynamic="Required All" />-->
-<!--        <Assembly Name="Avalonia.Win32" Dynamic="Required All" />-->
-<!--        <Assembly Name="Avalonia.Xaml.Interactions" Dynamic="Required All" />-->
-<!--        <Assembly Name="AsyncImageLoader.Avalonia" Dynamic="Required All" />-->
-<!--        <Assembly Name="Refit" Dynamic="Required All" />-->
-<!--        <Assembly Name="Refit.HttpClientFactory" Dynamic="Required All" />-->
-<!--        <Assembly Name="CommunityToolkit.Mvvm" Dynamic="Required All" />-->
-<!--        <Assembly Name="NLog" Dynamic="Required All" />-->
-<!--        <Assembly Name="NLog.Extensions.Logging" Dynamic="Required All" />-->
-<!--        <Assembly Name="Microsoft.Extensions.DependencyInjection" Dynamic="Required All" />-->
-<!--        -->
-<!--        <Assembly Name="Komiic" Dynamic="Required All" />-->
-<!--        <Assembly Name="Komiic.Core" Dynamic="Required All" />-->
-<!--        <Assembly Name="Komiic.Desktop" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Avalonia" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Avalonia.Base" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Avalonia.Win32" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Avalonia.Xaml.Interactions" Dynamic="Required All" />-->
+        <!--        <Assembly Name="AsyncImageLoader.Avalonia" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Refit" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Refit.HttpClientFactory" Dynamic="Required All" />-->
+        <!--        <Assembly Name="CommunityToolkit.Mvvm" Dynamic="Required All" />-->
+        <!--        <Assembly Name="NLog" Dynamic="Required All" />-->
+        <!--        <Assembly Name="NLog.Extensions.Logging" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Microsoft.Extensions.DependencyInjection" Dynamic="Required All" />-->
+        <!--        -->
+        <!--        <Assembly Name="Komiic" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Komiic.Core" Dynamic="Required All" />-->
+        <!--        <Assembly Name="Komiic.Desktop" Dynamic="Required All" />-->
     </Application>
 </Directives>

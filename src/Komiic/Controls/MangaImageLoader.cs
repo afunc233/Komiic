@@ -22,8 +22,8 @@ internal class MangaImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
     private async Task<Bitmap?> LoadAsync(MangaImageData mangaImageData)
     {
         await Task.CompletedTask;
-        string url = mangaImageData.GetImageUrl();
-        string? localUrl = cacheService.GetLocalImageUrl(url);
+        var url = mangaImageData.GetImageUrl();
+        var localUrl = cacheService.GetLocalImageUrl(url);
 
         if (string.IsNullOrWhiteSpace(localUrl))
         {
@@ -33,19 +33,19 @@ internal class MangaImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
             request.Headers.Referrer = mangaImageData.GetReferrer();
 
             var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-            byte[] dataArr = await response.Content.ReadAsByteArrayAsync();
+            var dataArr = await response.Content.ReadAsByteArrayAsync();
 
             using var memoryStream = new MemoryStream(dataArr);
             var bitmap = new Bitmap(memoryStream);
 
             await cacheService.SetLocalImage(url, dataArr);
 
-            ImageLoaded?.Invoke(this, new(mangaImageData, true));
+            ImageLoaded?.Invoke(this, new KvValue<MangaImageData, bool>(mangaImageData, true));
             return bitmap;
         }
 
-        ImageLoaded?.Invoke(this, new(mangaImageData, false));
+        ImageLoaded?.Invoke(this, new KvValue<MangaImageData, bool>(mangaImageData, false));
 
-        return new(localUrl);
+        return new Bitmap(localUrl);
     }
 }

@@ -4,10 +4,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Komiic.Core.Http;
 
-
 public class TraceIdLoggingMessageHandlerFilter(ILoggerFactory loggerFactory) : IHttpMessageHandlerBuilderFilter
 {
-    private readonly ILoggerFactory _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+    private readonly ILoggerFactory _loggerFactory =
+        loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
 
     public Action<HttpMessageHandlerBuilder> Configure(Action<HttpMessageHandlerBuilder> next)
     {

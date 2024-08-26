@@ -15,13 +15,15 @@ public partial class HeaderViewModel
 
     private readonly IMessenger _messenger;
 
+    [ObservableProperty] private Account? _accountData;
+
     [ObservableProperty] private ImageLimit _imageLimit = new()
     {
         Limit = 300,
-        Usage = 0,
+        Usage = 0
     };
 
-    [ObservableProperty] private Account? _accountData;
+    private Task? _loadDataTask;
 
     public HeaderViewModel(IMessenger messenger, IAccountService accountService) : base(messenger)
     {
@@ -38,15 +40,19 @@ public partial class HeaderViewModel
         };
     }
 
+    public async void Receive(LoadMangaImageDataMessage message)
+    {
+        _loadDataTask ??= LoadData().ContinueWith(_ => { _loadDataTask = null; });
+        if (_loadDataTask != null)
+        {
+            await _loadDataTask;
+        }
+    }
+
     [RelayCommand]
     private async Task OpenLogin()
     {
         var result = await Messenger.Send(new OpenLoginDialogMessage());
-        await Task.CompletedTask;
-        // var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
-        // dialogContent.Username = _accountService.CacheUserName;
-        // dialogContent.Password = _accountService.CachePassword;
-        // bool result = await Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
         if (result)
         {
             await LoadData();
@@ -70,16 +76,5 @@ public partial class HeaderViewModel
     public async Task LoadData()
     {
         await _accountService.LoadImageLimit();
-    }
-
-    private Task? _loadDataTask;
-
-    public async void Receive(LoadMangaImageDataMessage message)
-    {
-        _loadDataTask ??= LoadData().ContinueWith(_ => { _loadDataTask = null; });
-        if (_loadDataTask != null)
-        {
-            await _loadDataTask;
-        }
     }
 }

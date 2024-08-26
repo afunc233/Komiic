@@ -11,7 +11,7 @@ public class LoadAccountActivationHandler(IAccountService accountService) : IAct
     async Task IActivationHandler.HandleAsync()
     {
         await Task.CompletedTask;
-        
+
         await accountService.LoadAccount();
     }
 }

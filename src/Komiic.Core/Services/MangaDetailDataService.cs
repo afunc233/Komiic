@@ -14,14 +14,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (mangaInfoByIdData is { Data.ComicById: not null })
         {
-            return new()
+            return new ApiResponseData<MangaInfo?>
             {
                 Data = mangaInfoByIdData.Data.ComicById,
                 ErrorMessage = mangaInfoByIdData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<MangaInfo?>
         {
             Data = default,
             ErrorMessage = mangaInfoByIdData.GetMessage()
@@ -37,14 +37,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (messageCountByComicIdData is { Data.MessageCountByComicIdCount: not null })
         {
-            return new()
+            return new ApiResponseData<int?>
             {
                 Data = messageCountByComicIdData.Data.MessageCountByComicIdCount,
                 ErrorMessage = messageCountByComicIdData.GetMessage()
             };
         }
 
-        return new() { Data = default, ErrorMessage = messageCountByComicIdData.GetMessage() };
+        return new ApiResponseData<int?> { Data = default, ErrorMessage = messageCountByComicIdData.GetMessage() };
     }
 
     public async Task<ApiResponseData<List<MessagesByComicId>>> GetMessagesByComicId(string comicId, int pageIndex,
@@ -52,10 +52,10 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
     {
         const int pageSize = 100;
         var variables =
-            QueryDataEnum.GetMessagesByComicId.GetQueryDataWithVariables(new ComicIdPaginationVariables()
+            QueryDataEnum.GetMessagesByComicId.GetQueryDataWithVariables(new ComicIdPaginationVariables
             {
                 ComicId = comicId,
-                Pagination = new Pagination()
+                Pagination = new Pagination
                 {
                     Offset = pageIndex * pageSize,
                     Limit = pageSize,
@@ -67,14 +67,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var messagesByComicIdData = await komiicQueryApi.GetMessagesByComicId(variables);
         if (messagesByComicIdData is { Data.GetMessagesByComicId.Count: > 0 })
         {
-            return new ApiResponseData<List<MessagesByComicId>>()
+            return new ApiResponseData<List<MessagesByComicId>>
             {
                 Data = messagesByComicIdData.Data.GetMessagesByComicId,
                 ErrorMessage = messagesByComicIdData.GetMessage()
             };
         }
 
-        return new ApiResponseData<List<MessagesByComicId>>()
+        return new ApiResponseData<List<MessagesByComicId>>
         {
             ErrorMessage = messagesByComicIdData.GetMessage(),
             Data = []
@@ -90,14 +90,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var lastMessageByComicIdData = await komiicQueryApi.GetLastMessageByComicId(variables);
         if (lastMessageByComicIdData is { Data.LastMessageByComicId: not null })
         {
-            return new()
+            return new ApiResponseData<LastMessageByComicId?>
             {
                 Data = lastMessageByComicIdData.Data.LastMessageByComicId,
                 ErrorMessage = lastMessageByComicIdData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<LastMessageByComicId?>
         {
             Data = default,
             ErrorMessage = lastMessageByComicIdData.GetMessage()
@@ -112,14 +112,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var chapterByComicIdData = await komiicQueryApi.GetChapterByComicId(variables);
         if (chapterByComicIdData is { Data.ChaptersByComicIdList.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<ChaptersByComicId>>
             {
                 Data = chapterByComicIdData.Data.ChaptersByComicIdList,
                 ErrorMessage = chapterByComicIdData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<ChaptersByComicId>>
         {
             Data = [],
             ErrorMessage = chapterByComicIdData.GetMessage()
@@ -134,14 +134,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var recommendComicByIdData = await komiicQueryApi.GetRecommendComicById(variables);
         if (recommendComicByIdData is { Data.RecommendComicList.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<string>>
             {
                 Data = recommendComicByIdData.Data.RecommendComicList,
                 ErrorMessage = recommendComicByIdData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<string>>
         {
             Data = [],
             ErrorMessage = recommendComicByIdData.GetMessage()
@@ -162,7 +162,7 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
             }
         }
 
-        return new() { Data = [], ErrorMessage = recommendComicData.ErrorMessage };
+        return new ApiResponseData<List<MangaInfo>> { Data = [], ErrorMessage = recommendComicData.ErrorMessage };
     }
 
     public async Task<ApiResponseData<List<MangaInfo>>> GetMangaInfoByIds(params string[] comicIds)
@@ -172,14 +172,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var mangaInfoByIdsData = await komiicQueryApi.GetMangaInfoByIds(variables);
         if (mangaInfoByIdsData is { Data.ComicByIds.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<MangaInfo>>
             {
                 Data = mangaInfoByIdsData.Data.ComicByIds,
                 ErrorMessage = mangaInfoByIdsData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<MangaInfo>>
         {
             Data = [],
             ErrorMessage = mangaInfoByIdsData.GetMessage()
@@ -193,14 +193,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
         var folderData = await komiicQueryApi.GetMyFolder(queryData);
         if (folderData is { Data.Folders.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<Folder>>
             {
                 Data = folderData.Data.Folders,
                 ErrorMessage = folderData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<Folder>>
         {
             Data = [],
             ErrorMessage = folderData.GetMessage()
@@ -209,7 +209,7 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
     public async Task<ApiResponseData<bool?>> RemoveComicToFolder(string folderId, string comicId)
     {
-        var queryData = QueryDataEnum.RemoveComicToFolder.GetQueryDataWithVariables(new FolderIdAndComicIdVariables()
+        var queryData = QueryDataEnum.RemoveComicToFolder.GetQueryDataWithVariables(new FolderIdAndComicIdVariables
         {
             FolderId = folderId,
             ComicId = comicId
@@ -219,14 +219,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (removeComicToFolderData is { Data: not null })
         {
-            return new()
+            return new ApiResponseData<bool?>
             {
                 Data = removeComicToFolderData.Data.RemoveComicToFolder,
                 ErrorMessage = removeComicToFolderData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<bool?>
         {
             Data = default,
             ErrorMessage = removeComicToFolderData.GetMessage()
@@ -235,7 +235,7 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
     public async Task<ApiResponseData<bool?>> AddComicToFolder(string folderId, string comicId)
     {
-        var queryData = QueryDataEnum.AddComicToFolder.GetQueryDataWithVariables(new FolderIdAndComicIdVariables()
+        var queryData = QueryDataEnum.AddComicToFolder.GetQueryDataWithVariables(new FolderIdAndComicIdVariables
         {
             FolderId = folderId,
             ComicId = comicId
@@ -245,14 +245,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (addComicToFolderData is { Data: not null })
         {
-            return new()
+            return new ApiResponseData<bool?>
             {
                 Data = addComicToFolderData.Data.AddComicToFolder,
                 ErrorMessage = addComicToFolderData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<bool?>
         {
             Data = default,
             ErrorMessage = addComicToFolderData.GetMessage()
@@ -261,7 +261,7 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
     public async Task<ApiResponseData<List<string>>> ComicInAccountFolders(string comicId)
     {
-        var queryData = QueryDataEnum.ComicInAccountFolders.GetQueryDataWithVariables(new ComicIdVariables()
+        var queryData = QueryDataEnum.ComicInAccountFolders.GetQueryDataWithVariables(new ComicIdVariables
         {
             ComicId = comicId
         });
@@ -270,14 +270,14 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         if (comicInAccountFoldersData is { Data.ComicInAccountFolders.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<string>>
             {
                 Data = comicInAccountFoldersData.Data.ComicInAccountFolders,
                 ErrorMessage = comicInAccountFoldersData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<string>>
         {
             Data = [],
             ErrorMessage = comicInAccountFoldersData.GetMessage()
@@ -288,19 +288,19 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
     {
         var queryData =
             QueryDataEnum.ComicsLastRead.GetQueryDataWithVariables(
-                new ComicIdsVariables() { ComicIdList = comicIds.ToList() });
+                new ComicIdsVariables { ComicIdList = comicIds.ToList() });
 
         var comicsLastReadData = await komiicQueryApi.GetComicsLastRead(queryData);
         if (comicsLastReadData is { Data.LastReadByComicIds.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<LastReadByComicId>>
             {
                 Data = comicsLastReadData.Data.LastReadByComicIds,
                 ErrorMessage = comicsLastReadData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<LastReadByComicId>>
         {
             Data = [],
             ErrorMessage = comicsLastReadData.GetMessage()
@@ -311,20 +311,20 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
     {
         var queryData =
             QueryDataEnum.RemoveFavorite.GetQueryDataWithVariables(
-                new ComicIdVariables() { ComicId = comicId });
+                new ComicIdVariables { ComicId = comicId });
 
         var removeFavoriteData = await komiicQueryApi.RemoveFavorite(queryData);
 
         if (removeFavoriteData is { Data: not null })
         {
-            return new()
+            return new ApiResponseData<bool?>
             {
                 Data = removeFavoriteData.Data.RemoveFavorite,
                 ErrorMessage = removeFavoriteData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<bool?>
         {
             Data = default,
             ErrorMessage = removeFavoriteData.GetMessage()
@@ -358,7 +358,7 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
     public async Task<ApiResponseData<bool?>> VoteMessage(string messageId, bool isUp)
     {
-        var queryData = QueryDataEnum.VoteMessage.GetQueryDataWithVariables(new VoteMessageVariables()
+        var queryData = QueryDataEnum.VoteMessage.GetQueryDataWithVariables(new VoteMessageVariables
         {
             MessageId = messageId,
             Up = isUp
@@ -412,21 +412,21 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
 
         var queryData =
             QueryDataEnum.AddMessageToComic.GetQueryDataWithVariables(
-                new AddMessageToComicVariables()
+                new AddMessageToComicVariables
                     { ComicId = comicId, Message = sendMessageText, ReplyToId = replyToId ?? "0" });
 
         var addMessageToComicData = await komiicQueryApi.AddMessageToComic(queryData);
 
         if (addMessageToComicData is { Data: not null })
         {
-            return new()
+            return new ApiResponseData<MessagesByComicId>
             {
                 Data = addMessageToComicData.Data.AddMessageToComic,
                 ErrorMessage = addMessageToComicData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<MessagesByComicId>
         {
             Data = default,
             ErrorMessage = addMessageToComicData.GetMessage()
@@ -437,21 +437,20 @@ internal class MangaDetailDataService(IKomiicQueryApi komiicQueryApi) : IMangaDe
     {
         var queryData =
             QueryDataEnum.DeleteMessage.GetQueryDataWithVariables(
-                new MessageIdVariables()
-                    { MessageId = messageId });
+                new MessageIdVariables { MessageId = messageId });
 
         var deleteMessageData = await komiicQueryApi.DeleteMessage(queryData);
 
         if (deleteMessageData is { Data: not null })
         {
-            return new()
+            return new ApiResponseData<bool?>
             {
                 Data = deleteMessageData.Data.DeleteMessage,
                 ErrorMessage = deleteMessageData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<bool?>
         {
             Data = default,
             ErrorMessage = deleteMessageData.GetMessage()

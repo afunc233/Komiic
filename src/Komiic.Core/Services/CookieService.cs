@@ -22,7 +22,7 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
         try
         {
             await ClearAllCookies(false);
-            string? localCookies = await cacheService.GetLocalCacheStr(KomiicConst.KomiicCookie);
+            var localCookies = await cacheService.GetLocalCacheStr(KomiicConst.KomiicCookie);
 
             if (!string.IsNullOrWhiteSpace(localCookies))
             {
@@ -51,14 +51,16 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
         }
 
         if (save)
+        {
             await SaveCookies();
+        }
     }
 
     public async Task SaveCookies()
     {
         var cookies = cookieContainer.GetAllCookies();
 
-        string json = JsonSerializer.Serialize(cookies, JsonSerializerOptions);
+        var json = JsonSerializer.Serialize(cookies, JsonSerializerOptions);
         await cacheService.SetLocalCache(KomiicConst.KomiicCookie, json);
 
         await Task.CompletedTask;
@@ -67,4 +69,4 @@ public class CookieService(CookieContainer cookieContainer, ICacheService cacheS
 
 [JsonSerializable(typeof(CookieCollection))]
 [JsonSerializable(typeof(Cookie))]
-partial class KomiicCookieJsonSerializerContext : JsonSerializerContext;
+internal partial class KomiicCookieJsonSerializerContext : JsonSerializerContext;

@@ -19,12 +19,11 @@ public partial class RecentUpdatePageViewModel(
     IMangaInfoVOService mangaInfoVOService,
     ILogger<RecentUpdatePageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
+    [ObservableProperty] private bool _hasMore = true;
     private int _recentUpdatePageIndex;
 
     public override NavBarType NavBarType => NavBarType.RecentUpdate;
     public override string Title => "最近更新";
-
-    [ObservableProperty] private bool _hasMore = true;
 
     public ObservableCollection<MangaInfoVO> RecentUpdateMangaInfos { get; } = [];
 
@@ -35,15 +34,14 @@ public partial class RecentUpdatePageViewModel(
         messenger.Send(new OpenMangaMessage(mangaInfo));
     }
 
-        [RelayCommand(AllowConcurrentExecutions = true)]
-
+    [RelayCommand(AllowConcurrentExecutions = true)]
     private async Task ToggleFavourite(MangaInfoVO mangaInfoVO)
     {
         await Task.CompletedTask;
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
 
     [RelayCommand]

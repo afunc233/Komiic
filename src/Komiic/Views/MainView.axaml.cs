@@ -15,23 +15,42 @@ namespace Komiic.Views;
 public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>, IRecipient<CloseDialogMessage<bool>>,
     IRecipient<OpenNotificationMessage>
 {
-    private IManagedNotificationManager? _notificationManager;
-
-    private readonly IMessenger _messenger;
-
-    
-    
-    private record CanBackAction(object Source, Func<bool> BackAction);
-
     /// <summary>
-    /// for BackRequested
+    ///     for BackRequested
     /// </summary>
     private readonly List<CanBackAction> _canBackRequestedActions = [];
-    
+
+    private readonly IMessenger _messenger;
+    private IManagedNotificationManager? _notificationManager;
+
     public MainView()
     {
         InitializeComponent();
         _messenger = WeakReferenceMessenger.Default;
+    }
+
+    public void Receive(CloseDialogMessage<bool> message)
+    {
+        _canBackRequestedActions.RemoveAll(x => Equals(x.Source, message.DialogContent));
+        MainDialogHost.Close(message.DialogContent, message.Result);
+    }
+
+
+    public void Receive(OpenDialogMessage<bool> message)
+    {
+        _canBackRequestedActions.Add(new CanBackAction(message.DialogContent, CloseDialog));
+        message.Reply(Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            var result = await MainDialogHost.Show<bool?>(message.DialogContent);
+
+            _canBackRequestedActions.RemoveAll(x => Equals(x.Source, message.DialogContent));
+            return result ?? false;
+        }));
+    }
+
+    public void Receive(OpenNotificationMessage message)
+    {
+        _notificationManager?.Show(message.Content);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -93,9 +112,12 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
             return;
         }
 
-        _canBackRequestedActions.Add(new(MainSplitView, () =>
+        _canBackRequestedActions.Add(new CanBackAction(MainSplitView, () =>
         {
-            if (!MainSplitView.IsPaneOpen) return false;
+            if (!MainSplitView.IsPaneOpen)
+            {
+                return false;
+            }
 
             MainSplitView.IsPaneOpen = false;
             return true;
@@ -147,30 +169,6 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
     }
 
 
-    public void Receive(OpenDialogMessage<bool> message)
-    {
-        _canBackRequestedActions.Add(new(message.DialogContent, CloseDialog));
-        message.Reply(Dispatcher.UIThread.InvokeAsync(async () =>
-        {
-            var result = await MainDialogHost.Show<bool?>(message.DialogContent);
-
-            _canBackRequestedActions.RemoveAll(x => Equals(x.Source, message.DialogContent));
-            return result ?? false;
-        }));
-    }
-
-    public void Receive(CloseDialogMessage<bool> message)
-    {
-        _canBackRequestedActions.RemoveAll(x => Equals(x.Source, message.DialogContent));
-        MainDialogHost.Close(message.DialogContent, message.Result);
-    }
-
-    public void Receive(OpenNotificationMessage message)
-    {
-        _notificationManager?.Show(message.Content);
-    }
-
-
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         // TODO 在 ubuntu 下 BeginMoveDrag 导致 DoubleTapped 触发有些问题 考虑自己移动 而不是 调用 BeginMoveDrag
@@ -204,4 +202,7 @@ public partial class MainView : UserControl, IRecipient<OpenDialogMessage<bool>>
             }
         }
     }
+
+
+    private record CanBackAction(object Source, Func<bool> BackAction);
 }

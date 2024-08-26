@@ -23,7 +23,8 @@
         </StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Button Content="搜" />
-            <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNull}}" Orientation="Horizontal">
+            <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNull}}"
+                        Orientation="Horizontal">
                 <Button
                     Command="{Binding OpenLoginCommand}"
                     Content="登录"
@@ -34,7 +35,8 @@
                     Foreground="Blue"
                     NavigateUri="https://komiic.com/register/" />
             </StackPanel>
-            <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNotNull}}" Orientation="Horizontal">
+            <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        Orientation="Horizontal">
                 <DropDownButton Background="Transparent" Padding="0">
                     <DropDownButton.Content>
                         <StackPanel Margin="0,0,10,0" Orientation="Horizontal">

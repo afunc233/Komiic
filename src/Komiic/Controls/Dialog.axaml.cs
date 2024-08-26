@@ -21,6 +21,20 @@ public class Dialog : TemplatedControl
     public static readonly StyledProperty<object> ContentProperty =
         AvaloniaProperty.Register<Dialog, object>(nameof(Content));
 
+    public static readonly StyledProperty<bool> CloseOnClickAwayProperty =
+        AvaloniaProperty.Register<DialogHost, bool>(nameof(CloseOnClickAway));
+
+    private Border? _border;
+    private TaskCompletionSource<object?>? _taskCompletionSource;
+
+    static Dialog()
+    {
+    }
+
+    internal Dialog()
+    {
+    }
+
     [Content]
     public object Content
     {
@@ -28,24 +42,10 @@ public class Dialog : TemplatedControl
         set => SetValue(ContentProperty, value);
     }
 
-    public static readonly StyledProperty<bool> CloseOnClickAwayProperty =
-        AvaloniaProperty.Register<DialogHost, bool>(nameof(CloseOnClickAway));
-
     public bool CloseOnClickAway
     {
         get => GetValue(CloseOnClickAwayProperty);
         set => SetValue(CloseOnClickAwayProperty, value);
-    }
-
-    static Dialog()
-    {
-    }
-
-    private Border? _border;
-    private TaskCompletionSource<object?>? _taskCompletionSource;
-
-    internal Dialog()
-    {
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -54,7 +54,7 @@ public class Dialog : TemplatedControl
         if (e.NameScope.Find<Border>(PART_Border) is { } border)
         {
             _border = border;
-            this.PointerPressed += CloseOnClickAwayHandler;
+            PointerPressed += CloseOnClickAwayHandler;
         }
 
         UpdatePseudoClasses();
@@ -82,7 +82,7 @@ public class Dialog : TemplatedControl
 
     public async Task<object?> Show()
     {
-        _taskCompletionSource = new();
+        _taskCompletionSource = new TaskCompletionSource<object?>();
 
         return await _taskCompletionSource.Task;
     }

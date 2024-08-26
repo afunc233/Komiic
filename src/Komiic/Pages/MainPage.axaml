@@ -13,10 +13,14 @@
 
     <TabControl>
         <TabItem Header="最新更新">
-            <control:MangaList ItemsSource="{Binding RecentUpdateMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMoreRecentUpdateCommand}" />
+            <control:MangaList ItemsSource="{Binding RecentUpdateMangaInfos}"
+                               ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                               LoadMoreCommand="{Binding LoadMoreRecentUpdateCommand}" />
         </TabItem>
         <TabItem Header="本月最夯">
-            <control:MangaList ItemsSource="{Binding HotComicsMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMoreHotComicsCommand}" />
+            <control:MangaList ItemsSource="{Binding HotComicsMangaInfos}"
+                               ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                               LoadMoreCommand="{Binding LoadMoreHotComicsCommand}" />
         </TabItem>
     </TabControl>
 </UserControl>

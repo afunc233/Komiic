@@ -28,10 +28,14 @@
         </Panel>
         <TabControl>
             <TabItem Header="月">
-                <controls:MangaList ItemsSource="{Binding MonthHotComicsMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMoreMonthHotComicsCommand}" />
+                <controls:MangaList ItemsSource="{Binding MonthHotComicsMangaInfos}"
+                                    ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                                    LoadMoreCommand="{Binding LoadMoreMonthHotComicsCommand}" />
             </TabItem>
             <TabItem Header="綜合">
-                <controls:MangaList ItemsSource="{Binding HotComicsMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMoreHotComicsCommand}" />
+                <controls:MangaList ItemsSource="{Binding HotComicsMangaInfos}"
+                                    ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                                    LoadMoreCommand="{Binding LoadMoreHotComicsCommand}" />
             </TabItem>
         </TabControl>
     </DockPanel>
