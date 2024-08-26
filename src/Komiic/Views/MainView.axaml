@@ -124,13 +124,8 @@
                 OpenPaneLength="160"
                 x:Name="MainSplitView">
                 <SplitView.Pane>
-                    <DockPanel controls:DirectionalKeyDownHandler.Handled="True">
-                        <ListBox
-                            DockPanel.Dock="Bottom"
-                            ItemsSource="{Binding FooterMenuItemsSource}"
-                            SelectedItem="{Binding SelectedNavBar}" />
-                        <ListBox ItemsSource="{Binding MenuItemsSource}" SelectedItem="{Binding SelectedNavBar}" />
-                    </DockPanel>
+                    <ListBox controls:DirectionalKeyDownHandler.Handled="True" ItemsSource="{Binding MenuItemsSource}"
+                             SelectedItem="{Binding SelectedNavBar}" />
                 </SplitView.Pane>
                 <TransitioningContentControl
                     Content="{Binding SelectedContent}"
