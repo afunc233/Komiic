@@ -75,11 +75,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000",
-        }
-    ];
-
-    public ObservableCollection<NavBar> FooterMenuItemsSource { get; } =
-    [
+        },
         new()
         {
             NavType = NavBarType.About,
@@ -142,7 +138,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             return;
         }
 
-        var navBar = MenuItemsSource.Concat(FooterMenuItemsSource).FirstOrDefault(it => it.NavType == value.NavBarType);
+        var navBar = MenuItemsSource.FirstOrDefault(it => it.NavType == value.NavBarType);
 
         SelectedNavBar = navBar;
     }
@@ -170,7 +166,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             }
         }
 
-        var allNavBars = MenuItemsSource.Concat(FooterMenuItemsSource).Select((value, index) => (value.NavType, index))
+        var allNavBars = MenuItemsSource.Select((value, index) => (value.NavType, index))
             .ToList();
 
         (NavBarType NavBarType, int Index ) indexOld = allNavBars.FirstOrDefault(x => x.NavType == oldValue.NavBarType);
