@@ -44,13 +44,11 @@ public partial class HeaderView : UserControl
 
         if (toggleButton.IsChecked == true)
         {
-            Application.Current.RequestedThemeVariant = ThemeVariant.Light;
-            toggleButton.Content = "日";
+            Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
         }
         else
         {
-            Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
-            toggleButton.Content = "月";
+            Application.Current.RequestedThemeVariant = ThemeVariant.Light;
         }
     }
 
