@@ -16,15 +16,19 @@
         <RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
         <!-- 每个 abi 生成一个 apk -->
         <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
-        <AndroidSupportedAbis/>
-        <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
-        <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+        <AndroidSupportedAbis Condition=" '$(TargetFramework)' == 'net8.0-android' ">armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
+        <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+        <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
         <AndroidLinkMode>None</AndroidLinkMode>
+        <AndroidLinkTool>proguard</AndroidLinkTool>
+        <AndroidHttpClientHandlerType>System.Net.Http.HttpClientHandler</AndroidHttpClientHandlerType>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <AndroidSupportedAbis/>
         <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
+        <AndroidLinkTool>proguard</AndroidLinkTool>
+        <AndroidHttpClientHandlerType>System.Net.Http.HttpClientHandler</AndroidHttpClientHandlerType>
     </PropertyGroup>
 
     <ItemGroup>
