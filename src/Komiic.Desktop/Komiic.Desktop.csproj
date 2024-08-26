@@ -17,13 +17,13 @@
     <PropertyGroup Condition="$(RuntimeIdentifier.Contains('linux'))">
         <PublishAot>false</PublishAot>
     </PropertyGroup>
-    
+
     <!-- 如果是 osx 平台 取消  PublishAot ,联网失败？日志上接口是请求了的，超时。。 -->
     <!-- dotnet publish -c Release  -r osx-arm64 -p:self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeNativeLibrariesForSelfExtract=true -->
-<!--    <PropertyGroup Condition="$(RuntimeIdentifier.Contains('osx'))">-->
-<!--        <PublishAot>false</PublishAot>-->
-<!--    </PropertyGroup>-->
-    
+    <!--    <PropertyGroup Condition="$(RuntimeIdentifier.Contains('osx'))">-->
+    <!--        <PublishAot>false</PublishAot>-->
+    <!--    </PropertyGroup>-->
+
     <ItemGroup>
         <RdXmlFile Include="..\Komiic\Komiic.rd.xml"/>
     </ItemGroup>

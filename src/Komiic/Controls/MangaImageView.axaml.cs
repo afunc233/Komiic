@@ -15,14 +15,27 @@ public class MangaImageView : TemplatedControl
     public static readonly StyledProperty<MangaImageData?> MangaImageDataProperty =
         AvaloniaProperty.Register<MangaImageView, MangaImageData?>(nameof(MangaImageData));
 
+    public static readonly StyledProperty<IMangaImageLoader?> LoaderProperty =
+        AvaloniaProperty.Register<MangaImageView, IMangaImageLoader?>(nameof(Loader));
+
+
+    public static readonly StyledProperty<bool> IsLoadingProperty =
+        AvaloniaProperty.Register<MangaImageView, bool>(nameof(IsLoading));
+
+    private Image? _image;
+
+
+    static MangaImageView()
+    {
+        MangaImageDataProperty.Changed.AddClassHandler<MangaImageView>((x, _) =>
+            x.SetSize());
+    }
+
     public MangaImageData? MangaImageData
     {
         get => GetValue(MangaImageDataProperty);
         set => SetValue(MangaImageDataProperty, value);
     }
-
-    public static readonly StyledProperty<IMangaImageLoader?> LoaderProperty =
-        AvaloniaProperty.Register<MangaImageView, IMangaImageLoader?>(nameof(Loader));
 
     public IMangaImageLoader? Loader
     {
@@ -30,21 +43,10 @@ public class MangaImageView : TemplatedControl
         set => SetValue(LoaderProperty, value);
     }
 
-
-    public static readonly StyledProperty<bool> IsLoadingProperty =
-        AvaloniaProperty.Register<MangaImageView, bool>(nameof(IsLoading));
-
     public bool IsLoading
     {
         get => GetValue(IsLoadingProperty);
         private set => SetValue(IsLoadingProperty, value);
-    }
-
-
-    static MangaImageView()
-    {
-        MangaImageDataProperty.Changed.AddClassHandler<MangaImageView>((x, _) =>
-            x.SetSize());
     }
 
     private void SetSize()
@@ -113,6 +115,4 @@ public class MangaImageView : TemplatedControl
         LoadImage();
         base.OnLoaded(e);
     }
-
-    private Image? _image;
 }

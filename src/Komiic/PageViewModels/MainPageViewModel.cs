@@ -21,15 +21,17 @@ public partial class MainPageViewModel(
     IMangaInfoVOService mangaInfoVOService,
     ILogger<MainPageViewModel> logger) : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    private int _recentUpdatePageIndex;
-    private int _hotComicsPageIndex;
-
-    [ObservableProperty] private bool _isLoading;
-
     [NotifyCanExecuteChangedFor(nameof(LoadMoreRecentUpdateCommand))]
     [NotifyCanExecuteChangedFor(nameof(LoadMoreHotComicsCommand))]
     [ObservableProperty]
     private bool _hasMore = true;
+
+    private int _hotComicsPageIndex;
+
+    [ObservableProperty] private ImageLimit? _imageLimit;
+
+    [ObservableProperty] private bool _isLoading;
+    private int _recentUpdatePageIndex;
 
     public override NavBarType NavBarType => NavBarType.Main;
 
@@ -38,8 +40,6 @@ public partial class MainPageViewModel(
     public ObservableCollection<MangaInfoVO> RecentUpdateMangaInfos { get; } = [];
 
     public ObservableCollection<MangaInfoVO> HotComicsMangaInfos { get; } = [];
-
-    [ObservableProperty] private ImageLimit? _imageLimit;
 
 
     [RelayCommand]
@@ -56,10 +56,13 @@ public partial class MainPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
 
-    private bool CanLoadMore() => !IsLoading && HasMore && !IsDataError;
+    private bool CanLoadMore()
+    {
+        return !IsLoading && HasMore && !IsDataError;
+    }
 
     [RelayCommand(CanExecute = nameof(CanLoadMore))]
     private async Task LoadMoreRecentUpdate()

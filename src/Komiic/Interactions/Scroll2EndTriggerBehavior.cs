@@ -14,13 +14,22 @@ namespace Komiic.Interactions;
 public class Scroll2EndTriggerBehavior : Behavior
 {
     /// <summary>
-    /// Identifies the <seealso cref="Distance2End"/> avalonia property.
+    ///     Identifies the <seealso cref="Distance2End" /> avalonia property.
     /// </summary>
     public static readonly StyledProperty<double> Distance2EndProperty =
         AvaloniaProperty.Register<Scroll2EndTriggerBehavior, double>(nameof(Distance2End), 200d);
 
     /// <summary>
-    /// Gets or sets the bound object that  <see cref="Scroll2EndTriggerBehavior"/> will listen to. This is an avalonia property.
+    ///     Identifies the <seealso cref="LoadMoreDataCmd" /> avalonia property.
+    /// </summary>
+    public static readonly StyledProperty<ICommand?> LoadMoreDataCmdProperty =
+        AvaloniaProperty.Register<Scroll2EndTriggerBehavior, ICommand?>(nameof(LoadMoreDataCmd));
+
+    private bool _attached;
+
+    /// <summary>
+    ///     Gets or sets the bound object that  <see cref="Scroll2EndTriggerBehavior" /> will listen to. This is an avalonia
+    ///     property.
     /// </summary>
     public double Distance2End
     {
@@ -29,13 +38,8 @@ public class Scroll2EndTriggerBehavior : Behavior
     }
 
     /// <summary>
-    /// Identifies the <seealso cref="LoadMoreDataCmd"/> avalonia property.
-    /// </summary>
-    public static readonly StyledProperty<ICommand?> LoadMoreDataCmdProperty =
-        AvaloniaProperty.Register<Scroll2EndTriggerBehavior, ICommand?>(nameof(LoadMoreDataCmd));
-
-    /// <summary>
-    /// Gets or sets the bound object that  <see cref="Scroll2EndTriggerBehavior"/> will listen to. This is an avalonia property.
+    ///     Gets or sets the bound object that  <see cref="Scroll2EndTriggerBehavior" /> will listen to. This is an avalonia
+    ///     property.
     /// </summary>
     public ICommand? LoadMoreDataCmd
     {
@@ -43,12 +47,14 @@ public class Scroll2EndTriggerBehavior : Behavior
         set => SetValue(LoadMoreDataCmdProperty, value);
     }
 
-    private bool _attached;
-
     protected override void OnAttachedToVisualTree()
     {
         base.OnAttachedToVisualTree();
-        if (AssociatedObject is not Interactive control) return;
+        if (AssociatedObject is not Interactive control)
+        {
+            return;
+        }
+
         _attached = true;
         control.AddHandler(ScrollViewer.ScrollChangedEvent, ScrollViewerOnScrollChanged);
     }
@@ -56,7 +62,11 @@ public class Scroll2EndTriggerBehavior : Behavior
     protected override void OnDetachedFromVisualTree()
     {
         base.OnDetachedFromVisualTree();
-        if (AssociatedObject is not Interactive control) return;
+        if (AssociatedObject is not Interactive control)
+        {
+            return;
+        }
+
         _attached = false;
 
         control.RemoveHandler(ScrollViewer.ScrollChangedEvent, ScrollViewerOnScrollChanged);
@@ -85,12 +95,12 @@ public class Scroll2EndTriggerBehavior : Behavior
         {
             return;
         }
-        
+
         var extent = scrollViewer.Extent;
         var offset = scrollViewer.Offset;
         if (extent.Height - scrollViewer.Viewport.Height < 0.5d)
-        {
             // Layout 那一次，调用 Command
+        {
             await CallCommand(scrollViewer, e);
         }
         else if (extent.Height - (offset.Y + scrollViewer.Viewport.Height) < Distance2End)
@@ -132,6 +142,7 @@ public class Scroll2EndTriggerBehavior : Behavior
                     LoadMoreDataCmd?.Execute(e);
                 }
             }
+
             break;
         }
     }

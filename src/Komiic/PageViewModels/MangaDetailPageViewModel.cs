@@ -33,18 +33,17 @@ public partial class MangaDetailPageViewModel(
     ILogger<MangaDetailPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
-    public override string Title => "漫画详情";
-
-    [ObservableProperty] private MangaInfo _mangaInfo = null!;
-    [ObservableProperty] private MangaInfoVO _mangaInfoVO = null!;
-
-    [ObservableProperty] private int _messageCount;
+    [ObservableProperty] private bool _isFavorite;
 
     [ObservableProperty] private LastMessageByComicId? _lastMessageByComicId;
 
     [ObservableProperty] private LastReadByComicId? _lastReadByComicId;
 
-    [ObservableProperty] private bool _isFavorite;
+    [ObservableProperty] private MangaInfo _mangaInfo = null!;
+    [ObservableProperty] private MangaInfoVO _mangaInfoVO = null!;
+
+    [ObservableProperty] private int _messageCount;
+    public override string Title => "漫画详情";
 
 
     public ObservableCollection<FolderVm> MyFolders { get; } = [];
@@ -52,6 +51,8 @@ public partial class MangaDetailPageViewModel(
     public ObservableCollection<MangaInfoVO> RecommendMangaInfoList { get; } = [];
 
     public ObservableCollection<GroupChaptersByComicId> GroupingChaptersByComicIdList { get; } = [];
+
+    public override NavBarType NavBarType => NavBarType.MangaDetail;
 
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
@@ -114,7 +115,7 @@ public partial class MangaDetailPageViewModel(
 
 
         var result = await mangaDetailDataService.AddComicToFolder(folder.Id, MangaInfo.Id);
-        if (result.Data is { })
+        if (result.Data is not null)
         {
         }
     }
@@ -126,7 +127,7 @@ public partial class MangaDetailPageViewModel(
         // messenger.Send(new OpenAuthorMessage(author));
 
         var result = await mangaDetailDataService.RemoveComicToFolder(folder.Id, MangaInfo.Id);
-        if (result.Data is { })
+        if (result.Data is not null)
         {
         }
     }
@@ -138,7 +139,7 @@ public partial class MangaDetailPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
 
     [RelayCommand]
@@ -184,7 +185,7 @@ public partial class MangaDetailPageViewModel(
             foreach (var groupingChaptersByComicId in chapterByComicIdData.Data.GroupBy(it =>
                          it.Type))
             {
-                GroupingChaptersByComicIdList.Add(new()
+                GroupingChaptersByComicIdList.Add(new GroupChaptersByComicId
                 {
                     Type = groupingChaptersByComicId.Key,
                     Chapters = groupingChaptersByComicId.ToList()
@@ -258,13 +259,10 @@ public partial class MangaDetailPageViewModel(
             MyFolders.Clear();
         }
     }
-
-    public override NavBarType NavBarType => NavBarType.MangaDetail;
 }
 
 public partial class FolderVm(Folder folder) : ObservableObject
 {
-    public Folder Folder { get; init; } = folder;
-
     [ObservableProperty] private bool _inFolder;
+    public Folder Folder { get; init; } = folder;
 }

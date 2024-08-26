@@ -19,7 +19,8 @@
                 Text="{Binding Title}" />
         </Panel>
 
-        <controls:MangaList ItemsSource="{Binding AllAuthors}" ItemTemplate="{StaticResource AuthorInfoTemplate}" LoadMoreCommand="{Binding LoadAllAuthorsCommand}" />
+        <controls:MangaList ItemsSource="{Binding AllAuthors}" ItemTemplate="{StaticResource AuthorInfoTemplate}"
+                            LoadMoreCommand="{Binding LoadAllAuthorsCommand}" />
 
     </DockPanel>
 </UserControl>

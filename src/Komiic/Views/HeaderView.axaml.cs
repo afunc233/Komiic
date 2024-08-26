@@ -37,7 +37,10 @@ public partial class HeaderView : UserControl
             return;
         }
 
-        if (sender is not ToggleButton toggleButton) return;
+        if (sender is not ToggleButton toggleButton)
+        {
+            return;
+        }
 
         if (toggleButton.IsChecked == true)
         {
@@ -60,7 +63,7 @@ public partial class HeaderView : UserControl
 
         async void Action()
         {
-            bool success = await TopLevel.GetTopLevel(this)!.Launcher.LaunchUriAsync(uri);
+            var success = await TopLevel.GetTopLevel(this)!.Launcher.LaunchUriAsync(uri);
             if (success)
             {
             }

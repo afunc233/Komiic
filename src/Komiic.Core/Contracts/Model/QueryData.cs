@@ -62,7 +62,7 @@ internal enum QueryDataEnum
     LastMessageByComicId,
     VoteMessage,
     MessageVotesByComicId,
-    DeleteMessage,
+    DeleteMessage
 }
 
 internal static class QueryDataExt
@@ -236,14 +236,16 @@ internal static class QueryDataExt
             {
                 QueryDataEnum.DeleteMessage,
                 "mutation deleteMessage($messageId: ID!) {\n  deleteMessage(messageId: $messageId)\n}"
-            },
+            }
         };
 
     private static string FirstCharToLowerStringBuilder(this QueryDataEnum queryData)
     {
         var input = queryData.ToString();
         if (string.IsNullOrEmpty(input))
+        {
             return input;
+        }
 
         var sb = new StringBuilder(input.Length);
         sb.Append(char.ToLower(input[0]));
@@ -253,25 +255,25 @@ internal static class QueryDataExt
 
     public static QueryData GetQueryData(this QueryDataEnum operationName)
     {
-        if (OperationQueryDic.TryGetValue(operationName, out string? query))
+        if (OperationQueryDic.TryGetValue(operationName, out var query))
         {
-            return new(operationName.FirstCharToLowerStringBuilder(), query);
+            return new QueryData(operationName.FirstCharToLowerStringBuilder(), query);
         }
 
-        throw new($"Operation :{operationName} not found");
+        throw new Exception($"Operation :{operationName} not found");
     }
 
     public static QueryData<T> GetQueryDataWithVariables<T>(this QueryDataEnum operationName, T variables)
     {
-        if (OperationQueryDic.TryGetValue(operationName, out string? query))
+        if (OperationQueryDic.TryGetValue(operationName, out var query))
         {
-            return new(operationName.FirstCharToLowerStringBuilder(), query)
+            return new QueryData<T>(operationName.FirstCharToLowerStringBuilder(), query)
             {
                 Variables = variables
             };
         }
 
-        throw new($"Operation :{operationName} not found");
+        throw new Exception($"Operation :{operationName} not found");
     }
 
     #endregion
@@ -353,7 +355,7 @@ public class FavoritePaginationVariables
     [JsonPropertyName("pagination")]
     public FavoritePagination Pagination { get; set; } = new()
     {
-        OrderBy = "COMIC_DATE_UPDATED",
+        OrderBy = "COMIC_DATE_UPDATED"
     };
 }
 

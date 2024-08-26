@@ -13,8 +13,20 @@ public class KomiicHostedService(
     IEnumerable<IActivationHandler> activationHandlers,
     ILogger<KomiicHostedService> logger) : IHostedService
 {
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        await Task.CompletedTask;
+
+        await HandleByGroupAsync(cancellationToken);
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await Task.CompletedTask;
+    }
+
     /// <summary>
-    /// 分组并行执行
+    ///     分组并行执行
     /// </summary>
     /// <param name="cancellationToken"></param>
     private async Task HandleByGroupAsync(CancellationToken cancellationToken)
@@ -44,17 +56,5 @@ public class KomiicHostedService(
                 }
             }
         }
-    }
-
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-        await Task.CompletedTask;
-
-        await HandleByGroupAsync(cancellationToken);
-    }
-
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-        await Task.CompletedTask;
     }
 }

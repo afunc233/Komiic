@@ -7,6 +7,10 @@ namespace Komiic.Core.Services;
 
 public class DiskCacheService : ICacheService
 {
+    private readonly string _jsonCacheFolder = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(Komiic),
+        "Cache", "Jsons");
+
     private readonly ILogger _logger;
 
     public DiskCacheService(ILogger<DiskCacheService> logger)
@@ -15,15 +19,14 @@ public class DiskCacheService : ICacheService
         AesUtil.SetLogger(logger);
     }
 
-    private readonly string _jsonCacheFolder = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(Komiic),
-        "Cache", "Jsons");
-
     async Task<string?> ICacheService.GetLocalCacheStr(string key, TimeSpan? timeSpan)
     {
-        string? path = Path.Combine(_jsonCacheFolder, CreateMD5(key));
+        var path = Path.Combine(_jsonCacheFolder, CreateMD5(key));
 
-        if (!File.Exists(path)) return default;
+        if (!File.Exists(path))
+        {
+            return default;
+        }
 
         if (timeSpan.HasValue)
         {
@@ -34,9 +37,12 @@ public class DiskCacheService : ICacheService
             }
         }
 
-        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return default;
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return default;
+        }
 
-        string json = await File.ReadAllTextAsync(path);
+        var json = await File.ReadAllTextAsync(path);
 
         return AesUtil.AesDecrypt(json);
     }
@@ -45,7 +51,7 @@ public class DiskCacheService : ICacheService
     {
         try
         {
-            string path = Path.Combine(_jsonCacheFolder, CreateMD5(key));
+            var path = Path.Combine(_jsonCacheFolder, CreateMD5(key));
             Directory.CreateDirectory(_jsonCacheFolder);
             await File.WriteAllTextAsync(path, AesUtil.AesEncrypt(cache)).ConfigureAwait(false);
             await Task.CompletedTask;
@@ -60,21 +66,24 @@ public class DiskCacheService : ICacheService
     {
         await Task.CompletedTask;
 
-        string path = Path.Combine(_jsonCacheFolder, CreateMD5(key));
+        var path = Path.Combine(_jsonCacheFolder, CreateMD5(key));
 
-        if (!File.Exists(path)) return;
+        if (!File.Exists(path))
+        {
+            return;
+        }
 
         File.Delete(path);
     }
 
     private static string CreateMD5(string input)
     {
-        byte[] bytes = Encoding.ASCII.GetBytes(input);
+        var bytes = Encoding.ASCII.GetBytes(input);
         return BitConverter.ToString(MD5.HashData(bytes)).Replace("-", "");
     }
-    
+
     #region Aes
-    
+
     private static class AesUtil
     {
         private const string KeyString = "45863214759886542365896541236548"; // 32字节的密钥
@@ -91,7 +100,7 @@ public class DiskCacheService : ICacheService
         }
 
         /// <summary>
-        /// 解密
+        ///     解密
         /// </summary>
         /// <param name="decryptStr"></param>
         /// <returns></returns>
@@ -101,7 +110,7 @@ public class DiskCacheService : ICacheService
         }
 
         /// <summary>
-        /// 解密
+        ///     解密
         /// </summary>
         /// <param name="decryptStr">要解密的串</param>
         /// <param name="aesKey">密钥</param>
@@ -111,7 +120,7 @@ public class DiskCacheService : ICacheService
         {
             try
             {
-                byte[] byteDecrypt = Convert.FromBase64String(decryptStr);
+                var byteDecrypt = Convert.FromBase64String(decryptStr);
 
                 using var aes = Aes.Create();
                 aes.Padding = PaddingMode.PKCS7;
@@ -121,7 +130,7 @@ public class DiskCacheService : ICacheService
                 aes.IV = aesIV;
 
                 using var decryptor = aes.CreateDecryptor(aesKey, aesIV);
-                byte[] decrypted = decryptor.TransformFinalBlock(
+                var decrypted = decryptor.TransformFinalBlock(
                     byteDecrypt, 0, byteDecrypt.Length);
                 return Encoding.UTF8.GetString(decrypted);
             }
@@ -134,7 +143,7 @@ public class DiskCacheService : ICacheService
         }
 
         /// <summary>
-        /// 加密
+        ///     加密
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
@@ -144,7 +153,7 @@ public class DiskCacheService : ICacheService
         }
 
         /// <summary>
-        /// 加密
+        ///     加密
         /// </summary>
         /// <param name="content"></param>
         /// <param name="byteKey"></param>
@@ -154,7 +163,7 @@ public class DiskCacheService : ICacheService
         {
             try
             {
-                byte[] byteContent = Encoding.UTF8.GetBytes(content);
+                var byteContent = Encoding.UTF8.GetBytes(content);
 
                 using var aes = Aes.Create();
                 aes.Padding = PaddingMode.PKCS7;
@@ -164,7 +173,7 @@ public class DiskCacheService : ICacheService
                 aes.IV = byteIV;
 
                 using var encryptor = aes.CreateEncryptor(byteKey, byteIV);
-                byte[] decrypted = encryptor.TransformFinalBlock(byteContent, 0, byteContent.Length);
+                var decrypted = encryptor.TransformFinalBlock(byteContent, 0, byteContent.Length);
 
                 return Convert.ToBase64String(decrypted);
             }
@@ -178,5 +187,4 @@ public class DiskCacheService : ICacheService
     }
 
     #endregion
-    
 }

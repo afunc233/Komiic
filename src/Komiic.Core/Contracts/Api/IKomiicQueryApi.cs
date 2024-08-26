@@ -6,6 +6,26 @@ namespace Komiic.Core.Contracts.Api;
 [Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute30)]
 internal interface IKomiicQueryApi
 {
+    #region 漫画内容
+
+    /// <summary>
+    ///     根据章节获取图片
+    /// </summary>
+    /// <param name="queryData"></param>
+    /// <returns></returns>
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<ImagesByChapterIdData>> GetImagesByChapterId([Body] QueryData<ChapterIdVariables> queryData);
+
+    #endregion
+
+    #region 推薦
+
+    [Post(KomiicConst.QueryUrl)]
+    Task<ResponseData<RecommendComicIdsData>> GetRecommendComicIds(
+        [Body] QueryData<RecommendComicIdsPaginationVariables> queryData);
+
+    #endregion
+
     #region 首页
 
     [Post(KomiicConst.QueryUrl)]
@@ -19,7 +39,7 @@ internal interface IKomiicQueryApi
     #region 漫画详情
 
     /// <summary>
-    /// 根据id 获取漫画详情
+    ///     根据id 获取漫画详情
     /// </summary>
     /// <param name="queryData"></param>
     /// <returns></returns>
@@ -27,7 +47,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<ComicByIdData>> GetMangaInfoById([Body] QueryData<ComicIdVariables> queryData);
 
     /// <summary>
-    /// 根据id 列表 获取漫画详情
+    ///     根据id 列表 获取漫画详情
     /// </summary>
     /// <param name="queryData"></param>
     /// <returns></returns>
@@ -35,7 +55,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<ComicByIdsData>> GetMangaInfoByIds([Body] QueryData<ComicIdsVariables> queryData);
 
     /// <summary>
-    /// 根据id 获取推荐漫画id
+    ///     根据id 获取推荐漫画id
     /// </summary>
     /// <param name="queryData"></param>
     /// <returns></returns>
@@ -43,7 +63,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<RecommendComicByIdData>> GetRecommendComicById([Body] QueryData<ComicIdVariables> queryData);
 
     /// <summary>
-    /// 根据ID 获取章节信息
+    ///     根据ID 获取章节信息
     /// </summary>
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
@@ -51,22 +71,10 @@ internal interface IKomiicQueryApi
 
     #endregion
 
-    #region 漫画内容
-
-    /// <summary>
-    /// 根据章节获取图片
-    /// </summary>
-    /// <param name="queryData"></param>
-    /// <returns></returns>
-    [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<ImagesByChapterIdData>> GetImagesByChapterId([Body] QueryData<ChapterIdVariables> queryData);
-
-    #endregion
-
     #region 分类
 
     /// <summary>
-    /// 獲取分類
+    ///     獲取分類
     /// </summary>
     /// <param name="queryData"></param>
     /// <returns></returns>
@@ -74,7 +82,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<AllCategoryData>> GetAllCategory([Body] QueryData queryData);
 
     /// <summary>
-    /// 根據分類獲取漫画
+    ///     根據分類獲取漫画
     /// </summary>
     /// <param name="getQueryDataWithVariables"></param>
     /// <returns></returns>
@@ -111,19 +119,11 @@ internal interface IKomiicQueryApi
 
     #endregion
 
-    #region 推薦
-
-    [Post(KomiicConst.QueryUrl)]
-    Task<ResponseData<RecommendComicIdsData>> GetRecommendComicIds(
-        [Body] QueryData<RecommendComicIdsPaginationVariables> queryData);
-
-    #endregion
-
     #region 書櫃
 
     /// <summary>
-    /// 獲取書櫃圖片 https://komiic.com/api/folder/image/IzSzen1J
-    /// IzSzen1J : folderKey
+    ///     獲取書櫃圖片 https://komiic.com/api/folder/image/IzSzen1J
+    ///     IzSzen1J : folderKey
     /// </summary>
     /// <param name="queryData"></param>
     /// <returns></returns>
@@ -168,7 +168,7 @@ internal interface IKomiicQueryApi
     Task<ResponseData<MessageChanData>> GetMessageChan([Body] QueryData<MessageIdVariables> queryData);
 
     /// <summary>
-    /// 获取留言数量
+    ///     获取留言数量
     /// </summary>
     /// <returns></returns>
     [Post(KomiicConst.QueryUrl)]
@@ -176,7 +176,7 @@ internal interface IKomiicQueryApi
         GetMessageCountByComicId([Body] QueryData<ComicIdVariables> queryData);
 
     /// <summary>
-    /// 最后一条留言
+    ///     最后一条留言
     /// </summary>
     /// <param name="queryData"></param>
     /// <returns></returns>

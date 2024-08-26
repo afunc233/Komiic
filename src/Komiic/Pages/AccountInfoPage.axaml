@@ -11,7 +11,7 @@
     xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
     xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <Border
         Classes="BoxShadow"
         HorizontalAlignment="Center"

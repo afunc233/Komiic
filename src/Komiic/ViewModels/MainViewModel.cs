@@ -15,9 +15,35 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
     IRecipient<OpenMangaViewerMessage>, IRecipient<OpenAuthorMessage>, IRecipient<OpenAccountInfoMessage>,
     IRecipient<OpenCategoryMessage>, IRecipient<OpenLoginDialogMessage>, IRecipient<BackRequestedMessage>
 {
+    private readonly IAccountService _accountService;
+
+    private readonly List<IPageViewModel> _selectedContentHistory = [];
+
+
+    private readonly IServiceProvider _serviceProvider;
+    [ObservableProperty] private bool _isTransitionReversed;
+
+    [ObservableProperty] private IPageViewModel? _selectedContent;
+
+    [ObservableProperty] private NavBar? _selectedNavBar;
+
+    public MainViewModel(IServiceProvider serviceProvider, IAccountService accountService,
+        HeaderViewModel headerViewModel, IMessenger messenger) :
+        base(messenger)
+    {
+        _serviceProvider = serviceProvider;
+        _accountService = accountService;
+        Header = headerViewModel;
+
+        SelectedNavBar = MenuItemsSource.FirstOrDefault();
+#pragma warning disable IL2026
+        IsActive = true;
+#pragma warning restore IL2026
+    }
+
     public ObservableCollection<NavBar> MenuItemsSource { get; } =
     [
-        new()
+        new NavBar
         {
             NavType = NavBarType.Main,
             BarName = "首页",
@@ -26,10 +52,10 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
-            CheckedForeground = "#ff0000",
+            CheckedForeground = "#ff0000"
         },
 
-        new()
+        new NavBar
         {
             NavType = NavBarType.RecentUpdate,
             BarName = "最近更新",
@@ -38,10 +64,10 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
-            CheckedForeground = "#ff0000",
+            CheckedForeground = "#ff0000"
         },
 
-        new()
+        new NavBar
         {
             NavType = NavBarType.Hot,
             BarName = "夯",
@@ -50,10 +76,10 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
-            CheckedForeground = "#ff0000",
+            CheckedForeground = "#ff0000"
         },
 
-        new()
+        new NavBar
         {
             NavType = NavBarType.AllManga,
             BarName = "所有漫畫",
@@ -62,10 +88,10 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
-            CheckedForeground = "#ff0000",
+            CheckedForeground = "#ff0000"
         },
 
-        new()
+        new NavBar
         {
             NavType = NavBarType.Authors,
             BarName = "作者列表",
@@ -74,9 +100,9 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
-            CheckedForeground = "#ff0000",
+            CheckedForeground = "#ff0000"
         },
-        new()
+        new NavBar
         {
             NavType = NavBarType.About,
             BarName = "关于",
@@ -85,9 +111,84 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
-            CheckedForeground = "#ff0000",
+            CheckedForeground = "#ff0000"
         }
     ];
+
+    public IViewModelBase? Header { get; }
+
+    public void Receive(BackRequestedMessage message)
+    {
+        var hasBack = false;
+
+        var lastContent = _selectedContentHistory.LastOrDefault();
+        if (lastContent is not null)
+        {
+            SelectedContent = lastContent;
+
+            _selectedContentHistory.Remove(lastContent);
+
+            hasBack = true;
+        }
+
+        message.Reply(hasBack);
+    }
+
+    public void Receive(OpenAccountInfoMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<AccountInfoPageViewModel>();
+
+        viewModel.AccountData = message.AccountData;
+        viewModel.ImageLimit = message.ImageLimit;
+
+        SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenAuthorMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<AuthorDetailPageViewModel>();
+
+        viewModel.Author = message.Author;
+        SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenCategoryMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<AllMangaPageViewModel>();
+
+        viewModel.WantSelectedCategory = message.Category;
+
+        SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenLoginDialogMessage message)
+    {
+        var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
+        dialogContent.Username = _accountService.CacheUserName;
+        dialogContent.Password = _accountService.CachePassword;
+
+        var messageResponse = Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
+
+        message.Reply(messageResponse.Response);
+    }
+
+
+    public void Receive(OpenMangaMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<MangaDetailPageViewModel>();
+
+        viewModel.MangaInfo = message.MangaInfo;
+        SelectedContent = viewModel;
+    }
+
+    public void Receive(OpenMangaViewerMessage message)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<MangaViewerPageViewModel>();
+
+        viewModel.MangaInfo = message.MangaInfo;
+        viewModel.Chapter = message.Chapter;
+        SelectedContent = viewModel;
+    }
 
     partial void OnSelectedNavBarChanged(NavBar? value)
     {
@@ -124,13 +225,6 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         }
     }
 
-    [ObservableProperty] private NavBar? _selectedNavBar;
-
-    [ObservableProperty] private IPageViewModel? _selectedContent;
-    [ObservableProperty] private bool _isTransitionReversed;
-
-    public IViewModelBase? Header { get; }
-
     partial void OnSelectedContentChanged(IPageViewModel? value)
     {
         if (value == null)
@@ -150,7 +244,7 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
             return;
         }
 
-        bool existValue = _selectedContentHistory.Contains(oldValue) || _selectedContentHistory.Contains(newValue);
+        var existValue = _selectedContentHistory.Contains(oldValue) || _selectedContentHistory.Contains(newValue);
         if (!existValue)
         {
             if (_selectedContentHistory.Any())
@@ -173,98 +267,5 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         (NavBarType NavBarType, int Index ) indexNew = allNavBars.FirstOrDefault(x => x.NavType == newValue.NavBarType);
 
         IsTransitionReversed = indexOld.Index > indexNew.Index;
-    }
-
-
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IAccountService _accountService;
-
-    private readonly List<IPageViewModel> _selectedContentHistory = [];
-
-    public MainViewModel(IServiceProvider serviceProvider, IAccountService accountService,
-        HeaderViewModel headerViewModel, IMessenger messenger) :
-        base(messenger)
-    {
-        _serviceProvider = serviceProvider;
-        _accountService = accountService;
-        Header = headerViewModel;
-
-        SelectedNavBar = MenuItemsSource.FirstOrDefault();
-#pragma warning disable IL2026
-        IsActive = true;
-#pragma warning restore IL2026
-    }
-
-
-    public void Receive(OpenMangaMessage message)
-    {
-        var viewModel = _serviceProvider.GetRequiredService<MangaDetailPageViewModel>();
-
-        viewModel.MangaInfo = message.MangaInfo;
-        SelectedContent = viewModel;
-    }
-
-    public void Receive(OpenMangaViewerMessage message)
-    {
-        var viewModel = _serviceProvider.GetRequiredService<MangaViewerPageViewModel>();
-
-        viewModel.MangaInfo = message.MangaInfo;
-        viewModel.Chapter = message.Chapter;
-        SelectedContent = viewModel;
-    }
-
-    public void Receive(OpenAuthorMessage message)
-    {
-        var viewModel = _serviceProvider.GetRequiredService<AuthorDetailPageViewModel>();
-
-        viewModel.Author = message.Author;
-        SelectedContent = viewModel;
-    }
-
-    public void Receive(OpenAccountInfoMessage message)
-    {
-        var viewModel = _serviceProvider.GetRequiredService<AccountInfoPageViewModel>();
-
-        viewModel.AccountData = message.AccountData;
-        viewModel.ImageLimit = message.ImageLimit;
-
-        SelectedContent = viewModel;
-    }
-
-    public void Receive(OpenCategoryMessage message)
-    {
-        var viewModel = _serviceProvider.GetRequiredService<AllMangaPageViewModel>();
-
-        viewModel.WantSelectedCategory = message.Category;
-
-        SelectedContent = viewModel;
-    }
-
-    public void Receive(OpenLoginDialogMessage message)
-    {
-        var dialogContent = _serviceProvider.GetRequiredService<LoginViewModel>();
-        dialogContent.Username = _accountService.CacheUserName;
-        dialogContent.Password = _accountService.CachePassword;
-
-        var messageResponse = Messenger.Send(new OpenDialogMessage<bool>(dialogContent));
-
-        message.Reply(messageResponse.Response);
-    }
-
-    public void Receive(BackRequestedMessage message)
-    {
-        var hasBack = false;
-
-        var lastContent = _selectedContentHistory.LastOrDefault();
-        if (lastContent is not null)
-        {
-            SelectedContent = lastContent;
-
-            _selectedContentHistory.Remove(lastContent);
-
-            hasBack = true;
-        }
-
-        message.Reply(hasBack);
     }
 }

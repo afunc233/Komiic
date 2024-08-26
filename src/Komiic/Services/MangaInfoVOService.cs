@@ -25,7 +25,7 @@ public class MangaInfoVOService(
         var favoriteComicIds = accountService.AccountData?.FavoriteComicIds;
         return new MangaInfoVO(mangaInfo)
         {
-            IsFavourite = favoriteComicIds?.Any(it => string.Equals(it, mangaInfo.Id)) ?? false,
+            IsFavourite = favoriteComicIds?.Any(it => string.Equals(it, mangaInfo.Id)) ?? false
         };
     }
 

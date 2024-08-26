@@ -33,7 +33,11 @@ public partial class MangaViewerPage : UserControl
 
     private void MangaViewerPageViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (!string.Equals(e.PropertyName, nameof(MangaViewerPageViewModel.HistoryPage))) return;
+        if (!string.Equals(e.PropertyName, nameof(MangaViewerPageViewModel.HistoryPage)))
+        {
+            return;
+        }
+
         if (sender is MangaViewerPageViewModel mangaViewerPageViewModel)
         {
             MangaViewerItemsControl.ScrollIntoView(mangaViewerPageViewModel.HistoryPage);

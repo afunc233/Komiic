@@ -12,6 +12,8 @@ using Komiic.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace Komiic.Extensions;
 
@@ -21,13 +23,13 @@ public static class KomiicExtensions
     {
         // 注入消息中心
         services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
-        services.AddSingleton<IMangaInfoVOService,MangaInfoVOService>();
+        services.AddSingleton<IMangaInfoVOService, MangaInfoVOService>();
 
         if (!OperatingSystem.IsBrowser())
         {
             services.AddSingleton<IActivationHandler, LoadCookiesActivationHandler>();
         }
-        
+
         // 注入图片加载器
         services.AddImageLoader();
 
@@ -77,13 +79,12 @@ public static class KomiicExtensions
     }
 
 
-
     public static void ConfigNLog(this string appName)
     {
         // Step 1. Create configuration object 
-        var config = new NLog.Config.LoggingConfiguration();
+        var config = new LoggingConfiguration();
 
-        var fileTarget = new NLog.Targets.FileTarget();
+        var fileTarget = new FileTarget();
         config.AddTarget("file", fileTarget);
 
         // Step 3. Set target properties 
@@ -99,11 +100,11 @@ public static class KomiicExtensions
         }
 
         // Step 4. Define rules
-        var fileRule = new NLog.Config.LoggingRule("*", minLevel, fileTarget);
+        var fileRule = new LoggingRule("*", minLevel, fileTarget);
 
-        var microsoftLogRule = new NLog.Config.LoggingRule("Microsoft.*", LogLevel.Warn, fileTarget);
+        var microsoftLogRule = new LoggingRule("Microsoft.*", LogLevel.Warn, fileTarget);
         var httpClientLogRule =
-            new NLog.Config.LoggingRule("System.Net.Http.HttpClient", LogLevel.Warn, fileTarget);
+            new LoggingRule("System.Net.Http.HttpClient", LogLevel.Warn, fileTarget);
 
         config.LoggingRules.Add(fileRule);
         config.LoggingRules.Add(microsoftLogRule);
@@ -114,7 +115,7 @@ public static class KomiicExtensions
 
     private static bool ShouldTraceLog(string appName)
     {
-        string debugStateFile = Path.Combine(AppContext.BaseDirectory, $"{appName}.debug");
+        var debugStateFile = Path.Combine(AppContext.BaseDirectory, $"{appName}.debug");
         return File.Exists(debugStateFile);
     }
 }

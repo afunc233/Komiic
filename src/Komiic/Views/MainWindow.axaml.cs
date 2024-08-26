@@ -3,29 +3,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Animation;
 using Avalonia.Controls;
+using Avalonia.Rendering;
 using Avalonia.Styling;
 
 namespace Komiic.Views;
 
 public partial class MainWindow : Window
 {
-    public MainAppSplashContent? SplashScreen { get; init; }
-
     private CancellationTokenSource? _splashCts;
 
-    /// <summary>
-    /// TODO 在 ubuntu 下  resize 没了？
-    /// </summary>
     public MainWindow()
     {
         InitializeComponent();
-#if DEBUG                                                                                      
-        RendererDiagnostics.DebugOverlays = Avalonia.Rendering.RendererDebugOverlays.None |
-                                            Avalonia.Rendering.RendererDebugOverlays.Fps |
-                                            Avalonia.Rendering.RendererDebugOverlays.LayoutTimeGraph |
-                                            Avalonia.Rendering.RendererDebugOverlays.RenderTimeGraph;
-#endif       
+#if DEBUG
+        RendererDiagnostics.DebugOverlays = RendererDebugOverlays.None |
+                                            RendererDebugOverlays.Fps |
+                                            RendererDebugOverlays.LayoutTimeGraph |
+                                            RendererDebugOverlays.RenderTimeGraph;
+#endif
     }
+
+    public MainAppSplashContent? SplashScreen { get; init; }
 
     protected override async void OnOpened(EventArgs e)
     {
@@ -39,7 +37,7 @@ public partial class MainWindow : Window
 
         PseudoClasses.Set(":splashOpen", true);
         var time = DateTime.Now;
-        _splashCts = new();
+        _splashCts = new CancellationTokenSource();
         await SplashScreen.RunTasks(_splashCts.Token);
         _splashCts?.Dispose();
         _splashCts = null;
@@ -70,22 +68,22 @@ public partial class MainWindow : Window
             FillMode = FillMode.Forward,
             Children =
             {
-                new()
+                new KeyFrame
                 {
-                    Cue = new(0d),
+                    Cue = new Cue(0d),
                     Setters =
                     {
                         new Setter(OpacityProperty, 1d)
                     }
                 },
-                new()
+                new KeyFrame
                 {
-                    Cue = new(1d),
+                    Cue = new Cue(1d),
                     Setters =
                     {
-                        new Setter(OpacityProperty, 0d),
+                        new Setter(OpacityProperty, 0d)
                     },
-                    KeySpline = new(0, 0, 0, 1)
+                    KeySpline = new KeySpline(0, 0, 0, 1)
                 }
             }
         };
@@ -95,22 +93,22 @@ public partial class MainWindow : Window
             Duration = TimeSpan.FromMilliseconds(167),
             Children =
             {
-                new()
+                new KeyFrame
                 {
-                    Cue = new(0d),
+                    Cue = new Cue(0d),
                     Setters =
                     {
                         new Setter(OpacityProperty, 0d)
                     }
                 },
-                new()
+                new KeyFrame
                 {
-                    Cue = new(1d),
+                    Cue = new Cue(1d),
                     Setters =
                     {
-                        new Setter(OpacityProperty, 1d),
+                        new Setter(OpacityProperty, 1d)
                     },
-                    KeySpline = new(0, 0, 0, 1)
+                    KeySpline = new KeySpline(0, 0, 0, 1)
                 }
             }
         };
@@ -129,5 +127,4 @@ public partial class MainWindow : Window
 
         base.OnClosed(e);
     }
-
 }

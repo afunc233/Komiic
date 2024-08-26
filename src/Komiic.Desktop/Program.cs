@@ -7,13 +7,13 @@ namespace Komiic.Desktop;
 
 internal static class Program
 {
+    private static readonly Logger Logger;
+
     static Program()
     {
         $"{nameof(Komiic)}.{nameof(Desktop)}".ConfigNLog();
         Logger = LogManager.GetCurrentClassLogger();
     }
-
-    private static readonly Logger Logger;
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -32,15 +32,17 @@ internal static class Program
         }
         finally
         {
-            Logger.Debug($"Application terminated");
+            Logger.Debug("Application terminated");
         }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     private static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithHarmonyOSSansSCFont()
             .LogToTrace()
             .With(new SkiaOptions { UseOpacitySaveLayer = true });
+    }
 }

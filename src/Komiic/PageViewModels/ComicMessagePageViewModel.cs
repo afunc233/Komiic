@@ -19,27 +19,28 @@ public partial class ComicMessagePageViewModel(
     IMessenger messenger,
     ILogger<ComicMessagePageViewModel> logger) : AbsPageViewModel(logger)
 {
+    private readonly List<MessageVotesByComicId> _messageVotesByComicIdData = [];
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(LoadMoreDataCommand))]
+    private bool _hasMore;
+
+    [ObservableProperty] private MangaDetailPageViewModel _mangaDetailPageViewModel = null!;
     private int _pageIndex;
+
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AddMessageToComicCommand))]
+    private string? _sendMessageText;
 
     public override NavBarType NavBarType => NavBarType.ComicMessage;
 
     public override string Title => "漫画留言";
 
-    [ObservableProperty] private MangaDetailPageViewModel _mangaDetailPageViewModel = null!;
-
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(LoadMoreDataCommand))]
-    private bool _hasMore;
-
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AddMessageToComicCommand))]
-    private string? _sendMessageText;
-
     public bool HasLogin => accountService.AccountData is not null;
 
     public ObservableCollection<MessagesByComicIdVm> MessagesByComicIds { get; } = [];
 
-    private readonly List<MessageVotesByComicId> _messageVotesByComicIdData = [];
-
     private bool CanLoadMore => HasMore && !IsLoading;
+
+    private bool CanAddMessage => !string.IsNullOrWhiteSpace(SendMessageText);
 
     protected override async Task OnNavigatedTo()
     {
@@ -102,7 +103,7 @@ public partial class ComicMessagePageViewModel(
     {
         if (!HasLogin)
         {
-            var loginResult= await messenger.Send(new OpenLoginDialogMessage());
+            var loginResult = await messenger.Send(new OpenLoginDialogMessage());
             if (!loginResult)
             {
                 return;
@@ -123,7 +124,7 @@ public partial class ComicMessagePageViewModel(
     {
         if (!HasLogin)
         {
-            var loginResult= await messenger.Send(new OpenLoginDialogMessage());
+            var loginResult = await messenger.Send(new OpenLoginDialogMessage());
             if (!loginResult)
             {
                 return;
@@ -144,7 +145,7 @@ public partial class ComicMessagePageViewModel(
     {
         if (!HasLogin)
         {
-            var loginResult= await messenger.Send(new OpenLoginDialogMessage());
+            var loginResult = await messenger.Send(new OpenLoginDialogMessage());
             if (!loginResult)
             {
                 return;
@@ -163,14 +164,12 @@ public partial class ComicMessagePageViewModel(
         await Task.CompletedTask;
     }
 
-    private bool CanAddMessage => !string.IsNullOrWhiteSpace(SendMessageText);
-
     [RelayCommand(CanExecute = nameof(CanAddMessage))]
     private async Task AddMessageToComic()
     {
         if (!HasLogin)
         {
-            var loginResult= await messenger.Send(new OpenLoginDialogMessage());
+            var loginResult = await messenger.Send(new OpenLoginDialogMessage());
             if (!loginResult)
             {
                 return;
@@ -197,7 +196,7 @@ public partial class ComicMessagePageViewModel(
             SendMessageText = null;
             MessagesByComicIds.Insert(0, new MessagesByComicIdVm(addMessageToComicData.Data)
             {
-                IsSelf = true,
+                IsSelf = true
             });
         }
     }
@@ -213,17 +212,16 @@ public partial class ComicMessagePageViewModel(
 
 public partial class MessagesByComicIdVm(MessagesByComicId messagesByComicId) : ObservableObject
 {
-    public MessagesByComicId MessagesByComicId { get; init; } = messagesByComicId;
-
-    [ObservableProperty] private int _upCount = messagesByComicId.UpCount;
-
     [ObservableProperty] private int _downCount = messagesByComicId.DownCount;
-
-    [ObservableProperty] private bool _hasUp;
 
     [ObservableProperty] private bool _hasDown;
 
+    [ObservableProperty] private bool _hasUp;
+
     [ObservableProperty] private bool _isSelf;
+
+    [ObservableProperty] private int _upCount = messagesByComicId.UpCount;
+    public MessagesByComicId MessagesByComicId { get; init; } = messagesByComicId;
 
     public void DoUp(bool isUp)
     {

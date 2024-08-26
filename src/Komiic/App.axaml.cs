@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using AsyncImageLoader;
 using AsyncImageLoader.Loaders;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Extensions.Hosting;
+using NLog.Extensions.Logging;
 
 namespace Komiic;
 
@@ -20,7 +22,7 @@ public class App : Application
     private readonly IHost _host = Host.CreateDefaultBuilder()
         .ConfigureServices(KomiicCoreExtensions.ConfigureServices)
         .ConfigureServices(KomiicExtensions.ConfigureServices)
-        .UseNLog(new())
+        .UseNLog(new NLogProviderOptions())
         .Build();
 
     private readonly ILogger? _logger = LogManager.GetCurrentClassLogger();
@@ -31,16 +33,16 @@ public class App : Application
 
         if (OperatingSystem.IsBrowser())
         {
-            AsyncImageLoader.ImageLoader.AsyncImageLoader =
-                AsyncImageLoader.ImageBrushLoader.AsyncImageLoader = new RamCachedWebImageLoader();
+            ImageLoader.AsyncImageLoader =
+                ImageBrushLoader.AsyncImageLoader = new RamCachedWebImageLoader();
         }
         else
         {
-            string cacheFolder = Path.Combine(
+            var cacheFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(Komiic),
                 "Cache", "Images");
-            AsyncImageLoader.ImageLoader.AsyncImageLoader =
-                AsyncImageLoader.ImageBrushLoader.AsyncImageLoader = new DiskCachedWebImageLoader(cacheFolder);
+            ImageLoader.AsyncImageLoader =
+                ImageBrushLoader.AsyncImageLoader = new DiskCachedWebImageLoader(cacheFolder);
         }
 
         _logger?.Debug(nameof(Initialize));
@@ -54,7 +56,7 @@ public class App : Application
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = _host.Services.GetRequiredService<MainViewModel>(),
-                    SplashScreen = new(_host.StartAsync()),
+                    SplashScreen = new MainAppSplashContent(_host.StartAsync())
                 };
                 desktop.ShutdownRequested += async (_, _) => { await _host.StopAsync(); };
                 break;

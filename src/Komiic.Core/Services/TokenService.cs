@@ -12,10 +12,9 @@ internal class TokenService(
     ILogger<TokenService> logger)
     : ITokenService
 {
-    private string? _token;
-
     private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
     private readonly JwtSecurityTokenHandler _tokenHandler = new();
+    private string? _token;
 
     public async Task<string?> GetToken()
     {
@@ -38,38 +37,9 @@ internal class TokenService(
         await cacheService.ClearLocalCache(KomiicConst.KomiicToken);
     }
 
-    private bool? IsTokenValid()
-    {
-        if (string.IsNullOrWhiteSpace(_token))
-        {
-            return null;
-        }
-
-        try
-        {
-            var jwtToken = _tokenHandler.ReadJwtToken(_token);
-
-            if (jwtToken is not null)
-            {
-                var expires = jwtToken.ValidTo;
-
-                if (expires > DateTime.UtcNow)
-                {
-                    return true;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "IsTokenValid error ! {Token}", _token);
-        }
-
-        return false;
-    }
-
     public async Task LoadToken()
     {
-        string? token = await cacheService.GetLocalCacheStr(KomiicConst.KomiicToken);
+        var token = await cacheService.GetLocalCacheStr(KomiicConst.KomiicToken);
         if (!string.IsNullOrWhiteSpace(token))
         {
             await SetToken(token, false);
@@ -80,7 +50,7 @@ internal class TokenService(
     {
         {
             // 首次驗證
-            bool? valid = IsTokenValid();
+            var valid = IsTokenValid();
             if (!valid.HasValue)
             {
                 return;
@@ -97,7 +67,7 @@ internal class TokenService(
             await _semaphoreSlim.WaitAsync();
 
             // 二次驗證
-            bool? valid = IsTokenValid();
+            var valid = IsTokenValid();
             if (!valid.HasValue)
             {
                 return;
@@ -131,5 +101,34 @@ internal class TokenService(
             await cookieService.LoadCookies();
             _semaphoreSlim.Release();
         }
+    }
+
+    private bool? IsTokenValid()
+    {
+        if (string.IsNullOrWhiteSpace(_token))
+        {
+            return null;
+        }
+
+        try
+        {
+            var jwtToken = _tokenHandler.ReadJwtToken(_token);
+
+            if (jwtToken is not null)
+            {
+                var expires = jwtToken.ValidTo;
+
+                if (expires > DateTime.UtcNow)
+                {
+                    return true;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "IsTokenValid error ! {Token}", _token);
+        }
+
+        return false;
     }
 }

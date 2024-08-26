@@ -26,6 +26,7 @@
                 VerticalAlignment="Bottom" />
         </Panel>
 
-        <controls:MangaList ItemsSource="{Binding MangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMangaInfoByAuthorCommand}" />
+        <controls:MangaList ItemsSource="{Binding MangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}"
+                            LoadMoreCommand="{Binding LoadMangaInfoByAuthorCommand}" />
     </DockPanel>
 </UserControl>

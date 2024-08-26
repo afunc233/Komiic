@@ -10,10 +10,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Refit;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Timeout;
+using Refit;
 
 namespace Komiic.Core;
 
@@ -22,26 +22,26 @@ public static class KomiicCoreExtensions
     public static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
     {
         services.AddKomiicHttp();
-        
+
         // 账户信息
         services.AddSingleton<IAccountService, AccountService>();
 
         // 注入数据服务
         services.AddSingleton<IComicDataService, ComicDataService>();
-        
+
         // 注入数据服务
         services.AddSingleton<ICategoryDataService, CategoryDataService>();
-        
+
         // 注入数据服务
         services.AddSingleton<IAuthorDataService, AuthorDataService>();
-        
+
         // 注入数据服务
         services.AddSingleton<IMangaViewerDataService, MangaViewerDataService>();
-        
+
         // 注入数据服务
         services.AddSingleton<IMangaDetailDataService, MangaDetailDataService>();
     }
-    
+
     private static void AddKomiicHttp(this IServiceCollection services)
     {
         services.AddSingleton(_ =>
@@ -83,7 +83,7 @@ public static class KomiicCoreExtensions
         // Token 管理
         services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<OptionalAuthenticatedHttpClientHandler>(sp =>
-            new((_, _) =>
+            new OptionalAuthenticatedHttpClientHandler((_, _) =>
                 sp.GetRequiredService<ITokenService>().GetToken()));
 
         // http 缓存
@@ -103,7 +103,7 @@ public static class KomiicCoreExtensions
         services.AddRefitClient<IKomiicQueryApi>(service => service.GetRequiredService<RefitSettings>(),
                 nameof(IKomiicQueryApi))
             .ConfigureHttpClient(
-                client => { client.BaseAddress = new(KomiicConst.KomiicApiUrl); })
+                client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
             .AddPolicyHandler(
                 (serviceProvider, _) =>
                     GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicQueryApi>>()));
@@ -112,14 +112,14 @@ public static class KomiicCoreExtensions
         services.AddRefitClient<IKomiicAccountApi>(service => service.GetRequiredService<RefitSettings>(),
                 nameof(IKomiicAccountApi))
             .ConfigureHttpClient(
-                client => { client.BaseAddress = new(KomiicConst.KomiicApiUrl); })
+                client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
             .AddPolicyHandler(
                 (serviceProvider, _) =>
                     GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicAccountApi>>()));
 
         // Komiic http 给图片加载用 IHttpClientFactory 
         services.AddHttpClient(KomiicConst.Komiic,
-                client => { client.BaseAddress = new(KomiicConst.KomiicApiUrl); })
+                client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
             .AddPolicyHandler(
                 (serviceProvider, _) =>
                     GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IHttpClientFactory>>()));
@@ -133,7 +133,6 @@ public static class KomiicCoreExtensions
 
                 if (!OperatingSystem.IsBrowser())
                 {
-                    
                     primaryHandler.AutomaticDecompression = DecompressionMethods.All;
 #if !DEBUG
                     primaryHandler.Proxy = null;
@@ -153,7 +152,7 @@ public static class KomiicCoreExtensions
             });
         });
     }
-    
+
     private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)
     {
         var retryPolicy = HttpPolicyExtensions
@@ -161,7 +160,7 @@ public static class KomiicCoreExtensions
             .Or<TimeoutRejectedException>()
             .Or<TaskCanceledException>()
             .WaitAndRetryAsync(4, i => TimeSpan.FromSeconds(Math.Pow(2, i)),
-                onRetry: (result, span, index, _) =>
+                (result, span, index, _) =>
                 {
                     var exception = result.Exception;
                     logger.LogWarning(exception == null

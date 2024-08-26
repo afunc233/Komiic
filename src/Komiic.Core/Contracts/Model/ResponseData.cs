@@ -13,7 +13,7 @@ internal class ResponseData
 {
     [JsonPropertyName("message")] public string? Message { get; set; }
 
-    [JsonPropertyName("errors")] public List<ErrorInfo>? Errors { get; set; }=[];
+    [JsonPropertyName("errors")] public List<ErrorInfo>? Errors { get; set; } = [];
 }
 
 internal class ResponseData<T> : ResponseData
@@ -342,7 +342,7 @@ public class LastReadByComicId
     [JsonPropertyName("book")] public BookOrChapter? Book { get; set; }
     [JsonPropertyName("chapter")] public BookOrChapter? Chapter { get; set; }
 
-    public BookOrChapter BookOrChapter => Book ?? Chapter ?? new();
+    public BookOrChapter BookOrChapter => Book ?? Chapter ?? new BookOrChapter();
 
     [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }

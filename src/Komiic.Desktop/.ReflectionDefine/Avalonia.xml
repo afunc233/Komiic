@@ -1,7 +1,7 @@
 ﻿<linker>
     <!-- App -->
-    <assembly fullname="Komiic.Core" preserve="All" />
-    <assembly fullname="Komiic" preserve="All" />
-    <assembly fullname="Komiic.Desktop" preserve="All" />
-    <assembly fullname="Avalonia.Themes.Fluent" preserve="All" />
+    <assembly fullname="Komiic.Core" preserve="All"/>
+    <assembly fullname="Komiic" preserve="All"/>
+    <assembly fullname="Komiic.Desktop" preserve="All"/>
+    <assembly fullname="Avalonia.Themes.Fluent" preserve="All"/>
 </linker>

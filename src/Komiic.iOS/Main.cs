@@ -7,16 +7,16 @@ namespace Komiic.iOS;
 
 public static class Application
 {
+    private static readonly Logger Logger;
+
     static Application()
     {
         $"{nameof(Komiic)}.{nameof(iOS)}".ConfigNLog();
         Logger = LogManager.GetCurrentClassLogger();
     }
 
-    private static readonly Logger Logger;
-
     // This is the main entry point of the application.
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         try
         {

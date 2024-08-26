@@ -16,15 +16,15 @@
         <RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
         <!-- 每个 abi 生成一个 apk -->
         <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
-        <AndroidSupportedAbis />
+        <AndroidSupportedAbis/>
         <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
         <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
         <AndroidLinkMode>None</AndroidLinkMode>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <AndroidSupportedAbis />
-      <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
+        <AndroidSupportedAbis/>
+        <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,8 +32,8 @@
             <Link>Resources\drawable\Icon.png</Link>
         </AndroidResource>
         <AndroidResource Update="Resources\values-v35\styles.xml">
-          <SubType>Designer</SubType>
-          <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+            <SubType>Designer</SubType>
+            <Generator>MSBuild:UpdateGeneratedFiles</Generator>
         </AndroidResource>
     </ItemGroup>
 

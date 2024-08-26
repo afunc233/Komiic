@@ -10,11 +10,11 @@ public interface IAccountService
 
     Account? AccountData { get; }
 
+    ImageLimit? ImageLimit { get; }
+
     event EventHandler AccountChanged;
 
     Task LoadAccount();
-
-    ImageLimit? ImageLimit { get; }
 
     event EventHandler ImageLimitChanged;
 

@@ -24,35 +24,42 @@ public partial class AllMangaPageViewModel(
     ILogger<AllMangaPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
+    private readonly SemaphoreSlim _semaphoreSlim = new(1);
+
     [NotifyCanExecuteChangedFor(nameof(LoadCategoryMangaCommand))] [ObservableProperty]
     private bool _hasMore = true;
 
-    [ObservableProperty] private Category? _wantSelectedCategory;
+    [ObservableProperty] private string _orderBy = "DATE_UPDATED";
+
+    private int _pageIndex;
 
     [ObservableProperty] private Category? _selectedCategory;
 
+    [ObservableProperty] private string? _state = "";
+
+    [ObservableProperty] private Category? _wantSelectedCategory;
+
     public ObservableCollection<KvValue> StateList { get; } =
     [
-        new("全部", ""),
-        new("连载", "ONGOING"),
-        new("完结", "END"),
+        new KvValue("全部", ""),
+        new KvValue("连载", "ONGOING"),
+        new KvValue("完结", "END")
     ];
-
-    [ObservableProperty] private string? _state = "";
 
     public ObservableCollection<KvValue> OrderByList { get; } =
     [
-        new("更新", "DATE_UPDATED"),
-        new("觀看數", "VIEWS"),
-        new("喜愛數", "FAVORITE_COUNT"),
+        new KvValue("更新", "DATE_UPDATED"),
+        new KvValue("觀看數", "VIEWS"),
+        new KvValue("喜愛數", "FAVORITE_COUNT")
     ];
 
-    [ObservableProperty] private string _orderBy = "DATE_UPDATED";
     public ObservableCollection<Category> AllCategories { get; } = [];
 
     public ObservableCollection<MangaInfoVO> AllMangaInfos { get; } = [];
 
-    private int _pageIndex;
+    public override NavBarType NavBarType => NavBarType.AllManga;
+
+    public override string Title => "全部漫画";
 
 
     async partial void OnSelectedCategoryChanged(Category? value)
@@ -122,15 +129,13 @@ public partial class AllMangaPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
-
-    private readonly SemaphoreSlim _semaphoreSlim = new(1);
 
 
     private async Task LoadManga(bool clearBefore = false)
     {
-        bool success = await _semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(1));
+        var success = await _semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(1));
         if (!success)
         {
             return;
@@ -171,8 +176,4 @@ public partial class AllMangaPageViewModel(
             _semaphoreSlim.Release();
         }
     }
-
-    public override NavBarType NavBarType => NavBarType.AllManga;
-
-    public override string Title => "全部漫画";
 }

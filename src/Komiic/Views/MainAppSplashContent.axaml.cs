@@ -18,6 +18,8 @@ public partial class MainAppSplashContent : UserControl
         _tasks = tasks;
     }
 
+    public int MinimumShowTime => 1 * 1000;
+
     public async Task RunTasks(CancellationToken cancellationToken)
     {
         if (_tasks == null)
@@ -27,6 +29,4 @@ public partial class MainAppSplashContent : UserControl
 
         await Task.WhenAll(_tasks);
     }
-
-    public int MinimumShowTime => 1 * 1000;
 }

@@ -41,6 +41,6 @@ public interface IMangaDetailDataService
 
     Task<ApiResponseData<MessagesByComicId>> AddMessageToComic(string comicId, string sendMessageText,
         string? replyToId = "0");
-    
+
     Task<ApiResponseData<bool?>> DeleteMessage(string messageId);
 }

@@ -26,14 +26,14 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
 
         if (recentUpdateData is { Data.RecentUpdate.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<MangaInfo>>
             {
                 Data = recentUpdateData.Data.RecentUpdate,
                 ErrorMessage = recentUpdateData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<MangaInfo>>
         {
             Data = [],
             ErrorMessage = recentUpdateData.GetMessage()
@@ -61,14 +61,14 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
 
         if (hotComicsData is { Data.HotComics.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<MangaInfo>>
             {
                 Data = hotComicsData.Data.HotComics,
                 ErrorMessage = hotComicsData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<MangaInfo>>
         {
             Data = [],
             ErrorMessage = hotComicsData.GetMessage()

@@ -1,12 +1,24 @@
 ﻿using Komiic.PageViewModels;
 
 namespace Komiic.ViewModels;
+
 public class NavBar : ViewModelBase
 {
     private readonly NavBarType _navType;
 
+    private string _barName = "";
+
+    private string _checkedForeground = "#ff0000";
+
+    private string _checkedIconUrl = "";
+
+    private string _foreground = "#ffffff";
+
+
+    private string _iconUrl = "";
+
     /// <summary>
-    /// 类型
+    ///     类型
     /// </summary>
     public NavBarType NavType
     {
@@ -14,10 +26,8 @@ public class NavBar : ViewModelBase
         init => SetProperty(ref _navType, value);
     }
 
-    private string _barName = "";
-
     /// <summary>
-    /// 名称
+    ///     名称
     /// </summary>
     public string BarName
     {
@@ -25,10 +35,8 @@ public class NavBar : ViewModelBase
         set => SetProperty(ref _barName, value);
     }
 
-    private string _foreground = "#ffffff";
-
     /// <summary>
-    /// 前景色
+    ///     前景色
     /// </summary>
     public string Foreground
     {
@@ -36,10 +44,8 @@ public class NavBar : ViewModelBase
         set => SetProperty(ref _foreground, value);
     }
 
-    private string _checkedForeground = "#ff0000";
-
     /// <summary>
-    /// 前景色
+    ///     前景色
     /// </summary>
     public string CheckedForeground
     {
@@ -47,16 +53,11 @@ public class NavBar : ViewModelBase
         set => SetProperty(ref _checkedForeground, value);
     }
 
-
-    private string _iconUrl = "";
-
     public string IconUrl
     {
         get => _iconUrl;
         set => SetProperty(ref _iconUrl, value);
     }
-
-    private string _checkedIconUrl = "";
 
     public string CheckedIconUrl
     {

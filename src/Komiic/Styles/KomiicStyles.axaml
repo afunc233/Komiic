@@ -57,7 +57,7 @@
             </Setter>
         </ControlTheme>
         <!--  给 ItemsControl 加 ScrollViewer 结束  -->
-        
+
     </Styles.Resources>
 
     <StyleInclude Source="../Controls/MangaImageView.axaml" />

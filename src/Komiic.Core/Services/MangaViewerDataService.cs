@@ -16,14 +16,14 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
         var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(variables);
         if (imagesByChapterIdData is { Data.ImagesByChapterIdList.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<ImagesByChapterId>>
             {
                 Data = imagesByChapterIdData.Data.ImagesByChapterIdList,
                 ErrorMessage = imagesByChapterIdData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<ImagesByChapterId>>
         {
             Data = [],
             ErrorMessage = imagesByChapterIdData.GetMessage()
@@ -41,14 +41,14 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
 
         if (readComicHistoryByIdData is { Data.ReadComicHistoryById: not null })
         {
-            return new()
+            return new ApiResponseData<ComicHistory?>
             {
                 Data = readComicHistoryByIdData.Data.ReadComicHistoryById,
                 ErrorMessage = readComicHistoryByIdData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<ComicHistory?>
         {
             Data = default,
             ErrorMessage = readComicHistoryByIdData.GetMessage()
@@ -62,19 +62,19 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
             {
                 ComicId = comicId,
                 ChapterId = chapterId,
-                Page = page,
+                Page = page
             });
         var addReadComicHistoryData = await komiicQueryApi.AddReadComicHistory(variables);
         if (addReadComicHistoryData is { Data.AddReadComicHistory: not null })
         {
-            return new()
+            return new ApiResponseData<ComicHistory?>
             {
                 Data = addReadComicHistoryData.Data.AddReadComicHistory,
                 ErrorMessage = addReadComicHistoryData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<ComicHistory?>
         {
             Data = default,
             ErrorMessage = addReadComicHistoryData.GetMessage()

@@ -4,7 +4,6 @@ namespace Komiic.Contracts;
 
 public interface IActivationHandler
 {
-    
     int Order { get; }
 
 

@@ -21,23 +21,23 @@ public partial class HotPageViewModel(
     ILogger<HotPageViewModel> logger)
     : AbsPageViewModel(logger), IOpenMangaViewModel
 {
+    [ObservableProperty] private bool _hasMore = true;
     private int _hotComicsPageIndex;
+
+    [ObservableProperty] private bool _isLoading;
     private int _monthHotComicsPageIndex;
+
+    [ObservableProperty] private string? _state = "";
     public override NavBarType NavBarType => NavBarType.Hot;
     public override string Title => "最热";
 
-    [ObservableProperty] private bool _isLoading;
-
-    [ObservableProperty] private bool _hasMore = true;
-
     public ObservableCollection<KvValue> StateList { get; } =
     [
-        new("全部", ""),
-        new("連載", "ONGOING"),
-        new("完結", "END")
+        new KvValue("全部", ""),
+        new KvValue("連載", "ONGOING"),
+        new KvValue("完結", "END")
     ];
 
-    [ObservableProperty] private string? _state = "";
     public ObservableCollection<MangaInfoVO> MonthHotComicsMangaInfos { get; } = [];
     public ObservableCollection<MangaInfoVO> HotComicsMangaInfos { get; } = [];
 
@@ -106,7 +106,7 @@ public partial class HotPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + $"收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
 
     protected override async Task OnNavigatedTo()

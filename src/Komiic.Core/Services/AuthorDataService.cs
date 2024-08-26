@@ -11,20 +11,20 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
         var variables = QueryDataEnum.ComicsByAuthor.GetQueryDataWithVariables(
             new AuthorIdVariables
             {
-                AuthorId = authorId,
+                AuthorId = authorId
             });
         var comicsByAuthorData = await komiicQueryApi.GetComicsByAuthor(variables);
 
         if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<MangaInfo>>
             {
                 Data = comicsByAuthorData.Data.ComicsByAuthorList,
                 ErrorMessage = comicsByAuthorData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<MangaInfo>>
         {
             Data = [],
             ErrorMessage = comicsByAuthorData.GetMessage()
@@ -36,7 +36,7 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
         var variables = QueryDataEnum.Authors.GetQueryDataWithVariables(
             new PaginationVariables
             {
-                Pagination = new()
+                Pagination = new Pagination
                 {
                     Limit = 50,
                     Offset = pageIndex * 50,
@@ -46,14 +46,14 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
         var allAuthorsData = await komiicQueryApi.GetAllAuthors(variables);
         if (allAuthorsData is { Data.AuthorList.Count: > 0 })
         {
-            return new()
+            return new ApiResponseData<List<Author>>
             {
                 Data = allAuthorsData.Data.AuthorList,
                 ErrorMessage = allAuthorsData.GetMessage()
             };
         }
 
-        return new()
+        return new ApiResponseData<List<Author>>
         {
             Data = [],
             ErrorMessage = allAuthorsData.GetMessage()
