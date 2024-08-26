@@ -6,10 +6,10 @@
     x:DataType="pageViewModels:AllMangaPageViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="clr-namespace:Komiic.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Komiic.Controls">
 
     <DockPanel>
         <Panel DockPanel.Dock="Top">
@@ -55,12 +55,6 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
-        <ScrollViewer>
-            <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}" ItemsSource="{Binding AllMangaInfos}" />
-            
-            <Interaction.Behaviors>
-                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadCategoryMangaCommand}" />
-            </Interaction.Behaviors>
-        </ScrollViewer>
+        <controls:MangaList ItemsSource="{Binding AllMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadCategoryMangaCommand}" />
     </DockPanel>
 </UserControl>

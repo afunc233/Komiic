@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
     xmlns:modelVO="clr-namespace:Komiic.Contracts.VO"
     xmlns:viewModels="clr-namespace:Komiic.ViewModels"
     xmlns:control="clr-namespace:Komiic.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
     <!--  Add Resources Here  -->
     <DataTemplate DataType="{x:Type modelVO:MangaInfoVO}" x:Key="MangaInfoVOTemplate">
         <control:MangaCard MangaInfoVO="{Binding}"

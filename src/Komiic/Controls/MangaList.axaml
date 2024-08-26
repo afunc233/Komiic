@@ -1,0 +1,28 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Komiic.Controls"
+        xmlns:interactions="clr-namespace:Komiic.Interactions">
+    <Design.PreviewWith>
+        <controls:MangaList />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|MangaList">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ItemsControl ItemsSource="{TemplateBinding ItemsSource}" HorizontalAlignment="Center" ItemTemplate="{TemplateBinding ItemTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <Interaction.Behaviors>
+                        <interactions:Scroll2EndTriggerBehavior Distance2End="300"
+                                                                LoadMoreDataCmd="{Binding RelativeSource={RelativeSource TemplatedParent},Path= LoadMoreCommand}" />
+                    </Interaction.Behaviors>
+                </ItemsControl>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>
