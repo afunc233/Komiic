@@ -132,12 +132,7 @@
             </ControlTemplate>
         </Setter>
         <Style Selector="^:pointerover /template/ Border#ItemRootBorder">
-            <Setter Property="Margin"
-                    Value="{OnFormFactor Default={StaticResource Margin3},Mobile={StaticResource Margin2}}" />
-            <Setter Property="Height"
-                    Value="{OnFormFactor Default={ StaticResource Double340},Mobile={StaticResource Double265}}" />
-            <Setter Property="Width"
-                    Value="{OnFormFactor Default={StaticResource Double210},Mobile={StaticResource Double155}}" />
+            <Setter Property="Background" Value="#20000000" />
         </Style>
     </ControlTheme>
 
