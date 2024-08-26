@@ -5,6 +5,8 @@
     x:Class="Komiic.Views.HeaderView"
     x:DataType="viewModels:HeaderViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:materialEnums="clr-namespace:Material.Icons;assembly=Material.Icons"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Komiic.ViewModels"
@@ -22,7 +24,9 @@
             <HyperlinkButton Content=" 贊助 " NavigateUri="https://donate.komiic.com/" />
         </StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-            <Button Content="搜" />
+            <Button Margin="0,0,4,0">
+                <material:MaterialIcon Kind="Magnify" />
+            </Button>
             <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNull}}"
                         Orientation="Horizontal">
                 <Button
@@ -81,9 +85,21 @@
                 </DropDownButton>
             </StackPanel>
             <ToggleButton
-                Content="日"
-                IsChecked="True"
-                IsCheckedChanged="ToggleButton_OnIsCheckedChanged" />
+                IsChecked="False"
+                IsCheckedChanged="ToggleButton_OnIsCheckedChanged">
+                <material:MaterialIcon Kind="{x:Static materialEnums:MaterialIconKind.WeatherNight}">
+                    <Interaction.Behaviors>
+                        <DataTriggerBehavior Binding="{Binding $parent[ToggleButton].IsChecked}" Value="{x:True}">
+                            <ChangePropertyAction PropertyName="Kind"
+                                                  Value="{x:Static materialEnums:MaterialIconKind.WeatherSunny}" />
+                        </DataTriggerBehavior>
+                        <DataTriggerBehavior Binding="{Binding $parent[ToggleButton].IsChecked}" Value="{x:False}">
+                            <ChangePropertyAction PropertyName="Kind"
+                                                  Value="{x:Static materialEnums:MaterialIconKind.WeatherNight}" />
+                        </DataTriggerBehavior>
+                    </Interaction.Behaviors>
+                </material:MaterialIcon>
+            </ToggleButton>
         </StackPanel>
 
         <StackPanel
