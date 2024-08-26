@@ -6,10 +6,10 @@
     x:DataType="pageViewModels:AuthorsPageViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="clr-namespace:Komiic.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pageViewModels="clr-namespace:Komiic.PageViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Komiic.Controls">
 
     <DockPanel>
         <Panel DockPanel.Dock="Top">
@@ -19,11 +19,7 @@
                 Text="{Binding Title}" />
         </Panel>
 
-        <ScrollViewer>
-            <ItemsRepeater ItemTemplate="{StaticResource AuthorInfoTemplate}" ItemsSource="{Binding AllAuthors}" />
-            <Interaction.Behaviors>
-                <interactions:Scroll2EndTriggerBehavior Distance2End="300" LoadMoreDataCmd="{Binding LoadAllAuthorsCommand}" />
-            </Interaction.Behaviors>
-        </ScrollViewer>
+        <controls:MangaList ItemsSource="{Binding AllAuthors}" ItemTemplate="{StaticResource AuthorInfoTemplate}" LoadMoreCommand="{Binding LoadAllAuthorsCommand}" />
+
     </DockPanel>
 </UserControl>

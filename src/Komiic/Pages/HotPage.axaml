@@ -6,10 +6,10 @@
     x:DataType="vm:HotPageViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="clr-namespace:Komiic.Interactions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Komiic.PageViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Komiic.Controls">
 
     <DockPanel>
         <Panel DockPanel.Dock="Top">
@@ -28,25 +28,10 @@
         </Panel>
         <TabControl>
             <TabItem Header="月">
-
-                <ScrollViewer>
-                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
-                                   ItemsSource="{Binding MonthHotComicsMangaInfos}" />
-                    <Interaction.Behaviors>
-                        <interactions:Scroll2EndTriggerBehavior Distance2End="300"
-                                                                LoadMoreDataCmd="{Binding LoadMoreMonthHotComicsCommand}" />
-                    </Interaction.Behaviors>
-                </ScrollViewer>
+                <controls:MangaList ItemsSource="{Binding MonthHotComicsMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMoreMonthHotComicsCommand}" />
             </TabItem>
             <TabItem Header="綜合">
-                <ScrollViewer>
-                    <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
-                                   ItemsSource="{Binding HotComicsMangaInfos}" />
-                    <Interaction.Behaviors>
-                        <interactions:Scroll2EndTriggerBehavior Distance2End="300"
-                                                                LoadMoreDataCmd="{Binding LoadMoreHotComicsCommand}" />
-                    </Interaction.Behaviors>
-                </ScrollViewer>
+                <controls:MangaList ItemsSource="{Binding HotComicsMangaInfos}" ItemTemplate="{StaticResource MangaInfoVOTemplate}" LoadMoreCommand="{Binding LoadMoreHotComicsCommand}" />
             </TabItem>
         </TabControl>
     </DockPanel>

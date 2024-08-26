@@ -6,7 +6,7 @@ namespace Komiic.Core.Services;
 
 internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataService
 {
-    private const int PerPageCount = 10;
+    private const int PerPageCount = 20;
 
     public async Task<ApiResponseData<List<MangaInfo>>> GetRecentUpdateComic(int pageIndex, string? orderBy, bool asc)
     {

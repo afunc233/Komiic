@@ -57,22 +57,13 @@
             </Setter>
         </ControlTheme>
         <!--  给 ItemsControl 加 ScrollViewer 结束  -->
-
-        <ControlTheme TargetType="ItemsRepeater" x:Key="{x:Type ItemsRepeater}">
-            <Setter Property="Layout">
-                <Setter.Value>
-                    <UniformGridLayout
-                        ItemsJustification="Center"
-                        ItemsStretch="None"
-                        Orientation="Horizontal" />
-                </Setter.Value>
-            </Setter>
-        </ControlTheme>
+        
     </Styles.Resources>
 
     <StyleInclude Source="../Controls/MangaImageView.axaml" />
     <StyleInclude Source="../Controls/DialogHost.axaml" />
     <StyleInclude Source="../Controls/Dialog.axaml" />
+    <StyleInclude Source="../Controls/MangaList.axaml" />
 
     <!--  加载中设置个默认图片  -->
     <Style Selector="Image[(asyncImageLoader|ImageLoader.IsLoading)=True]">

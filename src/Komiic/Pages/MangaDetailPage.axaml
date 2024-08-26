@@ -12,7 +12,8 @@
     xmlns:vm="clr-namespace:Komiic.PageViewModels"
     HorizontalAlignment="Right"
     VerticalAlignment="Stretch"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Komiic.Controls">
 
     <ItemsControl>
         <StackPanel>
@@ -221,22 +222,9 @@
                     Padding="10,0"
                     Text="推薦漫畫" />
             </Panel>
-            <ScrollViewer
-                Classes="BoxShadow"
-                HorizontalAlignment="Stretch"
-                Margin="20">
-                <ItemsRepeater ItemTemplate="{StaticResource MangaInfoVOTemplate}"
-                               
-                               ItemsSource="{Binding RecommendMangaInfoList}">
-                    <ItemsRepeater.Layout>
-                        <UniformGridLayout
-                            ItemsJustification="Center"
-                            ItemsStretch="None"
-                            MaximumRowsOrColumns="6"
-                            Orientation="Horizontal" />
-                    </ItemsRepeater.Layout>
-                </ItemsRepeater>
-            </ScrollViewer>
+            
+            <controls:MangaList Margin="20" ItemsSource="{Binding RecommendMangaInfoList}" ItemTemplate="{StaticResource MangaInfoVOTemplate}"  />
+
         </StackPanel>
     </ItemsControl>
 </UserControl>
