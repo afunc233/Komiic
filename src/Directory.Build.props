@@ -5,6 +5,10 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>$(NoWarn);SYSLIB1030;IL2026;XA0141</NoWarn>
         <LangVersion>preview</LangVersion>
+        <Copyright>Copyright $([System.DateTime]::Now.ToString("yyyy")) afunc233. All Rights Reserved.</Copyright>
+        <FileVersion>$([System.DateTime]::Now.ToString("yyMM.dd.HH.mm"))</FileVersion>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(MainTargetFramework)' == '$(TargetFramework)'">
