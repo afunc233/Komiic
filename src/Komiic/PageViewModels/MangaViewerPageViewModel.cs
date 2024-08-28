@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Controls;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 using Komiic.Data;
 using Komiic.Messages;

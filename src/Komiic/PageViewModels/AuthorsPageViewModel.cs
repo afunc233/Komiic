@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
 using Komiic.ViewModels;

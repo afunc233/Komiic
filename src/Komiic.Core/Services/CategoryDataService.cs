@@ -1,15 +1,15 @@
-﻿using Komiic.Core.Contracts.Api;
-using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Apis;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 
 namespace Komiic.Core.Services;
 
-internal class CategoryDataService(IKomiicQueryApi komiicQueryApi) : ICategoryDataService
+internal class CategoryDataService(IKomiicQueryApi komiicQueryClient) : ICategoryDataService
 {
     public async Task<ApiResponseData<List<Category>>> GetAllCategory()
     {
         List<Category> defaultCategoryArr = [new Category { Id = "0", Name = "全部" }];
-        var allCategoryData = await komiicQueryApi.GetAllCategory(QueryDataEnum.AllCategory.GetQueryData());
+        var allCategoryData = await komiicQueryClient.GetAllCategory(QueryDataEnum.AllCategory.GetQueryData());
         if (allCategoryData is { Data.AllCategories.Count: > 0 })
         {
             return new ApiResponseData<List<Category>>
@@ -41,7 +41,7 @@ internal class CategoryDataService(IKomiicQueryApi komiicQueryApi) : ICategoryDa
             }
         });
 
-        var comicByCategoryData = await komiicQueryApi.GetComicByCategory(variables);
+        var comicByCategoryData = await komiicQueryClient.GetComicByCategory(variables);
         if (comicByCategoryData is { Data.ComicByCategories.Count: > 0 })
         {
             return new ApiResponseData<List<MangaInfo>>

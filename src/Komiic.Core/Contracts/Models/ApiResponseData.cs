@@ -1,4 +1,4 @@
-﻿namespace Komiic.Core.Contracts.Model;
+﻿namespace Komiic.Core.Contracts.Models;
 
 public record ApiResponseData<T>
 {

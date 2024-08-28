@@ -1,6 +1,6 @@
 ﻿using System;
 using Komiic.Core;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 
 namespace Komiic.Data;
 

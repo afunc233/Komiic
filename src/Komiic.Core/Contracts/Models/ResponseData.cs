@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Komiic.Core.Contracts.Model;
+namespace Komiic.Core.Contracts.Models;
 
 internal class ErrorInfo
 {

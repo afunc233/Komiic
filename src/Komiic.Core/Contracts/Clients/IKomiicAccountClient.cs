@@ -1,10 +1,10 @@
-﻿using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Models;
 using Refit;
 
-namespace Komiic.Core.Contracts.Api;
+namespace Komiic.Core.Contracts.Clients;
 
 [Headers("Authorization: Bearer")]
-internal interface IKomiicAccountApi
+internal interface IKomiicAccountClient
 {
     #region RourceLimit
 
@@ -31,7 +31,7 @@ internal interface IKomiicAccountApi
     #region Login/Logout
 
     [Post(KomiicConst.LoginUrl)]
-    Task<IApiResponse<TokenResponseData>> Login([Body] LoginData loginData);
+    Task<TokenResponseData> Login([Body] LoginData loginData);
 
     [Post(KomiicConst.LogoutUrl)]
     Task<LogoutResponseData> Logout();

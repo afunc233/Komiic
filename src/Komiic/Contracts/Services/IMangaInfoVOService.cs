@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Komiic.Contracts.VO;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 
 namespace Komiic.Contracts.Services;
 

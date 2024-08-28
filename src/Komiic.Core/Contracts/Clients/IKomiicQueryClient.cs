@@ -1,10 +1,10 @@
-﻿using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Models;
 using Refit;
 
-namespace Komiic.Core.Contracts.Api;
+namespace Komiic.Core.Contracts.Clients;
 
 [Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute30)]
-internal interface IKomiicQueryApi
+internal interface IKomiicQueryClient
 {
     #region 漫画内容
 

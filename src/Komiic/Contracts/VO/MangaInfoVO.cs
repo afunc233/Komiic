@@ -1,5 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 
 namespace Komiic.Contracts.VO;
 

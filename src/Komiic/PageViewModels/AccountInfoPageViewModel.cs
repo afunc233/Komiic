@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 

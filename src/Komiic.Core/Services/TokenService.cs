@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Komiic.Core.Contracts.Api;
+using Komiic.Core.Contracts.Apis;
 using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
@@ -7,7 +7,7 @@ namespace Komiic.Core.Services;
 
 internal class TokenService(
     ICacheService cacheService,
-    IKomiicAccountApi komiicAccountApi,
+    IKomiicAccountApi komiicAccountClient,
     ICookieService cookieService,
     ILogger<TokenService> logger)
     : ITokenService
@@ -49,7 +49,7 @@ internal class TokenService(
     public async Task RefreshToken()
     {
         {
-            // 首次驗證
+            // 首次 驗證
             var valid = IsTokenValid();
             if (!valid.HasValue)
             {
@@ -78,7 +78,7 @@ internal class TokenService(
                 return;
             }
 
-            var tokenResponseData = await komiicAccountApi.RefreshAuth();
+            var tokenResponseData = await komiicAccountClient.RefreshAuth();
             if (tokenResponseData is { Token: not null })
             {
                 await SetToken(tokenResponseData.Token);

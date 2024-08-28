@@ -1,4 +1,4 @@
-﻿using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Models;
 
 namespace Komiic.Messages;
 
