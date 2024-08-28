@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
-    xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
+    xmlns:models="clr-namespace:Komiic.Core.Contracts.Models;assembly=Komiic.Core"
     xmlns:modelVO="clr-namespace:Komiic.Contracts.VO"
     xmlns:viewModels="clr-namespace:Komiic.ViewModels"
     xmlns:control="clr-namespace:Komiic.Controls"
@@ -13,7 +13,7 @@
                            OpenMangaCommand="{Binding $parent[UserControl].((viewModels:IOpenMangaViewModel)DataContext).OpenMangaCommand, FallbackValue={x:Null}}" />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type model:Author}" x:Key="AuthorInfoTemplate">
+    <DataTemplate DataType="{x:Type models:Author}" x:Key="AuthorInfoTemplate">
         <Border
             Background="Transparent"
             Classes="BoxShadow PointeroverBoxShadow"

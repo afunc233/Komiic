@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts.Services;
 using Komiic.Contracts.VO;
-using Komiic.Core.Contracts.Model;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 using Komiic.Data;
 using Komiic.Messages;

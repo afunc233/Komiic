@@ -1,10 +1,10 @@
-﻿using Komiic.Core.Contracts.Api;
-using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Apis;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 
 namespace Komiic.Core.Services;
 
-internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaViewerDataService
+internal class MangaViewerDataService(IKomiicQueryApi komiicQueryClient) : IMangaViewerDataService
 {
     public async Task<ApiResponseData<List<ImagesByChapterId>>> GetImagesByChapterId(string chapterId)
     {
@@ -13,7 +13,7 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
             {
                 ChapterId = chapterId
             });
-        var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(variables);
+        var imagesByChapterIdData = await komiicQueryClient.GetImagesByChapterId(variables);
         if (imagesByChapterIdData is { Data.ImagesByChapterIdList.Count: > 0 })
         {
             return new ApiResponseData<List<ImagesByChapterId>>
@@ -37,7 +37,7 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
             ComicId = comicId
         });
 
-        var readComicHistoryByIdData = await komiicQueryApi.ReadComicHistoryById(variables);
+        var readComicHistoryByIdData = await komiicQueryClient.ReadComicHistoryById(variables);
 
         if (readComicHistoryByIdData is { Data.ReadComicHistoryById: not null })
         {
@@ -64,7 +64,7 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaVi
                 ChapterId = chapterId,
                 Page = page
             });
-        var addReadComicHistoryData = await komiicQueryApi.AddReadComicHistory(variables);
+        var addReadComicHistoryData = await komiicQueryClient.AddReadComicHistory(variables);
         if (addReadComicHistoryData is { Data.AddReadComicHistory: not null })
         {
             return new ApiResponseData<ComicHistory?>

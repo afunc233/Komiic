@@ -1,5 +1,5 @@
-﻿using Komiic.Core.Contracts.Api;
-using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Apis;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +9,7 @@ internal class AccountService(
     ITokenService tokenService,
     ICacheService cacheService,
     ICookieService cookieService,
-    IKomiicAccountApi komiicAccountApi,
+    IKomiicAccountApi komiicAccountClient,
     ILogger<AccountService> logger) : IAccountService
 {
     public string? CacheUserName { get; private set; }
@@ -35,7 +35,7 @@ internal class AccountService(
                 return;
             }
 
-            var accountData = await komiicAccountApi.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
+            var accountData = await komiicAccountClient.GetUserInfo(QueryDataEnum.AccountQuery.GetQueryData());
             if (accountData is { Data: not null })
             {
                 AccountData = accountData.Data.Account;
@@ -58,23 +58,23 @@ internal class AccountService(
         await cacheService.SetLocalCache(KomiicConst.KomiicPassword, CachePassword = password);
         await tokenService.ClearToken();
         await cookieService.ClearAllCookies();
-        var tokenResponseData = await komiicAccountApi.Login(loginData);
-        if (tokenResponseData is { Content.Token: not null })
+        var tokenResponseData = await komiicAccountClient.Login(loginData);
+        if (tokenResponseData is { Token: not null })
         {
-            await tokenService.SetToken(tokenResponseData.Content.Token);
+            await tokenService.SetToken(tokenResponseData.Token);
             await LoadAccount();
             await cookieService.SaveCookies();
             return new ApiResponseData<bool?>
             {
                 Data = true,
-                ErrorMessage = tokenResponseData.Content.GetMessage()
+                ErrorMessage = tokenResponseData.GetMessage()
             };
         }
 
         return new ApiResponseData<bool?>
         {
             Data = default,
-            ErrorMessage = tokenResponseData.Content?.GetMessage()
+            ErrorMessage = tokenResponseData.GetMessage()
         };
     }
 
@@ -83,7 +83,7 @@ internal class AccountService(
     {
         try
         {
-            var imageLimitData = await komiicAccountApi.GetImageLimit(QueryDataEnum.GetImageLimit.GetQueryData());
+            var imageLimitData = await komiicAccountClient.GetImageLimit(QueryDataEnum.GetImageLimit.GetQueryData());
             if (imageLimitData is { Data.ImageLimit: not null })
             {
                 ImageLimit = imageLimitData.Data.ImageLimit;
@@ -103,7 +103,7 @@ internal class AccountService(
             await tokenService.ClearToken();
             AccountData = null;
             AccountChanged?.Invoke(this, EventArgs.Empty);
-            var responseData = await komiicAccountApi.Logout();
+            var responseData = await komiicAccountClient.Logout();
             if (responseData.Code == 200)
             {
                 logger.LogDebug("Logout success !");
@@ -123,7 +123,7 @@ internal class AccountService(
         await Task.CompletedTask;
 
         var setNextChapterModeData =
-            await komiicAccountApi.SetNextChapterMode(
+            await komiicAccountClient.SetNextChapterMode(
                 QueryDataEnum.SetNextChapterMode.GetQueryDataWithVariables(new NextChapterModeVariables
                 {
                     NextChapterMode = mode

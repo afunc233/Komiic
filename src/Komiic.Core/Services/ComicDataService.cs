@@ -1,10 +1,10 @@
-﻿using Komiic.Core.Contracts.Api;
-using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Apis;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 
 namespace Komiic.Core.Services;
 
-internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataService
+internal class ComicDataService(IKomiicQueryApi komiicQueryClient) : IComicDataService
 {
     private const int PerPageCount = 20;
 
@@ -17,7 +17,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
             Limit = PerPageCount,
             Offset = pageIndex * PerPageCount
         };
-        var recentUpdateData = await komiicQueryApi.GetRecentUpdate(
+        var recentUpdateData = await komiicQueryClient.GetRecentUpdate(
             QueryDataEnum.RecentUpdate.GetQueryDataWithVariables(
                 new PaginationVariables
                 {
@@ -53,7 +53,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryApi) : IComicDataServ
             Asc = aes
         };
 
-        var hotComicsData = await komiicQueryApi.GetHotComics(QueryDataEnum.HotComics.GetQueryDataWithVariables(
+        var hotComicsData = await komiicQueryClient.GetHotComics(QueryDataEnum.HotComics.GetQueryDataWithVariables(
             new PaginationVariables
             {
                 Pagination = pagination

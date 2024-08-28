@@ -8,7 +8,7 @@
     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="clr-namespace:Komiic.Core.Contracts.Model;assembly=Komiic.Core"
+    xmlns:model="clr-namespace:Komiic.Core.Contracts.Models;assembly=Komiic.Core"
     xmlns:vm="clr-namespace:Komiic.PageViewModels"
     HorizontalAlignment="Right"
     VerticalAlignment="Stretch"

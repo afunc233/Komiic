@@ -1,7 +1,9 @@
 ﻿using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
-using Komiic.Core.Contracts.Api;
+using Komiic.Core.Apis;
+using Komiic.Core.Contracts.Apis;
+using Komiic.Core.Contracts.Clients;
 using Komiic.Core.Contracts.Services;
 using Komiic.Core.Http;
 using Komiic.Core.Services;
@@ -100,22 +102,22 @@ public static class KomiicCoreExtensions
 
 
         // 查询相关 Api
-        services.AddRefitClient<IKomiicQueryApi>(service => service.GetRequiredService<RefitSettings>(),
-                nameof(IKomiicQueryApi))
+        services.AddRefitClient<IKomiicQueryClient>(service => service.GetRequiredService<RefitSettings>(),
+                nameof(IKomiicQueryClient))
             .ConfigureHttpClient(
                 client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
             .AddPolicyHandler(
                 (serviceProvider, _) =>
-                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicQueryApi>>()));
+                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicQueryClient>>()));
 
         // 账户相关 Api
-        services.AddRefitClient<IKomiicAccountApi>(service => service.GetRequiredService<RefitSettings>(),
-                nameof(IKomiicAccountApi))
+        services.AddRefitClient<IKomiicAccountClient>(service => service.GetRequiredService<RefitSettings>(),
+                nameof(IKomiicAccountClient))
             .ConfigureHttpClient(
                 client => { client.BaseAddress = new Uri(KomiicConst.KomiicApiUrl); })
             .AddPolicyHandler(
                 (serviceProvider, _) =>
-                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicAccountApi>>()));
+                    GetRetryPolicy(serviceProvider.GetRequiredService<ILogger<IKomiicAccountClient>>()));
 
         // Komiic http 给图片加载用 IHttpClientFactory 
         services.AddHttpClient(KomiicConst.Komiic,
@@ -151,6 +153,9 @@ public static class KomiicCoreExtensions
                 builder.AdditionalHandlers.Add(builder.Services.GetRequiredService<HttpCacheHandler>());
             });
         });
+
+        services.AddSingleton<IKomiicQueryApi, RefitKomiicQueryApi>();
+        services.AddSingleton<IKomiicAccountApi, RefitKomiicAccountApi>();
     }
 
     private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)

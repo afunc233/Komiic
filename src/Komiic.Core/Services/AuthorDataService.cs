@@ -1,10 +1,10 @@
-﻿using Komiic.Core.Contracts.Api;
-using Komiic.Core.Contracts.Model;
+﻿using Komiic.Core.Contracts.Apis;
+using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 
 namespace Komiic.Core.Services;
 
-internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataService
+internal class AuthorDataService(IKomiicQueryApi komiicQueryClient) : IAuthorDataService
 {
     public async Task<ApiResponseData<List<MangaInfo>>> GetComicsByAuthor(string authorId)
     {
@@ -13,7 +13,7 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
             {
                 AuthorId = authorId
             });
-        var comicsByAuthorData = await komiicQueryApi.GetComicsByAuthor(variables);
+        var comicsByAuthorData = await komiicQueryClient.GetComicsByAuthor(variables);
 
         if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
         {
@@ -43,7 +43,7 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryApi) : IAuthorDataSe
                     OrderBy = orderBy
                 }
             });
-        var allAuthorsData = await komiicQueryApi.GetAllAuthors(variables);
+        var allAuthorsData = await komiicQueryClient.GetAllAuthors(variables);
         if (allAuthorsData is { Data.AuthorList.Count: > 0 })
         {
             return new ApiResponseData<List<Author>>
