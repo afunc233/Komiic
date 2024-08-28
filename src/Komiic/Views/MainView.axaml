@@ -11,6 +11,7 @@
     xmlns:navEnums="clr-namespace:Komiic.PageViewModels"
     xmlns:materialIcon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
     xmlns:materialEnums="clr-namespace:Material.Icons;assembly=Material.Icons"
+    xmlns:markups="clr-namespace:Komiic.MarkupExtensions"
     xmlns:vm="clr-namespace:Komiic.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -19,8 +20,18 @@
             <StackPanel Orientation="Horizontal">
                 <materialIcon:MaterialIcon x:Name="Icon"
                                            Height="28"
-                                           Opacity="0.4"
-                                           Width="28" Kind="Abacus" />
+                                           Width="28" Kind="Abacus">
+                    <materialIcon:MaterialIcon.Opacity>
+                        <markups:Condition Binding="{Binding $parent[ListBoxItem].IsSelected}">
+                            <markups:Condition.OnTrue>
+                                <x:Double>0.8</x:Double>
+                            </markups:Condition.OnTrue>
+                            <markups:Condition.OnFalse>
+                                <x:Double>0.4</x:Double>
+                            </markups:Condition.OnFalse>
+                        </markups:Condition>
+                    </materialIcon:MaterialIcon.Opacity>
+                </materialIcon:MaterialIcon>
                 <TextBlock
                     FontSize="16"
                     Margin="10,0,0,0"
@@ -55,15 +66,6 @@
                                          Value="{x:Static navEnums:NavBarType.About}">
                         <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
                                               Value="{x:Static materialEnums:MaterialIconKind.About}" />
-                    </DataTriggerBehavior>
-
-                    <DataTriggerBehavior Binding="{Binding $parent[ListBoxItem].IsSelected}" Value="True">
-                        <ChangePropertyAction TargetObject="Icon" PropertyName="Opacity"
-                                              Value="0.8" />
-                    </DataTriggerBehavior>
-                    <DataTriggerBehavior Binding="{Binding $parent[ListBoxItem].IsSelected}" Value="False">
-                        <ChangePropertyAction TargetObject="Icon" PropertyName="Opacity"
-                                              Value="0.4" />
                     </DataTriggerBehavior>
                 </Interaction.Behaviors>
             </StackPanel>

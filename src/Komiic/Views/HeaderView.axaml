@@ -7,6 +7,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
     xmlns:materialEnums="clr-namespace:Material.Icons;assembly=Material.Icons"
+    xmlns:markups="clr-namespace:Komiic.MarkupExtensions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Komiic.ViewModels"
@@ -87,17 +88,17 @@
             <ToggleButton
                 IsChecked="False"
                 IsCheckedChanged="ToggleButton_OnIsCheckedChanged">
-                <material:MaterialIcon Kind="{x:Static materialEnums:MaterialIconKind.WeatherNight}">
-                    <Interaction.Behaviors>
-                        <DataTriggerBehavior Binding="{Binding $parent[ToggleButton].IsChecked}" Value="{x:True}">
-                            <ChangePropertyAction PropertyName="Kind"
-                                                  Value="{x:Static materialEnums:MaterialIconKind.WeatherSunny}" />
-                        </DataTriggerBehavior>
-                        <DataTriggerBehavior Binding="{Binding $parent[ToggleButton].IsChecked}" Value="{x:False}">
-                            <ChangePropertyAction PropertyName="Kind"
-                                                  Value="{x:Static materialEnums:MaterialIconKind.WeatherNight}" />
-                        </DataTriggerBehavior>
-                    </Interaction.Behaviors>
+                <material:MaterialIcon>
+                    <material:MaterialIcon.Kind>
+                        <markups:Condition Binding="{Binding $parent[ToggleButton].IsChecked}">
+                            <markups:Condition.OnFalse>
+                                <materialEnums:MaterialIconKind>WeatherNight</materialEnums:MaterialIconKind>
+                            </markups:Condition.OnFalse>
+                            <markups:Condition.OnTrue>
+                                <materialEnums:MaterialIconKind>WeatherSunny</materialEnums:MaterialIconKind>
+                            </markups:Condition.OnTrue>
+                        </markups:Condition>
+                    </material:MaterialIcon.Kind>
                 </material:MaterialIcon>
             </ToggleButton>
         </StackPanel>
