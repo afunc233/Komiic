@@ -1,12 +1,12 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+                    xmlns:controls="using:Komiic.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-
                     x:DataType="controls:MangaCard"
                     xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                     xmlns:materialEnums="clr-namespace:Material.Icons;assembly=Material.Icons"
-                    xmlns:controls="using:Komiic.Controls">
+                    xmlns:markups="clr-namespace:Komiic.MarkupExtensions">
     <Design.PreviewWith>
         <controls:MangaCard />
     </Design.PreviewWith>
@@ -44,18 +44,6 @@
                                 Command="{Binding OpenMangaCommand,RelativeSource={RelativeSource TemplatedParent}}"
                                 CommandParameter="{Binding MangaInfoVO.MangaInfo}" />
                         </EventTriggerBehavior>
-
-                        <DataTriggerBehavior Binding="{Binding  MangaInfoVO.IsFavourite}" Value="True">
-                            <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
-                                                  Value="{x:Static materialEnums:MaterialIconKind.Heart}" />
-                        </DataTriggerBehavior>
-                        <DataTriggerBehavior
-                            Binding="{Binding RelativeSource={RelativeSource TemplatedParent} ,Path= MangaInfoVO.IsFavourite}"
-                            ComparisonCondition="NotEqual"
-                            Value="True">
-                            <ChangePropertyAction TargetObject="Icon" PropertyName="Kind"
-                                                  Value="{x:Static materialEnums:MaterialIconKind.HeartOutline}" />
-                        </DataTriggerBehavior>
                     </Interaction.Behaviors>
                     <StackPanel Margin="{OnFormFactor Default=8, Mobile=3}">
                         <Panel
@@ -81,7 +69,11 @@
                                 Background="#9FFFFFFF"
                                 CornerRadius="6">
                                 <StackPanel Orientation="Horizontal">
-                                    <material:MaterialIcon x:Name="Icon" Foreground="#F44337" />
+                                    <material:MaterialIcon
+                                        Kind="{markups:Condition {Binding MangaInfoVO.IsFavourite}, 
+                                               OnFalse={x:Static materialEnums:MaterialIconKind.HeartOutline},
+                                               OnTrue={x:Static materialEnums:MaterialIconKind.Heart}}"
+                                        Foreground="#F44337" />
                                     <TextBlock Text="{Binding MangaInfoVO.FavoriteCount}" />
                                 </StackPanel>
                             </Button>
