@@ -46,7 +46,7 @@ public static class KomiicCoreExtensions
 
     private static void AddKomiicHttp(this IServiceCollection services)
     {
-        services.AddSingleton(_ =>
+        services.AddSingleton(() =>
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -63,6 +63,7 @@ public static class KomiicCoreExtensions
             {
                 ContentSerializer = new SystemTextJsonContentSerializer(jsonSerializerOptions)
             };
+
             return refitSettings;
         });
 

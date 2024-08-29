@@ -4,7 +4,7 @@ using Refit;
 namespace Komiic.Core.Contracts.Clients;
 
 [Headers("Authorization: Bearer", KomiicConst.EnableCacheHeader + ":" + KomiicConst.Minute30)]
-internal interface IKomiicQueryClient
+internal interface IKomiicQueryClient : IDisposable
 {
     #region 漫画内容
 

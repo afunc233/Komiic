@@ -7,48 +7,58 @@ namespace Komiic.Core.Apis;
 
 internal class RefitKomiicAccountApi(IServiceProvider serviceProvider) : IKomiicAccountApi
 {
-    private IKomiicAccountClient KomiicAccountClientImplementation =>
-        serviceProvider.GetRequiredService<IKomiicAccountClient>();
-
-    Task<ResponseData<GetImageLimitData>?> IKomiicAccountApi.GetImageLimit(QueryData queryData)
+    async Task<ResponseData<GetImageLimitData>?> IKomiicAccountApi.GetImageLimit(QueryData queryData)
     {
-        return KomiicAccountClientImplementation.GetImageLimit(queryData);
+        using var client = GetClient();
+        return await client.GetImageLimit(queryData);
     }
 
-    Task<ResponseData<UpdateProfileImageData>> IKomiicAccountApi.UpdateProfileImage(
+    async Task<ResponseData<UpdateProfileImageData>> IKomiicAccountApi.UpdateProfileImage(
         QueryData<UpdateProfileImageVariables> queryData)
     {
-        return KomiicAccountClientImplementation.UpdateProfileImage(queryData);
+        using var client = GetClient();
+        return await client.UpdateProfileImage(queryData);
     }
 
-    Task<ResponseData<SetNextChapterModeData>> IKomiicAccountApi.SetNextChapterMode(
+    async Task<ResponseData<SetNextChapterModeData>> IKomiicAccountApi.SetNextChapterMode(
         QueryData<NextChapterModeVariables> queryData)
     {
-        return KomiicAccountClientImplementation.SetNextChapterMode(queryData);
+        using var client = GetClient();
+        return await client.SetNextChapterMode(queryData);
     }
 
-    Task<TokenResponseData> IKomiicAccountApi.Login(LoginData loginData)
+    async Task<TokenResponseData> IKomiicAccountApi.Login(LoginData loginData)
     {
-        return KomiicAccountClientImplementation.Login(loginData);
+        using var client = GetClient();
+        return await client.Login(loginData);
     }
 
-    Task<LogoutResponseData> IKomiicAccountApi.Logout()
+    async Task<LogoutResponseData> IKomiicAccountApi.Logout()
     {
-        return KomiicAccountClientImplementation.Logout();
+        using var client = GetClient();
+        return await client.Logout();
     }
 
-    Task<TokenResponseData> IKomiicAccountApi.RefreshAuth()
+    async Task<TokenResponseData> IKomiicAccountApi.RefreshAuth()
     {
-        return KomiicAccountClientImplementation.RefreshAuth();
+        using var client = GetClient();
+        return await client.RefreshAuth();
     }
 
-    Task<ResponseData<AccountData>> IKomiicAccountApi.GetUserInfo(QueryData queryData)
+    async Task<ResponseData<AccountData>> IKomiicAccountApi.GetUserInfo(QueryData queryData)
     {
-        return KomiicAccountClientImplementation.GetUserInfo(queryData);
+        using var client = GetClient();
+        return await client.GetUserInfo(queryData);
     }
 
-    Task<ResponseData<FavoriteNewUpdatedData>> IKomiicAccountApi.GetFavoriteNewUpdated(QueryData queryData)
+    async Task<ResponseData<FavoriteNewUpdatedData>> IKomiicAccountApi.GetFavoriteNewUpdated(QueryData queryData)
     {
-        return KomiicAccountClientImplementation.GetFavoriteNewUpdated(queryData);
+        using var client = GetClient();
+        return await client.GetFavoriteNewUpdated(queryData);
+    }
+
+    private IKomiicAccountClient GetClient()
+    {
+        return serviceProvider.GetRequiredService<IKomiicAccountClient>();
     }
 }
