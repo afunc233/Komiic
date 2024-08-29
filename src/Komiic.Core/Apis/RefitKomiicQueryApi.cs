@@ -7,203 +7,246 @@ namespace Komiic.Core.Apis;
 
 internal class RefitKomiicQueryApi(IServiceProvider serviceProvider) : IKomiicQueryApi
 {
-    private IKomiicQueryClient KomiicQueryClientImplementation =>
-        serviceProvider.GetRequiredService<IKomiicQueryClient>();
-
-    Task<ResponseData<ImagesByChapterIdData>> IKomiicQueryApi.GetImagesByChapterId(
+    async Task<ResponseData<ImagesByChapterIdData>> IKomiicQueryApi.GetImagesByChapterId(
         QueryData<ChapterIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetImagesByChapterId(queryData);
+        using var client = GetClient();
+        return await client.GetImagesByChapterId(queryData);
     }
 
-    Task<ResponseData<RecommendComicIdsData>> IKomiicQueryApi.GetRecommendComicIds(
+    async Task<ResponseData<RecommendComicIdsData>> IKomiicQueryApi.GetRecommendComicIds(
         QueryData<RecommendComicIdsPaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetRecommendComicIds(queryData);
+        using var client = GetClient();
+        return await client.GetRecommendComicIds(queryData);
     }
 
-    Task<ResponseData<RecentUpdateData>> IKomiicQueryApi.GetRecentUpdate(QueryData<PaginationVariables> queryData)
+    async Task<ResponseData<RecentUpdateData>> IKomiicQueryApi.GetRecentUpdate(QueryData<PaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetRecentUpdate(queryData);
+        var client = GetClient();
+        return await client.GetRecentUpdate(queryData);
     }
 
-    Task<ResponseData<HotComicsData>> IKomiicQueryApi.GetHotComics(QueryData<PaginationVariables> queryData)
+    async Task<ResponseData<HotComicsData>> IKomiicQueryApi.GetHotComics(QueryData<PaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetHotComics(queryData);
+        using var client = GetClient();
+        return await client.GetHotComics(queryData);
     }
 
-    Task<ResponseData<ComicByIdData>> IKomiicQueryApi.GetMangaInfoById(QueryData<ComicIdVariables> queryData)
+    async Task<ResponseData<ComicByIdData>> IKomiicQueryApi.GetMangaInfoById(QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetMangaInfoById(queryData);
+        using var client = GetClient();
+        return await client.GetMangaInfoById(queryData);
     }
 
-    Task<ResponseData<ComicByIdsData>> IKomiicQueryApi.GetMangaInfoByIds(QueryData<ComicIdsVariables> queryData)
+    async Task<ResponseData<ComicByIdsData>> IKomiicQueryApi.GetMangaInfoByIds(QueryData<ComicIdsVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetMangaInfoByIds(queryData);
+        using var client = GetClient();
+        return await client.GetMangaInfoByIds(queryData);
     }
 
-    Task<ResponseData<RecommendComicByIdData>> IKomiicQueryApi.GetRecommendComicById(
+    async Task<ResponseData<RecommendComicByIdData>> IKomiicQueryApi.GetRecommendComicById(
         QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetRecommendComicById(queryData);
+        using var client = GetClient();
+        return await client.GetRecommendComicById(queryData);
     }
 
-    Task<ResponseData<ChaptersByComicIdData>> IKomiicQueryApi.GetChapterByComicId(QueryData<ComicIdVariables> queryData)
+    async Task<ResponseData<ChaptersByComicIdData>> IKomiicQueryApi.GetChapterByComicId(
+        QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetChapterByComicId(queryData);
+        using var client = GetClient();
+        return await client.GetChapterByComicId(queryData);
     }
 
-    Task<ResponseData<AllCategoryData>> IKomiicQueryApi.GetAllCategory(QueryData queryData)
+    async Task<ResponseData<AllCategoryData>> IKomiicQueryApi.GetAllCategory(QueryData queryData)
     {
-        return KomiicQueryClientImplementation.GetAllCategory(queryData);
+        using var client = GetClient();
+        return await client.GetAllCategory(queryData);
     }
 
-    Task<ResponseData<ComicByCategoryData>> IKomiicQueryApi.GetComicByCategory(
+    async Task<ResponseData<ComicByCategoryData>> IKomiicQueryApi.GetComicByCategory(
         QueryData<CategoryIdPaginationVariables> getQueryDataWithVariables)
     {
-        return KomiicQueryClientImplementation.GetComicByCategory(getQueryDataWithVariables);
+        using var client = GetClient();
+        return await client.GetComicByCategory(getQueryDataWithVariables);
     }
 
-    Task<ResponseData<AllAuthorsData>> IKomiicQueryApi.GetAllAuthors(QueryData<PaginationVariables> queryData)
+    async Task<ResponseData<AllAuthorsData>> IKomiicQueryApi.GetAllAuthors(QueryData<PaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetAllAuthors(queryData);
+        using var client = GetClient();
+        return await client.GetAllAuthors(queryData);
     }
 
-    Task<ResponseData<ComicsByAuthorData>> IKomiicQueryApi.GetComicsByAuthor(QueryData<AuthorIdVariables> queryData)
+    async Task<ResponseData<ComicsByAuthorData>> IKomiicQueryApi.GetComicsByAuthor(
+        QueryData<AuthorIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetComicsByAuthor(queryData);
+        using var client = GetClient();
+        return await client.GetComicsByAuthor(queryData);
     }
 
-    Task<ResponseData<AddFavoriteData>> IKomiicQueryApi.AddFavorite(QueryData<ComicIdVariables> queryData)
+    async Task<ResponseData<AddFavoriteData>> IKomiicQueryApi.AddFavorite(QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.AddFavorite(queryData);
+        using var client = GetClient();
+        return await client.AddFavorite(queryData);
     }
 
-    Task<ResponseData<RemoveFavoriteData>> IKomiicQueryApi.RemoveFavorite(QueryData<ComicIdVariables> queryData)
+    async Task<ResponseData<RemoveFavoriteData>> IKomiicQueryApi.RemoveFavorite(QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.RemoveFavorite(queryData);
+        using var client = GetClient();
+        return await client.RemoveFavorite(queryData);
     }
 
-    Task<ResponseData<FavoriteData>> IKomiicQueryApi.GetFavorites(QueryData<FavoritePaginationVariables> queryData)
+    async Task<ResponseData<FavoriteData>> IKomiicQueryApi.GetFavorites(
+        QueryData<FavoritePaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetFavorites(queryData);
+        using var client = GetClient();
+        return await client.GetFavorites(queryData);
     }
 
-    Task<ResponseData<LastReadByComicIdData>> IKomiicQueryApi.GetComicsLastRead(QueryData<ComicIdsVariables> queryData)
+    async Task<ResponseData<LastReadByComicIdData>> IKomiicQueryApi.GetComicsLastRead(
+        QueryData<ComicIdsVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetComicsLastRead(queryData);
+        using var client = GetClient();
+        return await client.GetComicsLastRead(queryData);
     }
 
-    Task<ResponseData<FolderData>> IKomiicQueryApi.GetMyFolder(QueryData queryData)
+    async Task<ResponseData<FolderData>> IKomiicQueryApi.GetMyFolder(QueryData queryData)
     {
-        return KomiicQueryClientImplementation.GetMyFolder(queryData);
+        using var client = GetClient();
+        return await client.GetMyFolder(queryData);
     }
 
-    Task<ResponseData<FolderByKeyData>> IKomiicQueryApi.GetFolderByKey(QueryData<KeyVariables> queryData)
+    async Task<ResponseData<FolderByKeyData>> IKomiicQueryApi.GetFolderByKey(QueryData<KeyVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetFolderByKey(queryData);
+        using var client = GetClient();
+        return await client.GetFolderByKey(queryData);
     }
 
-    Task<ResponseData<FolderComicIdsData>> IKomiicQueryApi.GetFolderComicIds(
+    async Task<ResponseData<FolderComicIdsData>> IKomiicQueryApi.GetFolderComicIds(
         QueryData<FolderComicIdsVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetFolderComicIds(queryData);
+        using var client = GetClient();
+        return await client.GetFolderComicIds(queryData);
     }
 
-    Task<ResponseData<UpdateFolderNameData>> IKomiicQueryApi.UpdateFolderName(
+    async Task<ResponseData<UpdateFolderNameData>> IKomiicQueryApi.UpdateFolderName(
         QueryData<UpdateFolderNameVariables> queryData)
     {
-        return KomiicQueryClientImplementation.UpdateFolderName(queryData);
+        using var client = GetClient();
+        return await client.UpdateFolderName(queryData);
     }
 
-    Task<ResponseData<RemoveFolderData>> IKomiicQueryApi.RemoveFolder(QueryData<FolderIdVariables> queryData)
+    async Task<ResponseData<RemoveFolderData>> IKomiicQueryApi.RemoveFolder(QueryData<FolderIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.RemoveFolder(queryData);
+        using var client = GetClient();
+        return await client.RemoveFolder(queryData);
     }
 
-    Task<ResponseData<RemoveComicToFolderData>> IKomiicQueryApi.RemoveComicToFolder(
+    async Task<ResponseData<RemoveComicToFolderData>> IKomiicQueryApi.RemoveComicToFolder(
         QueryData<FolderIdAndComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.RemoveComicToFolder(queryData);
+        using var client = GetClient();
+        return await client.RemoveComicToFolder(queryData);
     }
 
-    Task<ResponseData<AddComicToFolderData>> IKomiicQueryApi.AddComicToFolder(
+    async Task<ResponseData<AddComicToFolderData>> IKomiicQueryApi.AddComicToFolder(
         QueryData<FolderIdAndComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.AddComicToFolder(queryData);
+        using var client = GetClient();
+        return await client.AddComicToFolder(queryData);
     }
 
-    Task<ResponseData<ComicInAccountFoldersData>> IKomiicQueryApi.ComicInAccountFolders(
+    async Task<ResponseData<ComicInAccountFoldersData>> IKomiicQueryApi.ComicInAccountFolders(
         QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.ComicInAccountFolders(queryData);
+        using var client = GetClient();
+        return await client.ComicInAccountFolders(queryData);
     }
 
-    Task<ResponseData<AddMessageToComicData>> IKomiicQueryApi.AddMessageToComic(
+    async Task<ResponseData<AddMessageToComicData>> IKomiicQueryApi.AddMessageToComic(
         QueryData<AddMessageToComicVariables> queryData)
     {
-        return KomiicQueryClientImplementation.AddMessageToComic(queryData);
+        using var client = GetClient();
+        return await client.AddMessageToComic(queryData);
     }
 
-    Task<ResponseData<MessageChanData>> IKomiicQueryApi.GetMessageChan(QueryData<MessageIdVariables> queryData)
+    async Task<ResponseData<MessageChanData>> IKomiicQueryApi.GetMessageChan(QueryData<MessageIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetMessageChan(queryData);
+        using var client = GetClient();
+        return await client.GetMessageChan(queryData);
     }
 
-    Task<ResponseData<MessageCountByComicIdData>> IKomiicQueryApi.GetMessageCountByComicId(
+    async Task<ResponseData<MessageCountByComicIdData>> IKomiicQueryApi.GetMessageCountByComicId(
         QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetMessageCountByComicId(queryData);
+        using var client = GetClient();
+        return await client.GetMessageCountByComicId(queryData);
     }
 
-    Task<ResponseData<LastMessageByComicIdData>> IKomiicQueryApi.GetLastMessageByComicId(
+    async Task<ResponseData<LastMessageByComicIdData>> IKomiicQueryApi.GetLastMessageByComicId(
         QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetLastMessageByComicId(queryData);
+        using var client = GetClient();
+        return await client.GetLastMessageByComicId(queryData);
     }
 
-    Task<ResponseData<MessagesByComicIdData>> IKomiicQueryApi.GetMessagesByComicId(
+    async Task<ResponseData<MessagesByComicIdData>> IKomiicQueryApi.GetMessagesByComicId(
         QueryData<ComicIdPaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.GetMessagesByComicId(queryData);
+        using var client = GetClient();
+        return await client.GetMessagesByComicId(queryData);
     }
 
-    Task<ResponseData<VoteMessageData>> IKomiicQueryApi.VoteMessage(QueryData<VoteMessageVariables> queryData)
+    async Task<ResponseData<VoteMessageData>> IKomiicQueryApi.VoteMessage(QueryData<VoteMessageVariables> queryData)
     {
-        return KomiicQueryClientImplementation.VoteMessage(queryData);
+        using var client = GetClient();
+        return await client.VoteMessage(queryData);
     }
 
-    Task<ResponseData<MessageVotesByComicIdData>> IKomiicQueryApi.MessageVotesByComicId(
+    async Task<ResponseData<MessageVotesByComicIdData>> IKomiicQueryApi.MessageVotesByComicId(
         QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.MessageVotesByComicId(queryData);
+        using var client = GetClient();
+        return await client.MessageVotesByComicId(queryData);
     }
 
-    Task<ResponseData<DeleteMessageData>> IKomiicQueryApi.DeleteMessage(QueryData<MessageIdVariables> queryData)
+    async Task<ResponseData<DeleteMessageData>> IKomiicQueryApi.DeleteMessage(QueryData<MessageIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.DeleteMessage(queryData);
+        using var client = GetClient();
+        return await client.DeleteMessage(queryData);
     }
 
-    Task<ResponseData<ReadComicHistoryData>> IKomiicQueryApi.ReadComicHistory(QueryData<PaginationVariables> queryData)
+    async Task<ResponseData<ReadComicHistoryData>> IKomiicQueryApi.ReadComicHistory(
+        QueryData<PaginationVariables> queryData)
     {
-        return KomiicQueryClientImplementation.ReadComicHistory(queryData);
+        using var client = GetClient();
+        return await client.ReadComicHistory(queryData);
     }
 
-    Task<ResponseData<ReadComicHistoryByIdData>> IKomiicQueryApi.ReadComicHistoryById(
+    async Task<ResponseData<ReadComicHistoryByIdData>> IKomiicQueryApi.ReadComicHistoryById(
         QueryData<ComicIdVariables> queryData)
     {
-        return KomiicQueryClientImplementation.ReadComicHistoryById(queryData);
+        using var client = GetClient();
+        return await client.ReadComicHistoryById(queryData);
     }
 
-    Task<ResponseData<AddReadComicHistoryData>> IKomiicQueryApi.AddReadComicHistory(
+    async Task<ResponseData<AddReadComicHistoryData>> IKomiicQueryApi.AddReadComicHistory(
         QueryData<AddReadComicHistoryVariables> queryData)
     {
-        return KomiicQueryClientImplementation.AddReadComicHistory(queryData);
+        using var client = GetClient();
+        return await client.AddReadComicHistory(queryData);
     }
 
-    Task<ResponseData<AddReadComicHistoryData>> IKomiicQueryApi.DeleteComicReadHistory(
+    async Task<ResponseData<AddReadComicHistoryData>> IKomiicQueryApi.DeleteComicReadHistory(
         QueryData<AddReadComicHistoryVariables> queryData)
     {
-        return KomiicQueryClientImplementation.DeleteComicReadHistory(queryData);
+        using var client = GetClient();
+        return await client.DeleteComicReadHistory(queryData);
+    }
+
+    private IKomiicQueryClient GetClient()
+    {
+        return serviceProvider.GetRequiredService<IKomiicQueryClient>();
     }
 }

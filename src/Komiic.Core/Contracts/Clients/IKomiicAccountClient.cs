@@ -4,7 +4,7 @@ using Refit;
 namespace Komiic.Core.Contracts.Clients;
 
 [Headers("Authorization: Bearer")]
-internal interface IKomiicAccountClient
+internal interface IKomiicAccountClient : IDisposable
 {
     #region RourceLimit
 
