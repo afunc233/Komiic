@@ -41,16 +41,16 @@ public partial class AllMangaPageViewModel(
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
-        new KvValue("全部", ""),
-        new KvValue("连载", "ONGOING"),
-        new KvValue("完结", "END")
+        new("全部", ""),
+        new("连载", "ONGOING"),
+        new("完结", "END")
     ];
 
     public ObservableCollection<KvValue> OrderByList { get; } =
     [
-        new KvValue("更新", "DATE_UPDATED"),
-        new KvValue("觀看數", "VIEWS"),
-        new KvValue("喜愛數", "FAVORITE_COUNT")
+        new("更新", "DATE_UPDATED"),
+        new("觀看數", "VIEWS"),
+        new("喜愛數", "FAVORITE_COUNT")
     ];
 
     public ObservableCollection<Category> AllCategories { get; } = [];
@@ -94,6 +94,7 @@ public partial class AllMangaPageViewModel(
 
     protected override async Task OnNavigatedTo()
     {
+        AllCategories.Clear();
         await SafeLoadData(async () =>
         {
             var allCategories = await categoryDataService.GetAllCategory();

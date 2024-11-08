@@ -53,7 +53,7 @@
                             Width="{OnFormFactor Default=180,
                                          Mobile=120}">
                             <Border ClipToBounds="True" CornerRadius="6">
-                                <Image
+                                <Image  RenderOptions.BitmapInterpolationMode="HighQuality"
                                     asyncImageLoader:ImageLoader.Source="{Binding MangaInfoVO.MangaInfo.ImageUrl,RelativeSource={RelativeSource TemplatedParent}}" />
                             </Border>
 

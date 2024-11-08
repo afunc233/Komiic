@@ -46,7 +46,7 @@ public static class KomiicCoreExtensions
 
     private static void AddKomiicHttp(this IServiceCollection services)
     {
-        services.AddSingleton(() =>
+        services.AddSingleton(s =>
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {

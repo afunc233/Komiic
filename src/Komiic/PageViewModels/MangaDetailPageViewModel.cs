@@ -155,6 +155,10 @@ public partial class MangaDetailPageViewModel(
 
     protected override async Task OnNavigatedTo()
     {
+        GroupingChaptersByComicIdList.Clear();
+        RecommendMangaInfoList.Clear();
+        MyFolders.Clear();
+
         await Task.CompletedTask;
 
         MangaInfoVO = mangaInfoVOService.GetMangaInfoVO(MangaInfo);

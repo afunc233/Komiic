@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -122,7 +123,14 @@ public partial class MainPageViewModel(
         accountService.AccountChanged -= AccountServiceOnAccountChanged;
         accountService.AccountChanged += AccountServiceOnAccountChanged;
 
-        await LoadMoreRecentUpdate();
-        await LoadMoreHotComics();
+        if (!RecentUpdateMangaInfos.Any())
+        {
+            await LoadMoreRecentUpdate();
+        }
+
+        if (!HotComicsMangaInfos.Any())
+        {
+            await LoadMoreHotComics();
+        }
     }
 }

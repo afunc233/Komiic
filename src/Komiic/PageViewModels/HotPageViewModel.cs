@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -33,9 +34,9 @@ public partial class HotPageViewModel(
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
-        new KvValue("全部", ""),
-        new KvValue("連載", "ONGOING"),
-        new KvValue("完結", "END")
+        new("全部", ""),
+        new("連載", "ONGOING"),
+        new("完結", "END")
     ];
 
     public ObservableCollection<MangaInfoVO> MonthHotComicsMangaInfos { get; } = [];
@@ -111,7 +112,14 @@ public partial class HotPageViewModel(
 
     protected override async Task OnNavigatedTo()
     {
-        await LoadMoreHotComics();
-        await LoadMoreMonthHotComics();
+        if (!HotComicsMangaInfos.Any())
+        {
+            await LoadMoreHotComics();
+        }
+
+        if (!MonthHotComicsMangaInfos.Any())
+        {
+            await LoadMoreMonthHotComics();
+        }
     }
 }

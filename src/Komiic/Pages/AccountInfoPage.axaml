@@ -16,8 +16,7 @@
         Classes="BoxShadow"
         HorizontalAlignment="Center"
         Margin="0,20,0,0"
-        VerticalAlignment="Top"
-        Width="600">
+        VerticalAlignment="Top">
         <StackPanel Orientation="Vertical">
             <TextBlock
                 FontSize="{StaticResource TabItemHeaderFontSize}"
@@ -107,7 +106,14 @@
                 </TextBlock>
 
                 <TextBlock FontSize="18"
-                           Text="{Binding ImageLimit.ResetInSeconds, FallbackValue='無', StringFormat='{}下次重置於:{0:HH:mm:ss}'}" />
+                           Text="{Binding ImageLimit.ResetInSeconds, FallbackValue='無'}">
+                    <Interaction.Behaviors>
+                        <interactions:CountdownBehavior TimeFormat="hh\:mm\:ss"
+                                                        FinalText="已经重置了,请刷新查看"
+                                                        TextFormat="下次重置倒计时: {0}"
+                                                        InitTimeSpan="{Binding ImageLimit.ResetInSeconds,FallbackValue={x:Null}}" />
+                    </Interaction.Behaviors>
+                </TextBlock>
 
                 <Border
                     Background="Gray"

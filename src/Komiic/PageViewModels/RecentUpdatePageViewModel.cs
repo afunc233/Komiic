@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -66,6 +67,11 @@ public partial class RecentUpdatePageViewModel(
 
     protected override Task OnNavigatedTo()
     {
+        if (!RecentUpdateMangaInfos.Any())
+        {
+            return Task.CompletedTask;
+        }
+
         return LoadMoreRecentUpdate();
     }
 }
