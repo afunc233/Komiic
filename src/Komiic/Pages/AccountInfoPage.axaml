@@ -105,13 +105,18 @@
                     </TextBlock.Inlines>
                 </TextBlock>
 
-                <TextBlock FontSize="18"
-                           Text="{Binding ImageLimit.ResetInSeconds, FallbackValue='無'}">
+                <TextBlock FontSize="18" x:Name="CountDownTextBlock"
+                           IsVisible="True">
                     <Interaction.Behaviors>
                         <interactions:CountdownBehavior TimeFormat="hh\:mm\:ss"
                                                         FinalText="已经重置了,请刷新查看"
+                                                        ActionDelay="00:00:05"
                                                         TextFormat="下次重置倒计时: {0}"
-                                                        InitTimeSpan="{Binding ImageLimit.ResetInSeconds,FallbackValue={x:Null}}" />
+                                                        InitTimeSpan="{Binding ImageLimit.ResetInSeconds,FallbackValue={x:Null}}">
+                            <interactions:CountdownBehavior.Actions>
+                                <InvokeCommandAction Command="{Binding LoadDataCommand}" />
+                            </interactions:CountdownBehavior.Actions>
+                        </interactions:CountdownBehavior>
                     </Interaction.Behaviors>
                 </TextBlock>
 

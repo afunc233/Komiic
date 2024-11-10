@@ -1,7 +1,7 @@
 <UserControl
     Background="{DynamicResource SystemRegionBrush}"
-    HorizontalAlignment="Right"
-    Margin="0,0,10,0"
+    HorizontalAlignment="{OnFormFactor Default=Right,Mobile=Stretch}"
+    Margin="0,0,0,0"
     VerticalAlignment="Stretch"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -185,7 +185,7 @@
         </TextBlock>
 
 
-        <ItemsControl ItemsSource="{Binding MessagesByComicIds}" Width="400">
+        <ItemsControl ItemsSource="{Binding MessagesByComicIds}" Width="{ OnFormFactor Default=400,Mobile=350}">
             <Interaction.Behaviors>
                 <interactions:Scroll2EndTriggerBehavior Distance2End="300"
                                                         LoadMoreDataCmd="{Binding LoadMoreDataCommand}" />
