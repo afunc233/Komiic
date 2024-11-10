@@ -159,7 +159,17 @@ public class ImageLimit
 
     [JsonPropertyName("resetInSeconds")] public string ResetInSecondsStr { get; set; } = null!;
 
-    public TimeSpan ResetInSeconds => TimeSpan.FromSeconds(int.Parse(ResetInSecondsStr));
+    public TimeSpan ResetInSeconds
+    {
+        get
+        {
+            if (int.TryParse(ResetInSecondsStr, out var resetInSeconds))
+            {
+                return TimeSpan.FromSeconds(resetInSeconds);
+            }
+            return TimeSpan.FromSeconds(10);
+        }
+    }
 
     [JsonPropertyName("__typename")] public string Typename { get; set; } = null!;
 }
