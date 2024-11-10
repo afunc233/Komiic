@@ -31,10 +31,17 @@ public class CountdownBehavior : Trigger
         AvaloniaProperty.Register<CountdownBehavior, string>(nameof(TextFormat), @"{0}");
 
     /// <summary>
-    ///     Identifies the <seealso cref="TextFormat" /> avalonia property.
+    ///     Identifies the <seealso cref="FinalText" /> avalonia property.
     /// </summary>
     public static readonly StyledProperty<string?> FinalTextProperty =
         AvaloniaProperty.Register<CountdownBehavior, string?>(nameof(FinalText));
+
+    /// <summary>
+    ///     Identifies the <seealso cref="ActionDelay" /> avalonia property.
+    /// </summary>
+    public static readonly StyledProperty<TimeSpan> ActionDelayProperty =
+        AvaloniaProperty.Register<CountdownBehavior, TimeSpan>(nameof(ActionDelay),
+            defaultValue: TimeSpan.FromSeconds(1));
 
 
     private DateTime? _attachedTime;
@@ -63,7 +70,7 @@ public class CountdownBehavior : Trigger
     }
 
     /// <summary>
-    ///     Gets or sets the value to be compared with the value of <see cref="CountdownBehavior.TextFormat" />. This is an
+    ///     Gets or sets the value to be compared with the value of <see cref="CountdownBehavior.FinalText" />. This is an
     ///     avalonia  property.
     /// </summary>
     public string? FinalText
@@ -80,6 +87,41 @@ public class CountdownBehavior : Trigger
     {
         get => GetValue(TextFormatProperty);
         set => SetValue(TextFormatProperty, value);
+    }
+
+    /// <summary>
+    ///     Gets or sets the value to be compared with the value of <see cref="CountdownBehavior.ActionDelay" />. This is an
+    ///     avalonia  property.
+    /// </summary>
+    public TimeSpan ActionDelay
+    {
+        get => GetValue(ActionDelayProperty);
+        set => SetValue(ActionDelayProperty, value);
+    }
+
+    static CountdownBehavior()
+    {
+        InitTimeSpanProperty.Changed.AddClassHandler<CountdownBehavior, TimeSpan?>((countdown, args) =>
+        {
+            if (args.NewValue.Value is null)
+            {
+                CountdownBehaviorManager.Instance.RemoveBehavior(countdown);
+            }
+            else
+            {
+                CountdownBehaviorManager.Instance.RemoveBehavior(countdown);
+                CountdownBehaviorManager.Instance.AddBehavior(countdown);
+
+                countdown.InitTimeSpan = args.NewValue.Value;
+                countdown._attachedTime = DateTime.UtcNow;
+                if (countdown._textBlock is not null)
+                {
+                    countdown._textBlock.IsVisible = true;
+                }
+
+                countdown.Update();
+            }
+        });
     }
 
     protected override void OnAttached()
@@ -105,15 +147,14 @@ public class CountdownBehavior : Trigger
 
     public void Update()
     {
-        _attachedTime ??= DateTime.UtcNow;
-
-        if (_textBlock is null)
-        {
-            return;
-        }
-
         Dispatcher.UIThread.Invoke(() =>
             {
+                _attachedTime ??= DateTime.UtcNow;
+                if (_textBlock is null || InitTimeSpan is null)
+                {
+                    return;
+                }
+
                 var calcTimeSpan = InitTimeSpan - (DateTime.UtcNow - _attachedTime.Value);
 
                 if (calcTimeSpan is { Ticks: > 0 })
@@ -131,9 +172,15 @@ public class CountdownBehavior : Trigger
 
                     _textBlock.Text = string.Format(TextFormat, calcTimeSpanStr);
                 }
-                else
+                else if (ActionDelay + calcTimeSpan >= TimeSpan.Zero)
                 {
                     _textBlock.Text = FinalText ?? "";
+                }
+                else
+                {
+                    _textBlock.IsVisible = true;
+                    CountdownBehaviorManager.Instance.RemoveBehavior(this);
+                    Interaction.ExecuteActions(AssociatedObject, Actions, default);
                 }
             },
             DispatcherPriority.Background);
@@ -148,6 +195,7 @@ internal class CountdownBehaviorManager
     private CountdownBehaviorManager()
     {
         _timer = new Timer(TimeSpan.FromSeconds(1));
+        _timer.Elapsed -= TimerOnElapsed;
         _timer.Elapsed += TimerOnElapsed;
     }
 
@@ -155,7 +203,10 @@ internal class CountdownBehaviorManager
 
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
-        foreach (var countdownBehavior in _behaviors)
+        // Update 内 可能调用 Remove 这导致 foreach 出现修改集合的异常
+        // 故而这里 执行 ToList  循环本地变量 以解决 可能出现的异常
+        var behaviors = _behaviors.ToList();
+        foreach (var countdownBehavior in behaviors)
         {
             countdownBehavior.Update();
         }
