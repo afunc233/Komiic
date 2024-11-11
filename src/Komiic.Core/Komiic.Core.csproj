@@ -9,9 +9,7 @@
     <ItemGroup>
 
         <!-- Refit -->
-        <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0"/>
-        <!-- Refit json version error -->
-        <PackageReference Include="System.Text.Json" Version="$(HostingVersion)"/>
+        <PackageReference Include="Refit.HttpClientFactory" Version="$(RefitVersion)"/>
 
         <!-- Hosting -->
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(HostingVersion)"/>
