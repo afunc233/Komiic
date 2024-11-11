@@ -32,7 +32,10 @@ public class NavigationAwareLocator : IDataTemplate
             return control;
         }
 
+        control.Loaded -= ControlOnLoaded;
         control.Loaded += ControlOnLoaded;
+        
+        control.Unloaded -= ControlOnUnloaded;
         control.Unloaded += ControlOnUnloaded;
 
         return control;
@@ -43,7 +46,7 @@ public class NavigationAwareLocator : IDataTemplate
         return data is INavigationAware;
     }
 
-    private async void ControlOnUnloaded(object? sender, RoutedEventArgs e)
+    private static async void ControlOnUnloaded(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control { DataContext: INavigationAware navigationAware } control)
         {
@@ -55,7 +58,7 @@ public class NavigationAwareLocator : IDataTemplate
         await navigationAware.NavigatedFrom();
     }
 
-    private async void ControlOnLoaded(object? sender, RoutedEventArgs e)
+    private static async void ControlOnLoaded(object? sender, RoutedEventArgs e)
     {
         if (sender is Control { DataContext: INavigationAware navigationAware })
         {

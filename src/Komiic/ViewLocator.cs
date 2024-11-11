@@ -19,12 +19,13 @@ public class ViewLocator : IDataTemplate
         var type = Type.GetType(name);
 #pragma warning restore IL2057
 
-        if (type != null)
+        if (type is null)
         {
-            return (Control)Activator.CreateInstance(type)!;
+            return new TextBlock { Text = "Not Found: " + name };
         }
 
-        return new TextBlock { Text = "Not Found: " + name };
+        var control = (Control)Activator.CreateInstance(type)!;
+        return control;
     }
 
     public bool Match(object? data)
