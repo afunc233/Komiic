@@ -70,7 +70,7 @@ public partial class MainPageViewModel(
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
+            var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++, cancellationToken: CancellationToken);
             if (dataList is { Data.Count: > 0 })
             {
                 foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data.ToArray()))
@@ -91,7 +91,7 @@ public partial class MainPageViewModel(
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++);
+            var dataList = await comicDataService.GetHotComic(_hotComicsPageIndex++, cancellationToken: CancellationToken);
             if (dataList is { Data.Count: > 0 })
             {
                 foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data.ToArray()))

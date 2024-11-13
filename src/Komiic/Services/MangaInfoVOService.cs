@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts.Services;
@@ -39,7 +40,7 @@ public class MangaInfoVOService(
         }
     }
 
-    public async Task<bool> ToggleFavorite(MangaInfoVO mangaInfoVO)
+    public async Task<bool> ToggleFavorite(MangaInfoVO mangaInfoVO,CancellationToken? cancellationToken = null)
     {
         await Task.CompletedTask;
 
@@ -58,7 +59,7 @@ public class MangaInfoVOService(
         {
             if (mangaInfoVO.IsFavourite)
             {
-                var removeResult = await mangaDetailDataService.RemoveFavorite(mangaInfo.Id);
+                var removeResult = await mangaDetailDataService.RemoveFavorite(mangaInfo.Id,cancellationToken);
                 if (removeResult is { ErrorMessage: null } and { Data: not null })
                 {
                     if (removeResult.Data ?? false)
@@ -72,7 +73,7 @@ public class MangaInfoVOService(
             }
             else
             {
-                var favoriteData = await mangaDetailDataService.AddFavorite(mangaInfo.Id);
+                var favoriteData = await mangaDetailDataService.AddFavorite(mangaInfo.Id,cancellationToken);
                 if (favoriteData is { Data: not null })
                 {
                     mangaInfoVO.IsFavourite = true;

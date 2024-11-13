@@ -46,7 +46,7 @@ public static class KomiicCoreExtensions
 
     private static void AddKomiicHttp(this IServiceCollection services)
     {
-        services.AddSingleton(s =>
+        services.AddSingleton<RefitSettings>((s) =>
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -155,8 +155,8 @@ public static class KomiicCoreExtensions
             });
         });
 
-        services.AddSingleton<IKomiicQueryApi, RefitKomiicQueryApi>();
-        services.AddSingleton<IKomiicAccountApi, RefitKomiicAccountApi>();
+        services.AddTransient<IKomiicQueryApi, RefitKomiicQueryApi>();
+        services.AddTransient<IKomiicAccountApi, RefitKomiicAccountApi>();
     }
 
     private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)
@@ -169,9 +169,17 @@ public static class KomiicCoreExtensions
                 (result, span, index, _) =>
                 {
                     var exception = result.Exception;
-                    logger.LogWarning(exception == null
-                        ? $"index:{index} Retrying request after {span.TotalSeconds} seconds. result: {result.Result}"
-                        : $"index:{index} Retrying request after {span.TotalSeconds} seconds. exception: {exception}");
+                    if (exception is TaskCanceledException ex)
+                    {
+                        logger.LogTrace(
+                            $"index:{index} Retrying request after {span.TotalSeconds} seconds. exception: {exception}");
+                    }
+                    else
+                    {
+                        logger.LogError(exception == null
+                            ? $"index:{index} Retrying request after {span.TotalSeconds} seconds. result: {result.Result}"
+                            : $"index:{index} Retrying request after {span.TotalSeconds} seconds. exception: {exception}");
+                    }
                 });
 
         // var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(2);

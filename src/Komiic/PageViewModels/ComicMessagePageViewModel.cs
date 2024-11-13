@@ -52,7 +52,7 @@ public partial class ComicMessagePageViewModel(
         {
             var mangaInfoId = MangaDetailPageViewModel.MangaInfo.Id;
 
-            var messageVotesByComicIdData = await mangaDetailDataService.MessageVotesByComicId(mangaInfoId);
+            var messageVotesByComicIdData = await mangaDetailDataService.MessageVotesByComicId(mangaInfoId, cancellationToken: CancellationToken);
             if (messageVotesByComicIdData is { Data.Count: > 0 })
             {
                 _messageVotesByComicIdData.AddRange(messageVotesByComicIdData.Data);
@@ -73,7 +73,7 @@ public partial class ComicMessagePageViewModel(
             return;
         }
 
-        var messagesData = await mangaDetailDataService.GetMessagesByComicId(mangaInfoId, _pageIndex++);
+        var messagesData = await mangaDetailDataService.GetMessagesByComicId(mangaInfoId, _pageIndex++, cancellationToken: CancellationToken);
         if (messagesData is { Data.Count: > 0 })
         {
             var messagesByComicIdVms = messagesData.Data.Select(it => new MessagesByComicIdVm(it)
@@ -110,7 +110,7 @@ public partial class ComicMessagePageViewModel(
             }
         }
 
-        var result = await mangaDetailDataService.VoteMessage(messagesByComicIdVm.MessagesByComicId.Id, true);
+        var result = await mangaDetailDataService.VoteMessage(messagesByComicIdVm.MessagesByComicId.Id, true, cancellationToken: CancellationToken);
         if (!(result.Data ?? false))
         {
             return;
@@ -131,7 +131,7 @@ public partial class ComicMessagePageViewModel(
             }
         }
 
-        var result = await mangaDetailDataService.VoteMessage(messagesByComicIdVm.MessagesByComicId.Id, false);
+        var result = await mangaDetailDataService.VoteMessage(messagesByComicIdVm.MessagesByComicId.Id, false, cancellationToken: CancellationToken);
         if (!(result.Data ?? false))
         {
             return;
@@ -152,7 +152,7 @@ public partial class ComicMessagePageViewModel(
             }
         }
 
-        var result = await mangaDetailDataService.DeleteMessage(messagesByComicIdVm.MessagesByComicId.Id);
+        var result = await mangaDetailDataService.DeleteMessage(messagesByComicIdVm.MessagesByComicId.Id, cancellationToken: CancellationToken);
         if (!(result.Data ?? false))
         {
             messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 删除失败!"));
@@ -185,7 +185,7 @@ public partial class ComicMessagePageViewModel(
             return;
         }
 
-        var addMessageToComicData = await mangaDetailDataService.AddMessageToComic(mangaInfoId, sendMessageText);
+        var addMessageToComicData = await mangaDetailDataService.AddMessageToComic(mangaInfoId, sendMessageText, cancellationToken: CancellationToken);
         if (addMessageToComicData is { Data: not null })
         {
             if (accountService.AccountData is not null)

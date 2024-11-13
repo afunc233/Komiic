@@ -33,7 +33,7 @@ public partial class AuthorsPageViewModel(
     {
         await SafeLoadData(async () =>
         {
-            var authorsData = await authorDataService.GetAllAuthors(_pageIndex++);
+            var authorsData = await authorDataService.GetAllAuthors(_pageIndex++, cancellationToken: CancellationToken);
             if (authorsData.Data is { Count: > 0 })
             {
                 authorsData.Data.ForEach(AllAuthors.Add);

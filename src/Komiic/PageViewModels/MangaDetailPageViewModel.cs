@@ -114,7 +114,7 @@ public partial class MangaDetailPageViewModel(
         // messenger.Send(new OpenAuthorMessage(author));
 
 
-        var result = await mangaDetailDataService.AddComicToFolder(folder.Id, MangaInfo.Id);
+        var result = await mangaDetailDataService.AddComicToFolder(folder.Id, MangaInfo.Id, CancellationToken);
         if (result.Data is not null)
         {
         }
@@ -126,7 +126,7 @@ public partial class MangaDetailPageViewModel(
         await Task.CompletedTask;
         // messenger.Send(new OpenAuthorMessage(author));
 
-        var result = await mangaDetailDataService.RemoveComicToFolder(folder.Id, MangaInfo.Id);
+        var result = await mangaDetailDataService.RemoveComicToFolder(folder.Id, MangaInfo.Id, CancellationToken);
         if (result.Data is not null)
         {
         }
@@ -165,7 +165,7 @@ public partial class MangaDetailPageViewModel(
         // 传过来有值了，所以应该不需要获取数据了
         // await komiicQueryApi.GetMangaInfoById(MangaInfo.id);
 
-        var messageCountData = await mangaDetailDataService.GetMessageCountByComicId(MangaInfo.Id);
+        var messageCountData = await mangaDetailDataService.GetMessageCountByComicId(MangaInfo.Id, CancellationToken);
 
         if (messageCountData is { Data: not null })
         {
@@ -174,7 +174,8 @@ public partial class MangaDetailPageViewModel(
 
         if (MessageCount > 0)
         {
-            var lastMessageByComicIdData = await mangaDetailDataService.GetLastMessageByComicId(MangaInfo.Id);
+            var lastMessageByComicIdData =
+                await mangaDetailDataService.GetLastMessageByComicId(MangaInfo.Id, CancellationToken);
 
             if (lastMessageByComicIdData.Data is not null)
             {
@@ -182,7 +183,7 @@ public partial class MangaDetailPageViewModel(
             }
         }
 
-        var chapterByComicIdData = await mangaDetailDataService.GetChapterByComicId(MangaInfo.Id);
+        var chapterByComicIdData = await mangaDetailDataService.GetChapterByComicId(MangaInfo.Id, CancellationToken);
 
         if (chapterByComicIdData is { Data.Count: > 0 })
         {
@@ -197,7 +198,8 @@ public partial class MangaDetailPageViewModel(
             }
         }
 
-        var recommendMangaInfosById = await mangaDetailDataService.GetRecommendMangaInfosById(MangaInfo.Id);
+        var recommendMangaInfosById =
+            await mangaDetailDataService.GetRecommendMangaInfosById(MangaInfo.Id, CancellationToken);
         if (recommendMangaInfosById is { Data.Count: > 0 })
         {
             foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(recommendMangaInfosById.Data))
@@ -237,10 +239,10 @@ public partial class MangaDetailPageViewModel(
         if (accountData is not null)
         {
             // IsLogin
-            var myFolders = await mangaDetailDataService.GetMyFolders();
+            var myFolders = await mangaDetailDataService.GetMyFolders(CancellationToken);
             if (myFolders is { Data.Count: > 0 })
             {
-                var data = await mangaDetailDataService.ComicInAccountFolders(MangaInfo.Id);
+                var data = await mangaDetailDataService.ComicInAccountFolders(MangaInfo.Id, CancellationToken);
 
                 myFolders.Data.ForEach(it =>
                 {
@@ -249,7 +251,7 @@ public partial class MangaDetailPageViewModel(
                 });
             }
 
-            var comicsLastReadData = await mangaDetailDataService.GetComicsLastRead(MangaInfo.Id);
+            var comicsLastReadData = await mangaDetailDataService.GetComicsLastRead(CancellationToken, MangaInfo.Id);
             if (comicsLastReadData is { Data.Count: > 0 })
             {
                 LastReadByComicId = comicsLastReadData.Data.FirstOrDefault();

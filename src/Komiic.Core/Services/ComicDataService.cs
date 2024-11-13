@@ -8,7 +8,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryClient) : IComicDataS
 {
     private const int PerPageCount = 20;
 
-    public async Task<ApiResponseData<List<MangaInfo>>> GetRecentUpdateComic(int pageIndex, string? orderBy, bool asc)
+    public async Task<ApiResponseData<List<MangaInfo>>> GetRecentUpdateComic(int pageIndex, string? orderBy, bool asc,CancellationToken? cancellationToken = null)
     {
         var pagination = new Pagination
         {
@@ -22,7 +22,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryClient) : IComicDataS
                 new PaginationVariables
                 {
                     Pagination = pagination
-                }));
+                }),cancellationToken);
 
         if (recentUpdateData is { Data.RecentUpdate.Count: > 0 })
         {
@@ -42,7 +42,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryClient) : IComicDataS
 
     public async Task<ApiResponseData<List<MangaInfo>>> GetHotComic(int pageIndex, string? orderBy = null,
         string? status = null,
-        bool aes = true)
+        bool aes = true,CancellationToken? cancellationToken = null)
     {
         var pagination = new Pagination
         {
@@ -57,7 +57,7 @@ internal class ComicDataService(IKomiicQueryApi komiicQueryClient) : IComicDataS
             new PaginationVariables
             {
                 Pagination = pagination
-            }));
+            }),cancellationToken);
 
         if (hotComicsData is { Data.HotComics.Count: > 0 })
         {

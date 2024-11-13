@@ -4,6 +4,7 @@
         <TargetFramework>$(MainTargetFramework)-ios</TargetFramework>
         <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
+        <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <ItemGroup>
