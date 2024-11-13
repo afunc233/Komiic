@@ -7,54 +7,57 @@ namespace Komiic.Core.Apis;
 
 internal class RefitKomiicAccountApi(IServiceProvider serviceProvider) : IKomiicAccountApi
 {
-    async Task<ResponseData<GetImageLimitData>?> IKomiicAccountApi.GetImageLimit(QueryData queryData)
+    async Task<ResponseData<GetImageLimitData>?> IKomiicAccountApi.GetImageLimit(QueryData queryData,
+        CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.GetImageLimit(queryData);
+        return await client.GetImageLimit(queryData, cancellationToken ?? CancellationToken.None);
     }
 
     async Task<ResponseData<UpdateProfileImageData>> IKomiicAccountApi.UpdateProfileImage(
-        QueryData<UpdateProfileImageVariables> queryData)
+        QueryData<UpdateProfileImageVariables> queryData, CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.UpdateProfileImage(queryData);
+        return await client.UpdateProfileImage(queryData, cancellationToken ?? CancellationToken.None);
     }
 
     async Task<ResponseData<SetNextChapterModeData>> IKomiicAccountApi.SetNextChapterMode(
-        QueryData<NextChapterModeVariables> queryData)
+        QueryData<NextChapterModeVariables> queryData, CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.SetNextChapterMode(queryData);
+        return await client.SetNextChapterMode(queryData, cancellationToken ?? CancellationToken.None);
     }
 
-    async Task<TokenResponseData> IKomiicAccountApi.Login(LoginData loginData)
+    async Task<TokenResponseData> IKomiicAccountApi.Login(LoginData loginData, CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.Login(loginData);
+        return await client.Login(loginData, cancellationToken ?? CancellationToken.None);
     }
 
-    async Task<LogoutResponseData> IKomiicAccountApi.Logout()
+    async Task<LogoutResponseData> IKomiicAccountApi.Logout(CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.Logout();
+        return await client.Logout(cancellationToken ?? CancellationToken.None);
     }
 
-    async Task<TokenResponseData> IKomiicAccountApi.RefreshAuth()
+    async Task<TokenResponseData> IKomiicAccountApi.RefreshAuth(CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.RefreshAuth();
+        return await client.RefreshAuth(cancellationToken ?? CancellationToken.None);
     }
 
-    async Task<ResponseData<AccountData>> IKomiicAccountApi.GetUserInfo(QueryData queryData)
+    async Task<ResponseData<AccountData>> IKomiicAccountApi.GetUserInfo(QueryData queryData,
+        CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.GetUserInfo(queryData);
+        return await client.GetUserInfo(queryData, cancellationToken ?? CancellationToken.None);
     }
 
-    async Task<ResponseData<FavoriteNewUpdatedData>> IKomiicAccountApi.GetFavoriteNewUpdated(QueryData queryData)
+    async Task<ResponseData<FavoriteNewUpdatedData>> IKomiicAccountApi.GetFavoriteNewUpdated(QueryData queryData,
+        CancellationToken? cancellationToken)
     {
         using var client = GetClient();
-        return await client.GetFavoriteNewUpdated(queryData);
+        return await client.GetFavoriteNewUpdated(queryData, cancellationToken ?? CancellationToken.None);
     }
 
     private IKomiicAccountClient GetClient()

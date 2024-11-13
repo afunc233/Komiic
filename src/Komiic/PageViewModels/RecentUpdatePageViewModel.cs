@@ -40,7 +40,7 @@ public partial class RecentUpdatePageViewModel(
     {
         await Task.CompletedTask;
 
-        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO, cancellationToken: CancellationToken);
         messenger.Send(
             new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
@@ -50,7 +50,9 @@ public partial class RecentUpdatePageViewModel(
     {
         await SafeLoadData(async () =>
         {
-            var dataList = await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++);
+            var dataList =
+                await comicDataService.GetRecentUpdateComic(_recentUpdatePageIndex++,
+                    cancellationToken: CancellationToken);
             if (dataList is { Data.Count: > 0 })
             {
                 foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(dataList.Data))

@@ -4,16 +4,17 @@ using Komiic.Core.Contracts.Services;
 
 namespace Komiic.Core.Services;
 
-internal class MangaViewerDataService(IKomiicQueryApi komiicQueryClient) : IMangaViewerDataService
+internal class MangaViewerDataService(IKomiicQueryApi komiicQueryApi) : IMangaViewerDataService
 {
-    public async Task<ApiResponseData<List<ImagesByChapterId>>> GetImagesByChapterId(string chapterId)
+    public async Task<ApiResponseData<List<ImagesByChapterId>>> GetImagesByChapterId(string chapterId,
+        CancellationToken? cancellationToken = null)
     {
         var variables = QueryDataEnum.ImagesByChapterId.GetQueryDataWithVariables(
             new ChapterIdVariables
             {
                 ChapterId = chapterId
             });
-        var imagesByChapterIdData = await komiicQueryClient.GetImagesByChapterId(variables);
+        var imagesByChapterIdData = await komiicQueryApi.GetImagesByChapterId(variables, cancellationToken);
         if (imagesByChapterIdData is { Data.ImagesByChapterIdList.Count: > 0 })
         {
             return new ApiResponseData<List<ImagesByChapterId>>
@@ -30,14 +31,15 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryClient) : IMang
         };
     }
 
-    public async Task<ApiResponseData<ComicHistory?>> ReadComicHistoryById(string comicId)
+    public async Task<ApiResponseData<ComicHistory?>> ReadComicHistoryById(string comicId,
+        CancellationToken? cancellationToken = null)
     {
         var variables = QueryDataEnum.ReadComicHistoryById.GetQueryDataWithVariables(new ComicIdVariables
         {
             ComicId = comicId
         });
 
-        var readComicHistoryByIdData = await komiicQueryClient.ReadComicHistoryById(variables);
+        var readComicHistoryByIdData = await komiicQueryApi.ReadComicHistoryById(variables, cancellationToken);
 
         if (readComicHistoryByIdData is { Data.ReadComicHistoryById: not null })
         {
@@ -55,7 +57,8 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryClient) : IMang
         };
     }
 
-    public async Task<ApiResponseData<ComicHistory?>> AddReadComicHistory(string comicId, string chapterId, int page)
+    public async Task<ApiResponseData<ComicHistory?>> AddReadComicHistory(string comicId, string chapterId, int page,
+        CancellationToken? cancellationToken = null)
     {
         var variables = QueryDataEnum.AddReadComicHistory.GetQueryDataWithVariables(
             new AddReadComicHistoryVariables
@@ -64,7 +67,7 @@ internal class MangaViewerDataService(IKomiicQueryApi komiicQueryClient) : IMang
                 ChapterId = chapterId,
                 Page = page
             });
-        var addReadComicHistoryData = await komiicQueryClient.AddReadComicHistory(variables);
+        var addReadComicHistoryData = await komiicQueryApi.AddReadComicHistory(variables, cancellationToken);
         if (addReadComicHistoryData is { Data.AddReadComicHistory: not null })
         {
             return new ApiResponseData<ComicHistory?>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Komiic.Contracts.VO;
 using Komiic.Core.Contracts.Models;
@@ -13,5 +14,5 @@ public interface IMangaInfoVOService
 
     void UpdateMangaInfoVO(IEnumerable<MangaInfoVO> mangaVOs);
 
-    Task<bool> ToggleFavorite(MangaInfoVO mangaInfoVO);
+    Task<bool> ToggleFavorite(MangaInfoVO mangaInfoVO, CancellationToken? cancellationToken = null);
 }

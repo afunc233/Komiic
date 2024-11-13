@@ -6,14 +6,15 @@ namespace Komiic.Core.Services;
 
 internal class AuthorDataService(IKomiicQueryApi komiicQueryClient) : IAuthorDataService
 {
-    public async Task<ApiResponseData<List<MangaInfo>>> GetComicsByAuthor(string authorId)
+    public async Task<ApiResponseData<List<MangaInfo>>> GetComicsByAuthor(string authorId,
+        CancellationToken? cancellationToken = null)
     {
         var variables = QueryDataEnum.ComicsByAuthor.GetQueryDataWithVariables(
             new AuthorIdVariables
             {
                 AuthorId = authorId
             });
-        var comicsByAuthorData = await komiicQueryClient.GetComicsByAuthor(variables);
+        var comicsByAuthorData = await komiicQueryClient.GetComicsByAuthor(variables, cancellationToken);
 
         if (comicsByAuthorData is { Data.ComicsByAuthorList.Count: > 0 })
         {
@@ -31,7 +32,8 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryClient) : IAuthorDat
         };
     }
 
-    public async Task<ApiResponseData<List<Author>>> GetAllAuthors(int pageIndex, string orderBy = "DATE_UPDATED")
+    public async Task<ApiResponseData<List<Author>>> GetAllAuthors(int pageIndex, string orderBy = "DATE_UPDATED",
+        CancellationToken? cancellationToken = null)
     {
         var variables = QueryDataEnum.Authors.GetQueryDataWithVariables(
             new PaginationVariables
@@ -43,7 +45,7 @@ internal class AuthorDataService(IKomiicQueryApi komiicQueryClient) : IAuthorDat
                     OrderBy = orderBy
                 }
             });
-        var allAuthorsData = await komiicQueryClient.GetAllAuthors(variables);
+        var allAuthorsData = await komiicQueryClient.GetAllAuthors(variables, cancellationToken);
         if (allAuthorsData is { Data.AuthorList.Count: > 0 })
         {
             return new ApiResponseData<List<Author>>

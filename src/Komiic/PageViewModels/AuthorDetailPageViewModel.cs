@@ -53,7 +53,7 @@ public partial class AuthorDetailPageViewModel(
         HasMore = false;
         await SafeLoadData(async () =>
         {
-            var comicsByAuthors = await authorDataService.GetComicsByAuthor(Author.Id);
+            var comicsByAuthors = await authorDataService.GetComicsByAuthor(Author.Id, CancellationToken);
             if (comicsByAuthors.Data is { Count: > 0 })
             {
                 foreach (var mangaInfoVO in mangaInfoVOService.GetMangaInfoVOs(comicsByAuthors.Data))

@@ -97,7 +97,7 @@ public partial class AllMangaPageViewModel(
         AllCategories.Clear();
         await SafeLoadData(async () =>
         {
-            var allCategories = await categoryDataService.GetAllCategory();
+            var allCategories = await categoryDataService.GetAllCategory(CancellationToken);
             if (allCategories.Data is { Count: > 0 })
             {
                 allCategories.Data.ForEach(AllCategories.Add);
@@ -128,7 +128,7 @@ public partial class AllMangaPageViewModel(
     {
         await Task.CompletedTask;
 
-        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
+        var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO, CancellationToken);
         messenger.Send(
             new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
     }
@@ -152,7 +152,7 @@ public partial class AllMangaPageViewModel(
 
             var comicByCategoryData =
                 await categoryDataService.GetComicByCategory(SelectedCategory?.Id ?? "0", _pageIndex++, OrderBy,
-                    State ?? "");
+                    State ?? "", CancellationToken);
 
             if (comicByCategoryData.Data is { Count: > 0 })
             {

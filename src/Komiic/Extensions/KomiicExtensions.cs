@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using CommunityToolkit.Mvvm.Messaging;
 using Komiic.Contracts;
@@ -84,38 +85,56 @@ public static class KomiicExtensions
         // Step 1. Create configuration object 
         var config = new LoggingConfiguration();
 
-        var fileTarget = new FileTarget();
-        config.AddTarget("file", fileTarget);
 
-        // Step 3. Set target properties 
-        fileTarget.FileName = "${basedir}/logs/" + appName + "_${shortdate}.log";
-        fileTarget.Layout = @"${date:format=HH\:mm\:ss} ${uppercase:${level}} ${message}";
-        fileTarget.MaxArchiveFiles = 10;
-        fileTarget.ArchiveAboveSize = 1048576;
-        var minLevel = LogLevel.Warn;
-
-        if (ShouldTraceLog(appName))
+        var nullTarget = new NullTarget();
+        var microsoftLogRule = new LoggingRule("Microsoft.*", LogLevel.Warn, nullTarget)
         {
-            minLevel = LogLevel.Trace;
-        }
-
-        // Step 4. Define rules
-        var fileRule = new LoggingRule("*", minLevel, fileTarget);
-
-        var microsoftLogRule = new LoggingRule("Microsoft.*", LogLevel.Warn, fileTarget);
+            Final = true
+        };
         var httpClientLogRule =
-            new LoggingRule("System.Net.Http.HttpClient", LogLevel.Warn, fileTarget);
+            new LoggingRule("System.Net.Http.HttpClient", LogLevel.Warn, nullTarget)
+            {
+                Final = true
+            };
 
-        config.LoggingRules.Add(fileRule);
         config.LoggingRules.Add(microsoftLogRule);
         config.LoggingRules.Add(httpClientLogRule);
+        foreach (var logLevel in EnumerateLogLevel(appName))
+        {
+            var fileTarget = new FileTarget();
+            fileTarget.Name = $"logfile-{logLevel}";
+            config.AddTarget(fileTarget);
+
+            // Step 3. Set target properties 
+            fileTarget.FileName = "${basedir}/logs/" + appName + $"_{logLevel}_" + "${shortdate}.log";
+            fileTarget.Layout = @"${date:format=HH\:mm\:ss} ${logger} ${uppercase:${level}} ${message}";
+            fileTarget.MaxArchiveFiles = 10;
+            fileTarget.ArchiveAboveSize = 1048576;
+
+            // Step 4. Define rules
+
+            var fileRule = new LoggingRule("*", logLevel, fileTarget);
+            config.LoggingRules.Add(fileRule);
+        }
+
 
         LogManager.Configuration = config;
     }
 
-    private static bool ShouldTraceLog(string appName)
+    private static List<LogLevel> EnumerateLogLevel(string appName)
     {
-        var debugStateFile = Path.Combine(AppContext.BaseDirectory, $"{appName}.debug");
-        return File.Exists(debugStateFile);
+        var logLevels = new List<LogLevel>();
+        var logLevelNames = LogLevel.AllLoggingLevels;
+        foreach (var logLevel in logLevelNames)
+        {
+            var debugStateFile = Path.Combine(AppContext.BaseDirectory, $"{appName}.{logLevel.Name}");
+
+            if (File.Exists(debugStateFile))
+            {
+                logLevels.Add(logLevel);
+            }
+        }
+
+        return logLevels;
     }
 }

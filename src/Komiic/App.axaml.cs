@@ -19,14 +19,18 @@ namespace Komiic;
 
 public class App : Application
 {
-    private readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureServices(KomiicCoreExtensions.ConfigureServices)
-        .ConfigureServices(KomiicExtensions.ConfigureServices)
-        .UseNLog(new NLogProviderOptions())
-        .Build();
+    private readonly IHost _host;
 
     private readonly ILogger? _logger = LogManager.GetCurrentClassLogger();
 
+    public App()
+    {
+        _host= Host.CreateDefaultBuilder()
+            .ConfigureServices(KomiicCoreExtensions.ConfigureServices)
+            .ConfigureServices(KomiicExtensions.ConfigureServices)
+            .UseNLog(new NLogProviderOptions())
+            .Build();
+    }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
