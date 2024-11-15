@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <AvaloniaVersion>11.2.0</AvaloniaVersion>
+        <AvaloniaVersion>11.2.1</AvaloniaVersion>
         <CommunityToolkitVersion>8.3.2</CommunityToolkitVersion>
         <HostingVersion>9.0.0-preview.6.24327.7</HostingVersion>
         <PollyVersion>9.0.0-preview.6.24328.4</PollyVersion>

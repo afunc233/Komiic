@@ -35,10 +35,10 @@
 
         <!-- Svg -->
         <PackageReference Include="Svg.SourceGenerator.Skia" Version="2.0.0.2"/>
-        <PackageReference Include="Avalonia.Controls.Skia" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Controls.Skia" Version="11.2.0"/>
 
         <!-- Behaviors -->
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0"/>
 
         <!-- Icons -->
         <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10"/>
@@ -57,26 +57,4 @@
         </None>
     </ItemGroup>
 
-    <!-- 暂时修复 11.2.0 的 android 编译问题 -->
-    <!-- https://github.com/AvaloniaUI/Avalonia/issues/17424#issuecomment-2462681081 -->
-    <Target Name="_ForceXamlCompile"
-            BeforeTargets="CompileAvaloniaXaml"
-            AfterTargets="AfterCompile"
-            Condition="'$(SkipCompilerExecution)' == 'true'">
-        <PropertyGroup>
-            <SkipCompilerExecution>false</SkipCompilerExecution>
-            <_Avalonia__ReEnableSkipCompilerExecution>true</_Avalonia__ReEnableSkipCompilerExecution>
-        </PropertyGroup>
-    </Target>
-
-    <Target Name="_ReenableSkipCompilerExecution"
-            AfterTargets="InjectAvaloniaXamlOutput"
-            BeforeTargets="CopyFilesToOutputDirectory;BuiltProjectOutputGroup;ComputeResolvedFilesToPublishList"
-            Condition="'$(_Avalonia__ReEnableSkipCompilerExecution)' == 'true'">
-        <PropertyGroup>
-            <SkipCompilerExecution>true</SkipCompilerExecution>
-        </PropertyGroup>
-    </Target>
-    <!-- 暂时修复 11.2.0 的 android 编译问题 结束-->
-    
 </Project>
