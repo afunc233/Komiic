@@ -50,10 +50,10 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
             await accountService.LoadImageLimit();
         });
 
-        await base.LoadData();
+        // await base.LoadData();
     }
 
-    protected override Task OnNavigatedTo()
+    protected override async Task OnNavigatedTo()
     {
         accountService.AccountChanged -= AccountServiceOnAccountChanged;
         accountService.AccountChanged += AccountServiceOnAccountChanged;
@@ -61,8 +61,9 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
         accountService.ImageLimitChanged -= AccountServiceOnImageLimitChanged;
         accountService.ImageLimitChanged += AccountServiceOnImageLimitChanged;
 
-        NextChapterMode = AccountData?.NextChapterMode;
-        return base.OnNavigatedTo();
+        await LoadData();
+        
+        await base.OnNavigatedTo();
     }
 
     protected override Task OnNavigatedFrom()
@@ -80,5 +81,6 @@ public partial class AccountInfoPageViewModel(IAccountService accountService, IL
     private void AccountServiceOnAccountChanged(object? sender, EventArgs e)
     {
         AccountData = accountService.AccountData;
+        NextChapterMode = AccountData?.NextChapterMode;
     }
 }
