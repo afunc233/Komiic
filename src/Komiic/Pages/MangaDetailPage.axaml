@@ -89,8 +89,8 @@
                                            Text="{Binding MangaInfo.LastBookUpdate, StringFormat={}更新:{0}}" />
                             </StackPanel>
                             <Button
-                                Background="#5057a3"
-                                Content="{Binding LastReadByComicId.BookOrChapter.Serial,StringFormat={}继续阅读:卷[{0}],FallbackValue={} 開始閱讀 }"
+                                Background="{DynamicResource AccentBrush}"
+                                Content="{Binding LastReadByComicId.BookOrChapter.Serial,StringFormat={}繼續閱讀:卷[{0}],FallbackValue={} 開始閱讀 }"
                                 Command="{Binding OpenMangaViewerWithHistoryCommand}"
                                 CornerRadius="4" />
 
@@ -164,7 +164,7 @@
                             <Panel>
                                 <TextBlock Margin="50,-5,-5,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                                            Text="{Binding MangaInfoVO.FavoriteCount}" />
-                                <TextBlock Text="喜爱" HorizontalAlignment="Center"
+                                <TextBlock Text="喜愛" HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Panel>
                         </ToggleButton>

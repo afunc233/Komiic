@@ -22,6 +22,12 @@ public static class KomiicExtensions
 {
     public static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
     {
+        // 主题偏好
+        services.AddSingleton<IThemePreferenceService, ThemePreferenceService>();
+        services.AddSingleton<IActivationHandler, LoadThemePreferenceActivationHandler>();
+
+        // 本地化（已取消语言切换，默认繁体，不再注册服务）
+
         // 注入消息中心
         services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         services.AddSingleton<IMangaInfoVOService, MangaInfoVOService>();

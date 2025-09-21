@@ -26,7 +26,8 @@ internal class AccountService(
         try
         {
             CacheUserName = await cacheService.GetLocalCacheStr(KomiicConst.KomiicUsername);
-            CachePassword = await cacheService.GetLocalCacheStr(KomiicConst.KomiicPassword);
+            // 密碼不再持久化；僅保留使用者名稱
+            CachePassword = null;
 
             var token = await tokenService.GetToken();
 
@@ -55,7 +56,7 @@ internal class AccountService(
     {
         var loginData = new LoginData { Email = username, Password = password };
         await cacheService.SetLocalCache(KomiicConst.KomiicUsername, CacheUserName = username);
-        await cacheService.SetLocalCache(KomiicConst.KomiicPassword, CachePassword = password);
+        // 不再保存密碼
         await tokenService.ClearToken();
         await cookieService.ClearAllCookies();
         var tokenResponseData = await komiicAccountClient.Login(loginData);

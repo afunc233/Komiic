@@ -1,0 +1,35 @@
+name: Release macOS (osx-arm64)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish app (osx-arm64)
+        run: |
+          dotnet restore src/Komiic.sln
+          dotnet publish src/Komiic.Desktop -c Release -r osx-arm64 -p:SelfContained=true -p:PublishSingleFile=true
+          mkdir -p artifacts
+          zip -r artifacts/Komiic-macos-arm64.zip src/Komiic.Desktop/bin/Release/net8.0/osx-arm64/publish
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Komiic-macos-arm64
+          path: artifacts/Komiic-macos-arm64.zip
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/Komiic-macos-arm64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

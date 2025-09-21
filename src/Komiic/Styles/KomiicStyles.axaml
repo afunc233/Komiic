@@ -19,9 +19,19 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
                     <BoxShadows x:Key="BorderBoxShadow">2 2 4 0 #30000000</BoxShadows>
+                    <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="#9FFFFFFF" />
+                    <SolidColorBrush x:Key="HoverOverlayBrush" Color="#20000000" />
+                    <SolidColorBrush x:Key="MutedBackgroundBrush" Color="#80808080" />
+                    <SolidColorBrush x:Key="BackdropOverlayBrush" Color="#88808080" />
+                    <SolidColorBrush x:Key="AccentBrush" Color="#5B86F0" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <BoxShadows x:Key="BorderBoxShadow">2 2 4 0 #30FFFFFF</BoxShadows>
+                    <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="#55000000" />
+                    <SolidColorBrush x:Key="HoverOverlayBrush" Color="#20FFFFFF" />
+                    <SolidColorBrush x:Key="MutedBackgroundBrush" Color="#40808080" />
+                    <SolidColorBrush x:Key="BackdropOverlayBrush" Color="#99000000" />
+                    <SolidColorBrush x:Key="AccentBrush" Color="#6B8DF2" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -88,7 +98,7 @@
     </Style>
 
     <Style Selector="Border.PointeroverBoxShadow:pointerover">
-        <Setter Property="BoxShadow" Value="2 2 4 0 #60FF0000" />
+        <Setter Property="BoxShadow" Value="2 2 4 0 #603366FF" />
         <!-- <Setter Property="Margin" Value="2" /> -->
     </Style>
 

@@ -57,7 +57,7 @@
                                     asyncImageLoader:ImageLoader.Source="{Binding MangaInfoVO.MangaInfo.ImageUrl,RelativeSource={RelativeSource TemplatedParent}}" />
                             </Border>
 
-                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#9FFFFFFF"
+                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource OverlayBackgroundBrush}"
                                     CornerRadius="6">
                                 <TextBlock Text="{Binding MangaInfoVO.MangaInfo.Views}" Margin="3" />
                             </Border>
@@ -66,7 +66,7 @@
                                 Command="{TemplateBinding ToggleFavouriteCommand}"
                                 CommandParameter="{TemplateBinding MangaInfoVO}"
                                 HorizontalAlignment="Right" Padding="3" VerticalAlignment="Top"
-                                Background="#9FFFFFFF"
+                                Background="{DynamicResource OverlayBackgroundBrush}"
                                 CornerRadius="6">
                                 <StackPanel Orientation="Horizontal">
                                     <material:MaterialIcon
@@ -113,7 +113,7 @@
                             </StackPanel>
                         </DockPanel>
                         <TextBlock
-                            Background="#80808080"
+                            Background="{DynamicResource MutedBackgroundBrush}"
                             Margin="0,2"
                             Padding="10,3"
                             Text="{Binding MangaInfoVO.MangaInfo.DateUpdated}"
@@ -124,7 +124,7 @@
             </ControlTemplate>
         </Setter>
         <Style Selector="^:pointerover /template/ Border#ItemRootBorder">
-            <Setter Property="Background" Value="#20000000" />
+            <Setter Property="Background" Value="{DynamicResource HoverOverlayBrush}" />
         </Style>
     </ControlTheme>
 

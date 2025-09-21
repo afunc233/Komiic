@@ -25,6 +25,19 @@ public static class KomiicCoreExtensions
     {
         services.AddKomiicHttp();
 
+        // Secure storage
+        if (!OperatingSystem.IsBrowser())
+        {
+            if (OperatingSystem.IsMacOS())
+            {
+                services.AddSingleton<ISecureStorage, MacKeychainSecureStorage>();
+            }
+            else
+            {
+                services.AddSingleton<ISecureStorage, NullSecureStorage>();
+            }
+        }
+
         // 账户信息
         services.AddSingleton<IAccountService, AccountService>();
 
@@ -182,8 +195,7 @@ public static class KomiicCoreExtensions
                     }
                 });
 
-        // var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(2);
-        // return Policy.WrapAsync(retryPolicy, timeoutPolicy);
-        return retryPolicy;
+        var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(10));
+        return Policy.WrapAsync(retryPolicy, timeoutPolicy);
     }
 }

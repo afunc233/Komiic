@@ -19,3 +19,16 @@
 移動端效果
 
 <img width="600px" src="https://github.com/afunc233/Komiic/blob/master/Images/mobile.jpg" alt="移動端效果" />
+
+## 最近更新（深色模式與 macOS 改進）
+- 默認跟隨系統主題（可在頂欄切換 自動/淺色/深色，並持久化偏好）
+- 修正與補充主題資源（覆蓋卡片/對話遮罩/懸停等顏色）
+- 桌面端頁面切換動畫縮短至 200ms，更加跟手
+- macOS (arm64) 發佈：對 `osx` Runtime 自動禁用 AOT，避免網絡超時
+
+桌面發佈（macOS arm64）
+```
+dotnet publish src/Komiic.Desktop -c Release -r osx-arm64 -p:SelfContained=true -p:PublishSingleFile=true
+```
+
+<!-- Python 客戶端已移除，當前倉庫僅保留 Avalonia 客戶端程式碼與文檔 -->

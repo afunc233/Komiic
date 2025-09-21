@@ -17,7 +17,7 @@
 
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type vm:NavBar}">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding Description}" ToolTip.ShowDelay="0" Background="Transparent">
                 <materialIcon:MaterialIcon x:Name="Icon"
                                            Height="28"
                                            Width="28" Kind="Abacus">
@@ -137,7 +137,7 @@
                     <TransitioningContentControl.PageTransition>
                         <CompositePageTransition>
                             <CompositePageTransition.PageTransitions>
-                                <PageSlide Duration="0:0:2" Orientation="Vertical" />
+                                <PageSlide Duration="0:0:0.2" Orientation="Vertical" />
                             </CompositePageTransition.PageTransitions>
                         </CompositePageTransition>
                     </TransitioningContentControl.PageTransition>

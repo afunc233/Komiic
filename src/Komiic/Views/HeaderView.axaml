@@ -32,7 +32,7 @@
                         Orientation="Horizontal">
                 <Button
                     Command="{Binding OpenLoginCommand}"
-                    Content="登录"
+                    Content="登入"
                     Foreground="Blue" />
                 <TextBlock Text="/" VerticalAlignment="Center" />
                 <HyperlinkButton
@@ -85,22 +85,50 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
             </StackPanel>
-            <ToggleButton
-                IsChecked="False"
-                IsCheckedChanged="ToggleButton_OnIsCheckedChanged">
-                <material:MaterialIcon>
-                    <material:MaterialIcon.Kind>
-                        <markups:Condition Binding="{Binding $parent[ToggleButton].IsChecked}">
-                            <markups:Condition.OnFalse>
-                                <materialEnums:MaterialIconKind>WeatherNight</materialEnums:MaterialIconKind>
-                            </markups:Condition.OnFalse>
-                            <markups:Condition.OnTrue>
-                                <materialEnums:MaterialIconKind>WeatherSunny</materialEnums:MaterialIconKind>
-                            </markups:Condition.OnTrue>
-                        </markups:Condition>
-                    </material:MaterialIcon.Kind>
-                </material:MaterialIcon>
-            </ToggleButton>
+            <DropDownButton Background="Transparent" Padding="0">
+                <DropDownButton.Content>
+                    <material:MaterialIcon x:Name="ThemeIcon" Kind="ThemeLightDark">
+                        <Interaction.Behaviors>
+                            <DataTriggerBehavior Binding="{Binding SelectedThemeMode}"
+                                                 ComparisonCondition="Equal" Value="Auto">
+                                <ChangePropertyAction TargetObject="ThemeIcon" PropertyName="Kind"
+                                                      Value="{x:Static materialEnums:MaterialIconKind.ThemeLightDark}" />
+                            </DataTriggerBehavior>
+                            <DataTriggerBehavior Binding="{Binding SelectedThemeMode}"
+                                                 ComparisonCondition="Equal" Value="Light">
+                                <ChangePropertyAction TargetObject="ThemeIcon" PropertyName="Kind"
+                                                      Value="{x:Static materialEnums:MaterialIconKind.WeatherSunny}" />
+                            </DataTriggerBehavior>
+                            <DataTriggerBehavior Binding="{Binding SelectedThemeMode}"
+                                                 ComparisonCondition="Equal" Value="Dark">
+                                <ChangePropertyAction TargetObject="ThemeIcon" PropertyName="Kind"
+                                                      Value="{x:Static materialEnums:MaterialIconKind.WeatherNight}" />
+                            </DataTriggerBehavior>
+                        </Interaction.Behaviors>
+                    </material:MaterialIcon>
+                </DropDownButton.Content>
+                <DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom" ShowMode="Standard">
+                        <MenuItem Header="跟隨系統" Command="{Binding SetThemeAutoCommand}">
+                            <MenuItem.Icon>
+                                <material:MaterialIcon Kind="Check" IsVisible="{Binding IsThemeAuto}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="淺色" Command="{Binding SetThemeLightCommand}">
+                            <MenuItem.Icon>
+                                <material:MaterialIcon Kind="Check" IsVisible="{Binding IsThemeLight}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="深色" Command="{Binding SetThemeDarkCommand}">
+                            <MenuItem.Icon>
+                                <material:MaterialIcon Kind="Check" IsVisible="{Binding IsThemeDark}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+
+            <!-- 語言切換已移除，默認繁體中文 -->
         </StackPanel>
 
         <StackPanel

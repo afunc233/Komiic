@@ -42,8 +42,8 @@ public partial class AllMangaPageViewModel(
     public ObservableCollection<KvValue> StateList { get; } =
     [
         new("全部", ""),
-        new("连载", "ONGOING"),
-        new("完结", "END")
+        new("連載", "ONGOING"),
+        new("完結", "END")
     ];
 
     public ObservableCollection<KvValue> OrderByList { get; } =
@@ -59,7 +59,7 @@ public partial class AllMangaPageViewModel(
 
     public override NavBarType NavBarType => NavBarType.AllManga;
 
-    public override string Title => "全部漫画";
+    public override string Title => "所有漫畫";
 
 
     async partial void OnSelectedCategoryChanged(Category? value)
@@ -130,7 +130,7 @@ public partial class AllMangaPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO, CancellationToken);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "新增" : "移除") + "收藏" + (result ? "成功！" : "失敗！")));
     }
 
 

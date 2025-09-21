@@ -34,7 +34,7 @@ public class DiskImageCacheService : IImageCacheService
 
     private static string CreateMD5(string input)
     {
-        var bytes = Encoding.ASCII.GetBytes(input);
+        var bytes = Encoding.UTF8.GetBytes(input);
         return BitConverter.ToString(MD5.HashData(bytes)).Replace("-", "");
     }
 }

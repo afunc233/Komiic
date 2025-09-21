@@ -32,6 +32,9 @@ public partial class MangaViewerPageViewModel(
     public override NavBarType NavBarType => NavBarType.MangaViewer;
     public override string Title => "";
 
+    private int _lastReportedHistoryPage = -1;
+    private volatile bool _updateInFlight;
+
     protected override async Task OnNavigatedTo()
     {
         await Task.CompletedTask;
@@ -71,16 +74,43 @@ public partial class MangaViewerPageViewModel(
         }
 
         var historyPage = ImagesByChapterList.IndexOf(mangaImage.Item1);
-        if (historyPage == HistoryPage)
+        if (historyPage == HistoryPage || historyPage == _lastReportedHistoryPage)
         {
             return;
         }
 
-        var data = await mangaViewerDataService.AddReadComicHistory(mangaImage.Item1.MangaInfo.Id,
-            mangaImage.Item1.Chapter.Id,
-            historyPage, cancellationToken: CancellationToken);
-        if (data.Data is not null)
+        if (_updateInFlight)
         {
+            return;
+        }
+
+        _updateInFlight = true;
+        try
+        {
+            var data = await mangaViewerDataService.AddReadComicHistory(mangaImage.Item1.MangaInfo.Id,
+                mangaImage.Item1.Chapter.Id,
+                historyPage, cancellationToken: CancellationToken);
+
+            if (data.Data is not null)
+            {
+                HistoryPage = historyPage;
+            }
+        }
+        catch (System.Threading.Tasks.TaskCanceledException)
+        {
+            // ignore timeout/cancel, keep UI responsive
+        }
+        catch (System.OperationCanceledException)
+        {
+        }
+        catch (System.Exception)
+        {
+            // swallow network errors here to avoid crashing from async void; logging can be added if needed
+        }
+        finally
+        {
+            _lastReportedHistoryPage = historyPage;
+            _updateInFlight = false;
         }
 
         if (mangaImage.Item2)

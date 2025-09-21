@@ -7,6 +7,7 @@ namespace Komiic.Core.Services;
 
 internal class TokenService(
     ICacheService cacheService,
+    ISecureStorage secureStorage,
     IKomiicAccountApi komiicAccountClient,
     ICookieService cookieService,
     ILogger<TokenService> logger)
@@ -27,6 +28,8 @@ internal class TokenService(
         _token = token;
         if (save)
         {
+            // Prefer secure storage; fallback to cache
+            await secureStorage.SetAsync(KomiicConst.KomiicToken, token);
             await cacheService.SetLocalCache(KomiicConst.KomiicToken, token);
         }
     }
@@ -34,12 +37,14 @@ internal class TokenService(
     public async Task ClearToken()
     {
         _token = null;
+        await secureStorage.RemoveAsync(KomiicConst.KomiicToken);
         await cacheService.ClearLocalCache(KomiicConst.KomiicToken);
     }
 
     public async Task LoadToken()
     {
-        var token = await cacheService.GetLocalCacheStr(KomiicConst.KomiicToken);
+        var token = await secureStorage.GetAsync(KomiicConst.KomiicToken) ??
+                    await cacheService.GetLocalCacheStr(KomiicConst.KomiicToken);
         if (!string.IsNullOrWhiteSpace(token))
         {
             await SetToken(token, false);

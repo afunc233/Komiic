@@ -42,7 +42,7 @@ public partial class RecentUpdatePageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO, cancellationToken: CancellationToken);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "新增" : "移除") + "收藏" + (result ? "成功！" : "失敗！")));
     }
 
     [RelayCommand]

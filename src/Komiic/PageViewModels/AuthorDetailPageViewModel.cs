@@ -28,7 +28,7 @@ public partial class AuthorDetailPageViewModel(
     public ObservableCollection<MangaInfoVO> MangaInfos { get; } = [];
 
     public override NavBarType NavBarType => NavBarType.AuthorDetail;
-    public override string Title => "作者详情";
+    public override string Title => "作者詳情";
 
     [RelayCommand]
     private async Task OpenManga(MangaInfo mangaInfo)
@@ -44,7 +44,7 @@ public partial class AuthorDetailPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "新增" : "移除") + "收藏" + (result ? "成功！" : "失敗！")));
     }
 
     [RelayCommand(CanExecute = nameof(HasMore), AllowConcurrentExecutions = false)]

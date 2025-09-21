@@ -32,7 +32,7 @@ public partial class ComicMessagePageViewModel(
 
     public override NavBarType NavBarType => NavBarType.ComicMessage;
 
-    public override string Title => "漫画留言";
+    public override string Title => "漫畫留言";
 
     public bool HasLogin => accountService.AccountData is not null;
 
@@ -155,7 +155,7 @@ public partial class ComicMessagePageViewModel(
         var result = await mangaDetailDataService.DeleteMessage(messagesByComicIdVm.MessagesByComicId.Id, cancellationToken: CancellationToken);
         if (!(result.Data ?? false))
         {
-            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 删除失败!"));
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n 刪除失敗！"));
             return;
         }
 

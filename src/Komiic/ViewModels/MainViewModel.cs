@@ -35,85 +35,92 @@ public partial class MainViewModel : RecipientViewModelBase, IRecipient<OpenMang
         _accountService = accountService;
         Header = headerViewModel;
 
+        BuildMenu();
+
         SelectedNavBar = MenuItemsSource.FirstOrDefault();
 #pragma warning disable IL2026
         IsActive = true;
 #pragma warning restore IL2026
     }
 
-    public ObservableCollection<NavBar> MenuItemsSource { get; } =
-    [
-        new NavBar
+    public ObservableCollection<NavBar> MenuItemsSource { get; } = new();
+
+    private void BuildMenu()
+    {
+        MenuItemsSource.Clear();
+        MenuItemsSource.Add(new NavBar
         {
             NavType = NavBarType.Main,
-            BarName = "首页",
+            BarName = "首頁",
+            Description = "回到首頁",
             IconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/S5eFhs5ei0xBgoEIuUzenySo.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000"
-        },
-
-        new NavBar
+        });
+        MenuItemsSource.Add(new NavBar
         {
             NavType = NavBarType.RecentUpdate,
             BarName = "最近更新",
+            Description = "查看最近更新的漫畫",
             IconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/S5eFhs5ei0xBgoEIuUzenySo.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000"
-        },
-
-        new NavBar
+        });
+        MenuItemsSource.Add(new NavBar
         {
             NavType = NavBarType.Hot,
             BarName = "夯",
+            Description = "本月最夯漫畫",
             IconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/S5eFhs5ei0xBgoEIuUzenySo.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000"
-        },
-
-        new NavBar
+        });
+        MenuItemsSource.Add(new NavBar
         {
             NavType = NavBarType.AllManga,
             BarName = "所有漫畫",
+            Description = "瀏覽全部分類與作品",
             IconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/S5eFhs5ei0xBgoEIuUzenySo.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000"
-        },
-
-        new NavBar
+        });
+        MenuItemsSource.Add(new NavBar
         {
             NavType = NavBarType.Authors,
             BarName = "作者列表",
+            Description = "按作者瀏覽",
             IconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/S5eFhs5ei0xBgoEIuUzenySo.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000"
-        },
-        new NavBar
+        });
+        MenuItemsSource.Add(new NavBar
         {
             NavType = NavBarType.About,
-            BarName = "关于",
+            BarName = "關於",
+            Description = "關於本應用",
             IconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/S5eFhs5ei0xBgoEIuUzenySo.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             CheckedIconUrl =
                 "https://dev-s-image.vcinema.cn/new_navigation_icon/pMLVQw1DUC9Rr8lrpCJepWqA.jpg?x-oss-process=image/interlace,1/resize,m_fill,w_48,h_48/quality,q_100/sharpen,100/format,png",
             Foreground = "#ffffff",
             CheckedForeground = "#ff0000"
-        }
-    ];
+        });
+    }
 
     public IViewModelBase? Header { get; }
 

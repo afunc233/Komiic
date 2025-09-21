@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Komiic.Core;
@@ -11,6 +12,8 @@ namespace Komiic.Controls;
 
 internal class MangaImageLoader(IHttpClientFactory clientFactory, IImageCacheService cacheService) : IMangaImageLoader
 {
+    private static readonly SemaphoreSlim Throttle = new(6, 6);
+
     async Task<Bitmap?> IMangaImageLoader.ProvideImageAsync(MangaImageData imageData)
     {
         var bitmap = await LoadAsync(imageData).ConfigureAwait(false);
@@ -27,21 +30,35 @@ internal class MangaImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
 
         if (string.IsNullOrWhiteSpace(localUrl))
         {
-            using var httpClient = clientFactory.CreateClient(KomiicConst.Komiic);
+            await Throttle.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                using var httpClient = clientFactory.CreateClient(KomiicConst.Komiic);
 
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Referrer = mangaImageData.GetReferrer();
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Referrer = mangaImageData.GetReferrer();
 
-            var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-            var dataArr = await response.Content.ReadAsByteArrayAsync();
+                using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)
+                    .ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
 
-            using var memoryStream = new MemoryStream(dataArr);
-            var bitmap = new Bitmap(memoryStream);
+                await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                await using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms).ConfigureAwait(false);
+                var dataArr = ms.ToArray();
 
-            await cacheService.SetLocalImage(url, dataArr);
+                using var memoryStream = new MemoryStream(dataArr);
+                var bitmap = new Bitmap(memoryStream);
 
-            ImageLoaded?.Invoke(this, new KvValue<MangaImageData, bool>(mangaImageData, true));
-            return bitmap;
+                await cacheService.SetLocalImage(url, dataArr);
+
+                ImageLoaded?.Invoke(this, new KvValue<MangaImageData, bool>(mangaImageData, true));
+                return bitmap;
+            }
+            finally
+            {
+                Throttle.Release();
+            }
         }
 
         ImageLoaded?.Invoke(this, new KvValue<MangaImageData, bool>(mangaImageData, false));

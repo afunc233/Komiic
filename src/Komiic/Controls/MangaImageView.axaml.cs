@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
 using Avalonia.Interactivity;
 using Komiic.Data;
 
@@ -23,6 +24,7 @@ public class MangaImageView : TemplatedControl
         AvaloniaProperty.Register<MangaImageView, bool>(nameof(IsLoading));
 
     private Image? _image;
+    private bool _loadedOnce;
 
 
     static MangaImageView()
@@ -67,6 +69,10 @@ public class MangaImageView : TemplatedControl
 
     private async void LoadImage()
     {
+        if (_loadedOnce)
+        {
+            return;
+        }
         if (Loader == null)
         {
             return;
@@ -91,6 +97,7 @@ public class MangaImageView : TemplatedControl
             {
                 _image.Source = bitmap;
             }
+            _loadedOnce = true;
         }
         catch (Exception)
         {
@@ -112,7 +119,32 @@ public class MangaImageView : TemplatedControl
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
-        LoadImage();
+        // Defer image loading until element enters effective viewport
         base.OnLoaded(e);
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        EffectiveViewportChanged += OnEffectiveViewportChanged;
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        EffectiveViewportChanged -= OnEffectiveViewportChanged;
+    }
+
+    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        if (_loadedOnce)
+        {
+            return;
+        }
+
+        if (e.EffectiveViewport.Width > 1 && e.EffectiveViewport.Height > 1)
+        {
+            LoadImage();
+        }
     }
 }

@@ -30,7 +30,7 @@ public partial class HotPageViewModel(
 
     [ObservableProperty] private string? _state = "";
     public override NavBarType NavBarType => NavBarType.Hot;
-    public override string Title => "最热";
+    public override string Title => "最熱";
 
     public ObservableCollection<KvValue> StateList { get; } =
     [
@@ -107,7 +107,7 @@ public partial class HotPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO, cancellationToken: CancellationToken);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "新增" : "移除") + "收藏" + (result ? "成功！" : "失敗！")));
     }
 
     protected override async Task OnNavigatedTo()

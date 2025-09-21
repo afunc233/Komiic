@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Komiic.Contracts.Services;
 using Komiic.Core.Contracts.Models;
 using Komiic.Core.Contracts.Services;
 using Komiic.Messages;
@@ -12,6 +13,7 @@ public partial class HeaderViewModel
     : RecipientViewModelBase, IRecipient<LoadMangaImageDataMessage>
 {
     private readonly IAccountService _accountService;
+    private readonly IThemePreferenceService _themePreferenceService;
 
     private readonly IMessenger _messenger;
 
@@ -25,10 +27,17 @@ public partial class HeaderViewModel
 
     private Task? _loadDataTask;
 
-    public HeaderViewModel(IMessenger messenger, IAccountService accountService) : base(messenger)
+    [ObservableProperty] private ThemeMode _selectedThemeMode;
+    [ObservableProperty] private bool _isThemeAuto;
+    [ObservableProperty] private bool _isThemeLight;
+    [ObservableProperty] private bool _isThemeDark;
+
+    public HeaderViewModel(IMessenger messenger, IAccountService accountService,
+        IThemePreferenceService themePreferenceService) : base(messenger)
     {
         _messenger = messenger;
         _accountService = accountService;
+        _themePreferenceService = themePreferenceService;
         AccountData = _accountService.AccountData;
         _accountService.AccountChanged += (_, _) => { AccountData = accountService.AccountData; };
         _accountService.ImageLimitChanged += (_, _) =>
@@ -38,6 +47,22 @@ public partial class HeaderViewModel
                 ImageLimit = accountService.ImageLimit;
             }
         };
+
+        SelectedThemeMode = _themePreferenceService.CurrentMode;
+        _themePreferenceService.ModeChanged += (_, mode) => { SelectedThemeMode = mode; };
+
+        // Ensure checkmarks are correct on first open
+        IsThemeAuto = SelectedThemeMode == ThemeMode.Auto;
+        IsThemeLight = SelectedThemeMode == ThemeMode.Light;
+        IsThemeDark = SelectedThemeMode == ThemeMode.Dark;
+
+    }
+
+    partial void OnSelectedThemeModeChanged(ThemeMode value)
+    {
+        IsThemeAuto = value == ThemeMode.Auto;
+        IsThemeLight = value == ThemeMode.Light;
+        IsThemeDark = value == ThemeMode.Dark;
     }
 
     public async void Receive(LoadMangaImageDataMessage message)
@@ -77,4 +102,27 @@ public partial class HeaderViewModel
     {
         await _accountService.LoadImageLimit();
     }
+
+    [RelayCommand]
+    private async Task SetThemeAuto()
+    {
+        await _themePreferenceService.SetAsync(ThemeMode.Auto);
+        _themePreferenceService.ApplyCurrentPreference();
+    }
+
+    [RelayCommand]
+    private async Task SetThemeLight()
+    {
+        await _themePreferenceService.SetAsync(ThemeMode.Light);
+        _themePreferenceService.ApplyCurrentPreference();
+    }
+
+    [RelayCommand]
+    private async Task SetThemeDark()
+    {
+        await _themePreferenceService.SetAsync(ThemeMode.Dark);
+        _themePreferenceService.ApplyCurrentPreference();
+    }
+
+    
 }

@@ -19,7 +19,7 @@
             </ControlTemplate>
         </Setter>
         <Style Selector="^:closeOnClickAway /template/ Border#PART_Border">
-            <Setter Property="Background" Value="#88808080" />
+            <Setter Property="Background" Value="{DynamicResource BackdropOverlayBrush}" />
         </Style>
     </Style>
 </Styles>

@@ -11,7 +11,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Viewbox>
-                    <Image x:Name="PART_Image" />
+                    <Image x:Name="PART_Image" RenderOptions.BitmapInterpolationMode="HighQuality" />
                     <!-- <TextBlock Text="Templated Control" /> -->
                 </Viewbox>
             </ControlTemplate>

@@ -36,7 +36,7 @@ public partial class MainPageViewModel(
 
     public override NavBarType NavBarType => NavBarType.Main;
 
-    public override string Title => "首页";
+    public override string Title => "首頁";
 
     public ObservableCollection<MangaInfoVO> RecentUpdateMangaInfos { get; } = [];
 
@@ -57,7 +57,7 @@ public partial class MainPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "新增" : "移除") + "收藏" + (result ? "成功！" : "失敗！")));
     }
 
     private bool CanLoadMore()

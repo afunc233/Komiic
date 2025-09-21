@@ -43,7 +43,7 @@ public partial class MangaDetailPageViewModel(
     [ObservableProperty] private MangaInfoVO _mangaInfoVO = null!;
 
     [ObservableProperty] private int _messageCount;
-    public override string Title => "漫画详情";
+    public override string Title => "漫畫詳情";
 
 
     public ObservableCollection<FolderVm> MyFolders { get; } = [];
@@ -82,7 +82,7 @@ public partial class MangaDetailPageViewModel(
         }
         else
         {
-            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n打开失败！"));
+            messenger.Send(new OpenNotificationMessage($"{DateTime.Now:O}\n打開失敗！"));
         }
     }
 
@@ -139,7 +139,7 @@ public partial class MangaDetailPageViewModel(
 
         var result = await mangaInfoVOService.ToggleFavorite(mangaInfoVO);
         messenger.Send(
-            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "添加" : "移除") + "收藏" + (result ? "成功！" : "失败！")));
+            new OpenNotificationMessage((mangaInfoVO.IsFavourite ? "新增" : "移除") + "收藏" + (result ? "成功！" : "失敗！")));
     }
 
     [RelayCommand]

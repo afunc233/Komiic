@@ -17,6 +17,8 @@ public class NavBar : ViewModelBase
 
     private string _iconUrl = "";
 
+    private string _description = "";
+
     /// <summary>
     ///     类型
     /// </summary>
@@ -63,5 +65,14 @@ public class NavBar : ViewModelBase
     {
         get => _checkedIconUrl;
         set => SetProperty(ref _checkedIconUrl, value);
+    }
+
+    /// <summary>
+    ///     悬停说明
+    /// </summary>
+    public string Description
+    {
+        get => _description;
+        set => SetProperty(ref _description, value);
     }
 }
