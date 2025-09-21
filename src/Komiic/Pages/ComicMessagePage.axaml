@@ -179,7 +179,7 @@
             <Button Command="{Binding DoLoginCommand}" Content="登入" />
             <Run Text="/" BaselineAlignment="Center" />
             <HyperlinkButton
-                Foreground="Blue"
+                                Foreground="{DynamicResource AccentBrush}"
                 NavigateUri="https://komiic.com/register/"
                 Content="註冊" />
         </TextBlock>

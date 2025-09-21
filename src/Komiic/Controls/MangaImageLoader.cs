@@ -24,7 +24,6 @@ internal class MangaImageLoader(IHttpClientFactory clientFactory, IImageCacheSer
 
     private async Task<Bitmap?> LoadAsync(MangaImageData mangaImageData)
     {
-        await Task.CompletedTask;
         var url = mangaImageData.GetImageUrl();
         var localUrl = cacheService.GetLocalImageUrl(url);
 

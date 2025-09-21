@@ -1,0 +1,39 @@
+name: Release macOS App (.app + .dmg)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        rid: [osx-arm64, osx-x64]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Bundle .app and DMG
+        run: |
+          chmod +x scripts/macos_app_bundle.sh
+          ./scripts/macos_app_bundle.sh Release ${{ matrix.rid }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Komiic-${{ matrix.rid }}
+          path: |
+            dist/Komiic-${{ matrix.rid }}.app
+            dist/Komiic-${{ matrix.rid }}.dmg
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/Komiic-${{ matrix.rid }}.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

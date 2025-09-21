@@ -24,6 +24,9 @@
                     <SolidColorBrush x:Key="MutedBackgroundBrush" Color="#80808080" />
                     <SolidColorBrush x:Key="BackdropOverlayBrush" Color="#88808080" />
                     <SolidColorBrush x:Key="AccentBrush" Color="#5B86F0" />
+                    <SolidColorBrush x:Key="FavoriteBrush" Color="#F44337" />
+                    <SolidColorBrush x:Key="TagBrush" Color="#0000CD" />
+                    <SolidColorBrush x:Key="TagPanelBrush" Color="#6495ED" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <BoxShadows x:Key="BorderBoxShadow">2 2 4 0 #30FFFFFF</BoxShadows>
@@ -32,6 +35,9 @@
                     <SolidColorBrush x:Key="MutedBackgroundBrush" Color="#40808080" />
                     <SolidColorBrush x:Key="BackdropOverlayBrush" Color="#99000000" />
                     <SolidColorBrush x:Key="AccentBrush" Color="#6B8DF2" />
+                    <SolidColorBrush x:Key="FavoriteBrush" Color="#FF6F60" />
+                    <SolidColorBrush x:Key="TagBrush" Color="#2B5BD7" />
+                    <SolidColorBrush x:Key="TagPanelBrush" Color="#3F6FEA" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

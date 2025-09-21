@@ -73,7 +73,7 @@
                                         Kind="{markups:Condition {Binding MangaInfoVO.IsFavourite}, 
                                                OnFalse={x:Static materialEnums:MaterialIconKind.HeartOutline},
                                                OnTrue={x:Static materialEnums:MaterialIconKind.Heart}}"
-                                        Foreground="#F44337" />
+                                        Foreground="{DynamicResource FavoriteBrush}" />
                                     <TextBlock Text="{Binding MangaInfoVO.FavoriteCount}" />
                                 </StackPanel>
                             </Button>
@@ -86,7 +86,7 @@
                             TextTrimming="CharacterEllipsis" />
                         <DockPanel>
                             <TextBlock
-                                Background="MediumBlue"
+                                Background="{DynamicResource TagBrush}"
                                 Padding="5,2"
                                 Text="連載">
                                 <!-- <TextBlock.Styles> -->
@@ -95,7 +95,7 @@
                                 <!--     </Style> -->
                                 <!-- </TextBlock.Styles> -->
                             </TextBlock>
-                            <StackPanel Background="CornflowerBlue" Orientation="Horizontal">
+                            <StackPanel Background="{DynamicResource TagPanelBrush}" Orientation="Horizontal">
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     Text="{Binding MangaInfoVO.MangaInfo.LastChapterUpdate, StringFormat={}{0}話}"

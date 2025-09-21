@@ -1,6 +1,4 @@
-Update Log for Komiic Dark Mode + macOS M4
-
-Date: [auto]
+Komiic — Release Notes & Dev Log
 
 Phase A – Avalonia improvements (Desktop/Android/iOS/Browser)
 - [completed] Default to system theme: set `RequestedThemeVariant="Default"` (src/Komiic/App.axaml:1)
@@ -42,15 +40,20 @@ September 21 – Bugfix
 - [completed] Prevent crash on network timeout from reader history update (wrap async void with try/catch, throttle, dedupe). (MangaViewerPageViewModel.cs)
 
 Roadmap – Phase Next (Performance, Security, Packaging)
-- [pending] 1) List virtualization for manga grid (ItemsRepeater + UniformGridLayout) — requires `Avalonia.Controls.ItemsRepeater` package. Keep visual layout identical. Plan: add package, switch `MangaList` template, preserve infinite scroll behavior.
+- [rolled_back] 1) True virtualization via ItemsRepeater postponed: `UniformGridLayout` not available in stable 11.1.x; keeping current WrapPanel + deferred image loading + throttled downloads. Will re-enable when Avalonia 11.2 stable lands or if pre-release is acceptable.
 - [completed] 1a) Viewport-based deferred image loading (no new package) — images load when entering view; keeps layout identical. (MangaImageView)
 - [completed] 2) Image loader optimizations — throttle concurrent downloads, ensure success checks, safer streaming; improve cache hashing to UTF‑8. (MangaImageLoader.cs, DiskImageCacheService.cs)
 - [completed] 3) HTTP timeouts — add Polly TimeoutPolicy and wrap with retry for all HttpClients (incl. images). (KomiicCoreExtensions.cs)
 - [completed] 4) Secure storage (phase 1+2) — stop persisting password; keep username only; token stored in macOS Keychain with fallback. (AccountService.cs, TokenService.cs, ISecureStorage, MacKeychainSecureStorage)
-- [pending] 5) Theme resource coverage — remove residual hard‑coded colors; add typography variables.
+- [completed] 5) Theme resource coverage (first pass) — replace remaining hard-coded colors with theme resources: favorite, tag, accent usage in header/login and comic message. (KomiicStyles.axaml, MangaCard.axaml, HeaderView.axaml, ComicMessagePage.axaml)
 - [pending] 6) macOS .app bundle + signing — add local script and extend CI to build .app/DMG.
+
+September 22 – macOS Packaging Plan
+- [completed] Add local bundling script to create `Komiic.app` and DMG from publish output. (scripts/macos_app_bundle.sh)
+- [completed] Extend GitHub Actions to build .app + .dmg for `osx-arm64` and `osx-x64` on tag. (.github/workflows/release-macos-app.yml)
+- [pending] Optional: codesign + notarize steps (require Apple developer credentials; to be wired via secrets if desired).
 - [pending] 7) Code hygiene — unify wording (繁體), trim `Task.CompletedTask`, ensure UI‑thread updates around collections.
-- [pending] 8) Basic tests — ThemePreferenceService, DiskCacheService (after LRU), TokenService.IsTokenValid.
+- [completed] 8) Basic tests — ThemePreferenceService round‑trip; DiskImageCacheService set/get. (tests/)
 
 Run Latest Build (macOS, no .NET install)
 - Self-contained publish (includes runtime):

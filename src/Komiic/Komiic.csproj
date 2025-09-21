@@ -15,6 +15,7 @@
         <!-- Avalonia -->
         <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)"/>
+        <!-- ItemsRepeater removed for now to keep stable restore; revisit when Avalonia 11.2 stable exposes UniformGridLayout -->
 
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>

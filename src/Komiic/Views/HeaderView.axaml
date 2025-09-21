@@ -33,11 +33,11 @@
                 <Button
                     Command="{Binding OpenLoginCommand}"
                     Content="登入"
-                    Foreground="Blue" />
+                    Foreground="{DynamicResource AccentBrush}" />
                 <TextBlock Text="/" VerticalAlignment="Center" />
                 <HyperlinkButton
                     Content="註冊"
-                    Foreground="Blue"
+                    Foreground="{DynamicResource AccentBrush}"
                     NavigateUri="https://komiic.com/register/" />
             </StackPanel>
             <StackPanel IsVisible="{Binding AccountData, Converter={x:Static ObjectConverters.IsNotNull}}"
